@@ -1,42 +1,38 @@
 # a11yagent README
 
-This is the README for your extension "a11yagent". After writing up a brief description, we recommend including the following sections.
+
+a11yagent is a VS Code extension that provides an accessibility-focused chat participant. It helps users with accessibility questions, settings, and release notes by intelligently selecting the right source for each query.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
 
-For example if there is an image subfolder under your extension project workspace:
+### Features
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- **Accessibility Help**: Ask accessibility-related questions and the agent will open the relevant Accessibility Help dialog in VS Code.
+- **Settings Search**: Ask about settings (e.g., "settings volume") and the agent will search through the default settings file, matching your query to the most relevant setting and returning its name.
+- **Release Notes**: Ask "what's new" or about release notes, and the agent will open the latest VS Code release notes for you.
+- **Intelligent Source Selection**: The agent analyzes your prompt and picks the best source (Accessibility Help, Settings, Release Notes) to answer your question.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+
+No special requirements. The extension works with VS Code 1.102.0 and later.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+This extension does not contribute any new settings. It helps you find and understand existing VS Code settings.
 
 ## Known Issues
 
+* The agent cannot directly read system files outside the workspace. Settings search is limited to the default settings file.
+* Some features depend on VS Code APIs and may not work in older versions.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
 
 ### 1.0.0
-
-Initial release of ...
+Initial release of a11yagent with chat participant, accessibility help, settings search, and release notes features.
 
 ### 1.0.1
 
