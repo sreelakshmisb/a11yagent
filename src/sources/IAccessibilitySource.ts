@@ -1,3 +1,4 @@
 export interface IAccessibilitySource {
-  getResponse(query: string): Promise<string>;
+  getContext(request: import('vscode').ChatRequest): Promise<string>;
 }
+
