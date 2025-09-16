@@ -8,8 +8,8 @@ export function activate(context: vscode.ExtensionContext) {
   // Register sources
   const sources: import('./sources/IAccessibilitySource').IAccessibilitySource[] = [
     new ReleaseNotesSource(),
-    new SettingsFileSource()
-    // new AccessibilityHelpSource()
+    new SettingsFileSource(),
+    new AccessibilityHelpSource()
   ];
 
   // Chat request handler
