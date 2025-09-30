@@ -6,10 +6,7 @@ import { Tail } from 'tail';
 let telemetryTail: Tail | undefined;
 const NONE = "_NONE";
 
-// File path for logging signals
-const logFilePath = path.join('/Users/sreelakshmisb/Desktop/accessibilityAgent/myVSExtension/a11yagent', 'tracked_signals.log');
-
-function parseTelemetry(telemetryLine: string) {
+function parseTelemetry(telemetryLine: string, logFilePath: string) {
   if (!telemetryLine.includes('telemetry/signal.played')) {
     return;
   }
@@ -32,8 +29,7 @@ function findMostRecentLogFolder(vscodeLogsFolderPath: string): string {
   try {
     files = fs.readdirSync(vscodeLogsFolderPath, { withFileTypes: true });
   } catch (e) {
-    console.error("Error opening log folder: " + e);
-    vscode.window.showErrorMessage("Log Folder Path is not correctly set: error opening folder. \nPlease, update configuration and reload the extension");
+    console.error("Log Folder Path is not correctly set: error opening folder. \nPlease, update configuration and reload the extension");
     return NONE;
   }
 
@@ -54,7 +50,10 @@ function findMostRecentLogFolder(vscodeLogsFolderPath: string): string {
 }
 
 export function startTelemetryTracking(context: vscode.ExtensionContext) {
-  const vscodeLogsFolderPath = '/Users/sreelakshmisb/Library/Application Support/Code/logs';
+  // File path for logging signals
+  const logFilePath = path.join(context.extensionPath, 'tracked_signals.log');
+
+  const vscodeLogsFolderPath = path.join(context.globalStorageUri.fsPath, '..', '..', '..', 'logs');
 
   const mostRecentLogFolder = findMostRecentLogFolder(vscodeLogsFolderPath);
 
@@ -76,7 +75,7 @@ export function startTelemetryTracking(context: vscode.ExtensionContext) {
 
     telemetryTail = new Tail(telemetryLogPath, options);
 
-    telemetryTail.on('line', parseTelemetry);
+    telemetryTail.on('line', (telemetryLine) => parseTelemetry(telemetryLine, logFilePath));
     telemetryTail.on('error', (error: Error) => console.error('Telemetry tail error:', error));
 
     vscode.window.showInformationMessage('Started telemetry tracking.');
