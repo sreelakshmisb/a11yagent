@@ -20,21 +20,16 @@
         "name": "a11yagent",
         "fullName": "Accessibility Agent",
         "description": "Ask me accessibility-related questions",
-        "commands": [
-          {
-            "name": "help",
-            "description": "Help me with accessibility features in VS Code"
-          }
-        ],
+        "commands": [],
         "isSticky": true,
         "disambiguation": [
           {
             "category": "accessibility",
-            "description": "Questions about accessibility in VS Code (help dialog, Accessible View, signals).",
+            "description": "Questions about accessibility features in VS Code",
             "examples": [
-              "Open accessibility help",
+              "What's the shortcut for opening the Accessibility View?",
               "How do I turn on screen reader mode?",
-              "What is Accessible View?"
+              "How do I reduce the volume of my accessibility signals?"
             ]
           }
         ]
@@ -51,7 +46,8 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
+    "@types/node": "^24.5.2",
+    "@types/tail": "^2.2.3",
     "@types/vscode": "^1.102.0",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
@@ -62,7 +58,11 @@
   },
   "dependencies": {
     "@types/jsdom": "^21.1.7",
+    "@vscode/extension-telemetry": "^1.0.0",
     "fuse.js": "^7.1.0",
-    "jsdom": "^27.0.0"
-  }
+    "jsdom": "^27.0.0",
+    "node-fetch": "^3.3.2",
+    "tail": "^2.2.6"
+  },
+  "type": "module"
 }

@@ -1,14 +1,14 @@
-import { IAccessibilitySource } from './IAccessibilitySource';
+import { IAccessibilitySource } from './IAccessibilitySource.js';
 
 export class AccessibilityHelpSource implements IAccessibilitySource {
   async getContext(request: import('vscode').ChatRequest): Promise<string> {
     // Dynamically fetch the main content of the VS Code accessibility documentation
     try {
-      const res = await fetch('https://code.visualstudio.com/docs/configure/accessibility/accessibility');
-      if (!res.ok) {
+      const response = await fetch('https://code.visualstudio.com/docs/configure/accessibility/accessibility');
+      if (!response.ok) {
         return 'Could not fetch VS Code accessibility documentation.';
       }
-      const html = await res.text();
+      const html = await response.text();
       // Use JSDOM to extract the main readable content from the HTML
       try {
         const { JSDOM } = await import('jsdom');

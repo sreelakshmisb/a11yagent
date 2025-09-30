@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { IAccessibilitySource } from './IAccessibilitySource';
+import { IAccessibilitySource } from './IAccessibilitySource.js';
 
 export class SettingsFileSource implements IAccessibilitySource {
   async getContext(request: import('vscode').ChatRequest): Promise<string> {

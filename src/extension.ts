@@ -1,15 +1,25 @@
 import * as vscode from 'vscode';
-import { AccessibilityHelpSource } from './sources/AccessibilityHelpSource';
-import { SettingsFileSource } from './sources/SettingsFileSource';
-import { ReleaseNotesSource } from './sources/ReleaseNotesSource';
+import { AccessibilityHelpSource } from './sources/AccessibilityHelpSource.js';
+import { SettingsFileSource } from './sources/SettingsFileSource.js';
+import { ReleaseNotesSource } from './sources/ReleaseNotesSource.js';
+import { startTelemetryTracking, stopTelemetryTracking } from './signalTracker.js';
+import { Tail } from 'tail';
 
+let telemetryTail: Tail | undefined;
+
+telemetryTail?.on('error', (error: Error) => console.error('Telemetry tail error:', error));
+
+// Explicitly cast 'context' to 'vscode.ExtensionContext'
 export function activate(context: vscode.ExtensionContext) {
 
+  // Start telemetry tracking as an ongoing background event
+  startTelemetryTracking(context);
+
   // Register sources
-  const sources: import('./sources/IAccessibilitySource').IAccessibilitySource[] = [
+  const sources: import('./sources/IAccessibilitySource.js').IAccessibilitySource[] = [
+    new AccessibilityHelpSource(),
     new ReleaseNotesSource(),
-    new SettingsFileSource(),
-    new AccessibilityHelpSource()
+    new SettingsFileSource()
   ];
 
   // Chat request handler
@@ -27,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
     Prioritize keyboard accessibility in answers and avoid mouse-only solutions while responding to queries.
     When possible, suggest command palette entries or CLI commands instead of mouse-based or UI workflows.
     Provide platform-specific keybindings and commands, and clarify any differences in behavior across platforms.
-    Format all keyboard shortcuts using backticks. Do not use <kbd> tags or kb(...) macros.`
+    Format all keyboard shortcuts using backticks. Do not use <kbd> tags or kb(...) macros.`;
 
     const messages = [
       vscode.LanguageModelChatMessage.User(instruction),
@@ -45,6 +55,9 @@ export function activate(context: vscode.ExtensionContext) {
   // Register the chat participant and its request handler
   const a11yAgent = vscode.chat.createChatParticipant('accessibility-agent.participant', handler);
 
+
 }
 
-    export function deactivate() { }
+export function deactivate() {
+  stopTelemetryTracking();
+ }
