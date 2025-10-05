@@ -85,7 +85,12 @@ export function startTelemetryTracking(context: vscode.ExtensionContext) {
 }
 
 export function stopTelemetryTracking() {
-  telemetryTail?.unwatch();
-  telemetryTail = undefined;
-  vscode.window.showInformationMessage('Stopped telemetry tracking.');
+  if (telemetryTail) {
+    // First unwatch to stop file monitoring
+    telemetryTail.unwatch();
+    
+    // The Tail library doesn't provide a way to remove listeners
+    // Force cleanup by destroying the reference
+    telemetryTail = undefined;
+  }
 }
