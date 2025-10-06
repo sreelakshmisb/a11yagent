@@ -1,30 +1,43 @@
+import * as vscode from 'vscode';
+
 /**
- * Determines the type of query based on the provided prompt.
- * @param prompt The user-provided query string.
- * @returns The type of query: 'recentAudioCue', 'audioCue', or 'unknown'.
+ * Classifies the query type using a language model.
+ * The type of query: 'audioCue', 'settings', or 'general'.
  */
-export function getQueryType(prompt: string): string {
-    const recentAudioCueKeywords = [
-        'what sound', 'what was that sound', 'recent sound', 'just played', 
-        'just heard', 'what signal', 'what audio cue', 'sound that played',
-        'what was that noise', 'what is that sound'
+
+export async function classifyQueryType(prompt: string): Promise<string> {
+    const messages = [
+        vscode.LanguageModelChatMessage.User(
+            `Classify the following query into one of the categories: 'audioCues', 'settings and features', or 'general'. Respond with only the category name. Query: "${prompt}"`
+        )
     ];
 
-    const audioCueKeywords = [
-        'audio cue', 'audio cues', 'sound', 'sound cues', 'audio signal', 
-        'accessibility.signal', 'sound signal', 'audio notification', 'beep', 
-        'audio feedback', 'sound notification', 'accessibility sound'
-    ];
+    let chatResponse: vscode.LanguageModelChatResponse | undefined;
+    const [model] = await vscode.lm.selectChatModels({ vendor: 'copilot' });
 
-    prompt = prompt.toLowerCase();
+    try {
+      chatResponse = await model.sendRequest(
+        messages,
+        {},
+        new vscode.CancellationTokenSource().token
+      );
+    } catch (err) {
+        console.log('Error in classifying query type:', err);
+        return 'general';
+      }
 
-    if (recentAudioCueKeywords.some(keyword => prompt.includes(keyword))) {
-        return 'recentAudioCue';
+    try {
+        let text = '';
+        for await (const chunk of chatResponse.text) {
+            text += chunk;
+        }
+        const classification = text.trim().toLowerCase();
+        if (['audiocues', 'settings and features', 'general'].includes(classification)) {
+            return classification;
+        }
+
+    } catch (error) {
+        console.error('Error classifying query type:', error);
     }
-
-    if (audioCueKeywords.some(keyword => prompt.includes(keyword))) {
-        return 'audioCue';
-    }
-
-    return 'unknown';
+    return 'general'; // Default to 'general' if classification fails
 }

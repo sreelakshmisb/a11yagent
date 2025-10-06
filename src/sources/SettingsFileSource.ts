@@ -36,7 +36,7 @@ export class SettingsFileSource implements IAccessibilitySource {
         }
         const formattedSettings = JSON.stringify(settingsList, null, 2);
         fs.writeFileSync(this.cacheFilePath, formattedSettings, 'utf8');
-        console.log('Settings file content cached successfully.');
+        //console.log('Settings file content cached successfully.');
         return formattedSettings;
       } catch (jsonErr) {
         // If not valid JSON, store the raw text
@@ -57,10 +57,10 @@ export class SettingsFileSource implements IAccessibilitySource {
   async getContext(request: vscode.ChatRequest, context: vscode.ExtensionContext): Promise<string> {
     try {
       if (fs.existsSync(this.cacheFilePath)) {
-        console.log('Reading cached settings file content.');
+        //console.log('Reading cached settings file content.');
         return fs.readFileSync(this.cacheFilePath, 'utf8');
       } else {
-        console.log('Cache file not found. Fetching settings file content.');
+        //console.log('Cache file not found. Fetching settings file content.');
         return await this.fetchContext();
       }
     } catch (error) {

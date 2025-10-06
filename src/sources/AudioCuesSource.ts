@@ -48,7 +48,7 @@ export class AudioCuesSource implements IAccessibilitySource {
             }
             // Store the results in the cache file
             fs.writeFileSync(this.cacheFilePath, result, 'utf8');
-            console.log('Signals cached successfully.');
+            //console.log('Signals cached successfully.');
             return result;
         } catch (error) {
             console.error('Error fetching accessibility signals:', error);
@@ -60,11 +60,11 @@ export class AudioCuesSource implements IAccessibilitySource {
         try {
             // Check if the cache file exists
             if (fs.existsSync(this.cacheFilePath)) {
-                console.log('Reading cached signal data');
+                //console.log('Reading cached signal data');
                 return fs.readFileSync(this.cacheFilePath, 'utf8');
             }
             // If the cache file does not exist, fetch the context
-            console.log('Cache file not found. Fetching signals and descriptions.');
+            //console.log('Cache file not found. Fetching signals and descriptions.');
             return await this.fetchContext();
 
         } catch (error) {

@@ -48,7 +48,7 @@ export class ReleaseNotesSource implements IAccessibilitySource {
 
             if (result) {
               fs.writeFileSync(this.cacheFilePath, result, 'utf8');
-              console.log('Release notes cached successfully.');
+              //console.log('Release notes cached successfully.');
               resolve(result);
             } else {
               resolve('');
@@ -71,10 +71,10 @@ export class ReleaseNotesSource implements IAccessibilitySource {
   async getContext(request: vscode.ChatRequest, context: vscode.ExtensionContext): Promise<string> {
     try {
       if (fs.existsSync(this.cacheFilePath)) {
-        console.log('Reading cached release notes.');
+        //console.log('Reading cached release notes.');
         return fs.readFileSync(this.cacheFilePath, 'utf8');
       } else {
-        console.log('Cache file not found. Fetching release notes.');
+        //console.log('Cache file not found. Fetching release notes.');
         await this.fetchContext();
         return fs.readFileSync(this.cacheFilePath, 'utf8');
       }

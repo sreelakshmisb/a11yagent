@@ -30,7 +30,7 @@ export class AccessibilityHelpSource implements IAccessibilitySource {
 
         // Store the content in the cache file
         fs.writeFileSync(this.cacheFilePath, content, 'utf8');
-        console.log('Accessibility help content cached successfully.');
+        //console.log('Accessibility help content cached successfully.');
         return content;
       } catch (parseErr) {
         // If jsdom or parsing fails, store the raw HTML
@@ -50,10 +50,10 @@ export class AccessibilityHelpSource implements IAccessibilitySource {
   async getContext(request: vscode.ChatRequest, context: vscode.ExtensionContext): Promise<string> {
     try {
       if (fs.existsSync(this.cacheFilePath)) {
-        console.log('Reading cached accessibility help content.');
+        //console.log('Reading cached accessibility help content.');
         return fs.readFileSync(this.cacheFilePath, 'utf8');
       } else {
-        console.log('Cache file not found. Fetching accessibility help content.');
+        //console.log('Cache file not found. Fetching accessibility help content.');
         await this.fetchContext();
         return fs.readFileSync(this.cacheFilePath, 'utf8');
       }

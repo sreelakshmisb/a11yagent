@@ -1,12 +1,10 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
 import { AccessibilityHelpSource } from './sources/AccessibilityHelpSource.js';
 import { SettingsFileSource } from './sources/SettingsFileSource.js';
 import { ReleaseNotesSource } from './sources/ReleaseNotesSource.js';
 import { AudioCuesSource } from './sources/AudioCuesSource.js';
 import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
-import { getQueryType } from './utils/queryTypeDecider.js';
+import { classifyQueryType } from './utils/queryTypeDecider.js';
 
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
 export function activate(context: vscode.ExtensionContext) {
@@ -21,9 +19,6 @@ export function activate(context: vscode.ExtensionContext) {
     new SettingsFileSource(context),
     new AudioCuesSource(context)
   ];
-  
-  // Paths to accessibility signals files
-  const trackedSignalsPath = path.join(context.extensionPath, 'tracked_signals.log');
   
   // Chat request handler
   const handler: vscode.ChatRequestHandler = async (
@@ -47,31 +42,20 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     // Determine the query type using the utility function
-    const queryType = getQueryType(request.prompt);
+    const queryType = await classifyQueryType(request.prompt);
 
-    if (queryType === 'recentAudioCue') {
-      // Handle recent audio cue query
-      try {
-        // Add tracked signals if the file exists
-        if (fs.existsSync(trackedSignalsPath)) {
-          const trackedSignals = fs.readFileSync(trackedSignalsPath, 'utf8');
-          if (trackedSignals.trim()) {
-            contextData += "\n\n## Recently Tracked Audio Signals\n\n" + trackedSignals;
-          }
-        }
-        contextData += "\n\n## Note on Tracked Signals\n\nthese signals are not in order. They are just a unique list of signals that have been played in the current session, in no particular order";
-        console.log("Using audio cues file with recent sound identification context");
-      } catch (error) {
-        console.error('Error handling recent audio cue query:', error);
-      }
-    } else if (queryType === 'audioCue') {
-      // Handle general audio cue query
-      
-    } else {
-      // For non-audio cue queries, use the normal sources
-      const contexts = await Promise.all(sources.map(source => source.getContext(request, context)));
-      contextData = contexts.filter(Boolean).join('\n\n');
+    console.log('Classified Query Type:', queryType);
+
+    // Filter sources based on the query type
+    let relevantSources = sources;
+    if (queryType === 'audiocues') {
+        relevantSources = sources.filter(source => source instanceof AudioCuesSource || source instanceof SettingsFileSource);
+    } else if (queryType === 'settings and features') {
+        relevantSources = sources.filter(source => source instanceof AccessibilityHelpSource || source instanceof SettingsFileSource);
     }
+
+    const contexts = await Promise.all(relevantSources.map(source => source.getContext(request, context)));
+    contextData = contexts.filter(Boolean).join('\n\n');
 
     // Build the appropriate instruction based on the query type
     let instruction = `
@@ -80,22 +64,11 @@ export function activate(context: vscode.ExtensionContext) {
     When possible, suggest command palette entries or CLI commands instead of mouse-based or UI workflows.
     Provide platform-specific keybindings and commands, and clarify any differences in behavior across platforms.
     Format all keyboard shortcuts using backticks. Do not use <kbd> tags or kb(...) macros.`;
-    
-    // Add specific instructions for recent sound identification
-    if (queryType === 'recentAudioCue') {
-      instruction += ` 
-    SOUND IDENTIFICATION INSTRUCTIONS:
-    The user is asking about a sound/signal that was just played. Do NOT ask them to refer to logs or files.
-    Check the All Audio Cues section in the context to check what signal is likely to have played, based on the actions the user recently undertook.
-    Refer the "Recently Tracked Audio Signals" section in the context to identify what signals have been tracked. the signal will be in the list, but need not be the latest entry.
-    Be decisive in your response - identify the most likely signal that was played and explain what triggered it.
-    Briefly explain the purpose of the identified signal in the context of the user's recent actions.`;
-    }
 
     const messages = [
       vscode.LanguageModelChatMessage.User(instruction),
+      vscode.LanguageModelChatMessage.User(request.prompt),
       vscode.LanguageModelChatMessage.User(contextData),
-      vscode.LanguageModelChatMessage.User(request.prompt)
     ];
 
     const chatResponse = await request.model.sendRequest(messages, {}, token);
