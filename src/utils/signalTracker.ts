@@ -51,7 +51,7 @@ function findMostRecentLogFolder(vscodeLogsFolderPath: string): string {
 
 export function startTelemetryTracking(context: vscode.ExtensionContext) {
   // File path for logging signals
-  const logFilePath = path.join(context.extensionPath, 'tracked_signals.log');
+  const logFilePath = path.join(context.extensionPath, 'cache', 'tracked_signals.log');
 
   const vscodeLogsFolderPath = path.join(context.globalStorageUri.fsPath, '..', '..', '..', 'logs');
 
@@ -88,8 +88,7 @@ export function stopTelemetryTracking() {
   if (telemetryTail) {
     // First unwatch to stop file monitoring
     telemetryTail.unwatch();
-    
-    // The Tail library doesn't provide a way to remove listeners
+  
     // Force cleanup by destroying the reference
     telemetryTail = undefined;
   }

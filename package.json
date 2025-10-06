@@ -21,7 +21,12 @@
         "name": "a11yagent",
         "fullName": "Accessibility Agent",
         "description": "Ask me accessibility-related questions",
-        "commands": [],
+        "commands": [
+          {
+             "name": "init",
+              "description": "initialize a11yagent"
+          }
+        ],
         "isSticky": true,
         "disambiguation": [
           {

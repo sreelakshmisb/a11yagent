@@ -1,120 +1,75 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 import { IAccessibilitySource } from './IAccessibilitySource.js';
 import * as ts from 'typescript'; // Import TypeScript Compiler API
 
 export class AudioCuesSource implements IAccessibilitySource {
 
     private readonly url: string = 'https://raw.githubusercontent.com/microsoft/vscode/f554e3c48013328227e23981a33d0f0d902dc75d/src/vs/workbench/contrib/accessibility/browser/accessibilityConfiguration.ts';
+    private readonly cacheFilePath: string;
+
+    constructor(context: vscode.ExtensionContext) {
+        this.cacheFilePath = path.join(context.extensionPath, 'cache', 'signals.md');
+    }
 
     /**
      * Fetches and extracts audio cues and their descriptions from the provided URL.
+     * Uses a cache file to avoid repeated network requests and ensures the cache persists across VS Code sessions.
      */
-    async getContext(request: vscode.ChatRequest): Promise<string> {
+    async fetchContext(): Promise<string> {
         try {
-            // Fetch the contents from the URL
+
+            // fetch the contents from the URL
             const response = await fetch(this.url);
             if (!response.ok) {
                 throw new Error(`Failed to fetch data: ${response.statusText}`);
             }
             const content = await response.text();
 
-            // Find the configuration object in the content
-            const configRegex = /const\s+configuration:\s+IConfigurationNode\s*=\s*({[\s\S]*?});/;
-            const configMatch = content.match(configRegex);
-            if (!configMatch || !configMatch[1]) {
-                throw new Error('Configuration object not found in the fetched content');
+            // Extract all 'localize' calls for 'accessibility.signals'
+            const localizeRegex = /localize\('accessibility\.signals\.[^']*', \"[^\"]*\"\)/g;
+            const matches = content.match(localizeRegex);
+
+            if (!matches) {
+                return '';
             }
 
-            // Extract properties section with all its entries
-            const configContent = configMatch[1];
-            
-            // Find the properties section start
-            const propertiesStartIndex = configContent.indexOf('properties:');
-            if (propertiesStartIndex === -1) {
-                throw new Error('Properties section not found in the configuration');
-            }
-            
-            // Extract the properties content by tracking opening and closing braces
-            let propertiesContent = '';
-            let depth = 0;
-            let inProperties = false;
-            let startExtract = false;
-            
-            for (let i = propertiesStartIndex; i < configContent.length; i++) {
-                const char = configContent[i];
-                
-                if (char === '{' && !inProperties) {
-                    inProperties = true;
-                    continue;
-                }
-                
-                if (inProperties) {
-                    if (char === '{') {
-                        depth++;
-                        startExtract = true;
-                    } else if (char === '}') {
-                        depth--;
-                    }
-                    
-                    if (startExtract) {
-                        propertiesContent += char;
-                    }
-                    
-                    if (depth === 0 && startExtract) {
-                        break;
-                    }
-                }
-            }
-            
-            // Find all keys that start with 'accessibility.signals.'
-            const signalRegex = /'accessibility\.signals\.[^']*'\s*:\s*{[^}]*description\s*:\s*localize\s*\(\s*'[^']*',\s*'([^']*)'\)/g;
-            const signalKeyRegex = /'(accessibility\.signals\.[^']*)'/;
-            
-            let match;
-            const signals: { [key: string]: string } = {};
-            
-            // Iterate through the properties to extract signal descriptions
-            const lines = propertiesContent.split('\n');
-            let currentKey = '';
-            let inAccessibilitySignalBlock = false;
-            
-            for (const line of lines) {
-                // Check if the line contains a key starting with 'accessibility.signals.'
-                const keyMatch = line.match(/'(accessibility\.signals\.[^']*)':/);
-                if (keyMatch) {
-                    currentKey = keyMatch[1];
-                    inAccessibilitySignalBlock = true;
-                    continue;
-                }
-                
-                // If we're inside an accessibility signal block, look for the description
-                if (inAccessibilitySignalBlock) {
-                    const descMatch = line.match(/description\s*:\s*localize\s*\(\s*'[^']*',\s*'([^']*)'\)/);
-                    if (descMatch) {
-                        signals[currentKey] = descMatch[1];
-                    }
-                    
-                    // Check if this line contains the closing brace of the object
-                    if (line.includes('},')) {
-                        inAccessibilitySignalBlock = false;
-                    }
-                }
-            }
-            
+            // Process matches to remove 'localize(' and ')' and sort them
+            const processedSignals = matches
+                .map(match => match.replace(/localize\(/, '').replace(/\)$/,'').trim())
+                .sort()
+                .filter((item, index, array) => array.indexOf(item) === index); // Remove duplicates
+
             // Format the results as a string
-            if (Object.keys(signals).length === 0) {
-                return "No accessibility signals found.";
+            let result = '# Accessibility Signals\n\n';
+            for (const signal of processedSignals) {
+                result += `- ${signal}\n`;
             }
-            
-            let result = "# Accessibility Signals\n\n";
-            for (const [key, description] of Object.entries(signals)) {
-                result += `- **${key}**: ${description}\n`;
-            }
-            
+            // Store the results in the cache file
+            fs.writeFileSync(this.cacheFilePath, result, 'utf8');
+            console.log('Signals cached successfully.');
             return result;
         } catch (error) {
             console.error('Error fetching accessibility signals:', error);
-            return `Error fetching accessibility signals: ${error instanceof Error ? error.message : String(error)}`;
+            return ``;
+        }
+    }
+
+    async getContext(request: vscode.ChatRequest, context: vscode.ExtensionContext): Promise<string> {
+        try {
+            // Check if the cache file exists
+            if (fs.existsSync(this.cacheFilePath)) {
+                console.log('Reading cached signal data');
+                return fs.readFileSync(this.cacheFilePath, 'utf8');
+            }
+            // If the cache file does not exist, fetch the context
+            console.log('Cache file not found. Fetching signals and descriptions.');
+            return await this.fetchContext();
+
+        } catch (error) {
+            console.error('Error in getContext:', error);
+            return ``;
         }
     }
 }

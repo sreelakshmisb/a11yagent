@@ -1,32 +1,65 @@
+import * as vscode from 'vscode';
 import { IAccessibilitySource } from './IAccessibilitySource.js';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export class AccessibilityHelpSource implements IAccessibilitySource {
-  async getContext(request: import('vscode').ChatRequest): Promise<string> {
-    // Dynamically fetch the main content of the VS Code accessibility documentation
+  private readonly cacheFilePath: string;
+
+  constructor(context: vscode.ExtensionContext) {
+    this.cacheFilePath = path.join(context.extensionPath, 'cache', 'accessibilityHelp.md');
+  }
+
+  /**
+   * Fetches the VS Code accessibility documentation and stores it in a cache file.
+   */
+  async fetchContext(): Promise<string> {
     try {
       const response = await fetch('https://code.visualstudio.com/docs/configure/accessibility/accessibility');
       if (!response.ok) {
-        return 'Could not fetch VS Code accessibility documentation.';
+        throw new Error('Could not fetch VS Code accessibility documentation.');
       }
       const html = await response.text();
+
       // Use JSDOM to extract the main readable content from the HTML
       try {
         const { JSDOM } = await import('jsdom');
         const dom = new JSDOM(html);
-        // VS Code docs uses <main> for main content
         const main = dom.window.document.querySelector('main');
-        if (main) {
-          // Get all text content, trimmed
-          return main.textContent?.trim() || '';
-        } else {
-          return '';
-        }
+        const content = main?.textContent?.trim() || '';
+
+        // Store the content in the cache file
+        fs.writeFileSync(this.cacheFilePath, content, 'utf8');
+        console.log('Accessibility help content cached successfully.');
+        return content;
       } catch (parseErr) {
-        // If jsdom or parsing fails, return the raw HTML
+        // If jsdom or parsing fails, store the raw HTML
+        fs.writeFileSync(this.cacheFilePath, html, 'utf8');
+        console.error('Failed to parse HTML. Raw HTML cached instead.');
         return html;
       }
-    } catch (err) {
-      return '';
+    } catch (error) {
+      console.error('Error fetching accessibility help content:', error);
+      return ``;
+    }
+  }
+
+  /**
+   * Reads the accessibility documentation from the cache file and returns it.
+   */
+  async getContext(request: vscode.ChatRequest, context: vscode.ExtensionContext): Promise<string> {
+    try {
+      if (fs.existsSync(this.cacheFilePath)) {
+        console.log('Reading cached accessibility help content.');
+        return fs.readFileSync(this.cacheFilePath, 'utf8');
+      } else {
+        console.log('Cache file not found. Fetching accessibility help content.');
+        await this.fetchContext();
+        return fs.readFileSync(this.cacheFilePath, 'utf8');
+      }
+    } catch (error) {
+      console.error('Error in getContext:', error);
+      return ``;
     }
   }
 }

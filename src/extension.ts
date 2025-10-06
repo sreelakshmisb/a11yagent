@@ -4,7 +4,9 @@ import * as path from 'path';
 import { AccessibilityHelpSource } from './sources/AccessibilityHelpSource.js';
 import { SettingsFileSource } from './sources/SettingsFileSource.js';
 import { ReleaseNotesSource } from './sources/ReleaseNotesSource.js';
-import { startTelemetryTracking, stopTelemetryTracking } from './signalTracker.js';
+import { AudioCuesSource } from './sources/AudioCuesSource.js';
+import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
+import { getQueryType } from './utils/queryTypeDecider.js';
 
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
 export function activate(context: vscode.ExtensionContext) {
@@ -12,80 +14,65 @@ export function activate(context: vscode.ExtensionContext) {
   // Start telemetry tracking as an ongoing background event
   startTelemetryTracking(context);
 
-  // Register sources
+  // Register sources and pass the context
   const sources: import('./sources/IAccessibilitySource.js').IAccessibilitySource[] = [
-    new AccessibilityHelpSource(),
-    new ReleaseNotesSource(),
-    new SettingsFileSource()
+    new AccessibilityHelpSource(context),
+    new ReleaseNotesSource(context),
+    new SettingsFileSource(context),
+    new AudioCuesSource(context)
   ];
   
   // Paths to accessibility signals files
-  const signalsFilePath = path.join(context.extensionPath, 'accessibility_signals.md');
   const trackedSignalsPath = path.join(context.extensionPath, 'tracked_signals.log');
   
-  // Function to detect if query is specifically about identifying a recent sound
-  const isRecentAudioCueQuery = (prompt: string): boolean => {
-    const recentAudioCueKeywords = [
-      'what sound', 'what was that sound', 'recent sound', 'just played', 
-      'just heard', 'what signal', 'what audio cue', 'sound that played',
-      'what was that noise', 'what is that sound'
-    ];
-    
-    prompt = prompt.toLowerCase();
-    return recentAudioCueKeywords.some(keyword => prompt.includes(keyword));
-  };
-  
-  // Function to detect if the query is about audio cues/signals
-  const isAudioCueQuery = (prompt: string): boolean => {
-    const audioCueKeywords = [
-      'audio cue', 'audio cues', 'sound', 'sound cues', 'audio signal', 
-      'accessibility.signal', 'sound signal', 'audio notification', 'beep', 
-      'audio feedback', 'sound notification', 'accessibility sound'
-    ];
-    
-    prompt = prompt.toLowerCase();
-    // Use the isRecentAudioCueQuery function to check for recent sound keywords as well
-    return audioCueKeywords.some(keyword => prompt.includes(keyword)) || 
-           isRecentAudioCueQuery(prompt);
-  };  // Chat request handler
+  // Chat request handler
   const handler: vscode.ChatRequestHandler = async (
     request: vscode.ChatRequest,
     chatContext: vscode.ChatContext,
     stream: vscode.ChatResponseStream,
     token: vscode.CancellationToken
   ): Promise<any> => {
-    let context = '';
-    
-    // Check if the query is about audio cues
-    if (isAudioCueQuery(request.prompt)) {
+    let contextData = '';
+
+        // If the command is 'init', initialize all sources
+    if (request.command === 'init') {
       try {
-        // Read the signals documentation
-        const allSignals = fs.readFileSync(signalsFilePath, 'utf8');
-        context += "\n\n##All Audio Cues\n\n" + allSignals;
-        
-        // If the query is about a sound that just played, try to include user's recent actions
-        if (isRecentAudioCueQuery(request.prompt)) {        
-          // Add tracked signals if the file exists
-          if (fs.existsSync(trackedSignalsPath)) {
-            const trackedSignals = fs.readFileSync(trackedSignalsPath, 'utf8');
-            if (trackedSignals.trim()) {
-              context += "\n\n## Recently Tracked Audio Signals\n\n" + trackedSignals;
-            }
-          }
-          context += "\n\n## Note on Tracked Signals\n\nthese signals are not in order. They are just a unique list of signals that have been played in the current session, in no particular order";
-          console.log("Using audio cues file with recent sound identification context");
-        } else {
-          console.log("Using audio cues file as context");
-        }
+        await Promise.all(sources.map(source => source.fetchContext()));
+        vscode.window.showInformationMessage('All sources initialized successfully.');
       } catch (error) {
-        console.error("Error reading audio cues file:", error);
+        console.error('Error initializing sources:', error);
+        vscode.window.showErrorMessage('Failed to initialize all sources.');
       }
+      return;
+    }
+
+    // Determine the query type using the utility function
+    const queryType = getQueryType(request.prompt);
+
+    if (queryType === 'recentAudioCue') {
+      // Handle recent audio cue query
+      try {
+        // Add tracked signals if the file exists
+        if (fs.existsSync(trackedSignalsPath)) {
+          const trackedSignals = fs.readFileSync(trackedSignalsPath, 'utf8');
+          if (trackedSignals.trim()) {
+            contextData += "\n\n## Recently Tracked Audio Signals\n\n" + trackedSignals;
+          }
+        }
+        contextData += "\n\n## Note on Tracked Signals\n\nthese signals are not in order. They are just a unique list of signals that have been played in the current session, in no particular order";
+        console.log("Using audio cues file with recent sound identification context");
+      } catch (error) {
+        console.error('Error handling recent audio cue query:', error);
+      }
+    } else if (queryType === 'audioCue') {
+      // Handle general audio cue query
+      
     } else {
       // For non-audio cue queries, use the normal sources
-      const contexts = await Promise.all(sources.map(source => source.getContext(request)));
-      context = contexts.filter(Boolean).join('\n\n');
+      const contexts = await Promise.all(sources.map(source => source.getContext(request, context)));
+      contextData = contexts.filter(Boolean).join('\n\n');
     }
-    
+
     // Build the appropriate instruction based on the query type
     let instruction = `
     The user relies on a screen reader and uses keyboard navigation as their primary interaction mode.
@@ -95,7 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
     Format all keyboard shortcuts using backticks. Do not use <kbd> tags or kb(...) macros.`;
     
     // Add specific instructions for recent sound identification
-    if (isRecentAudioCueQuery(request.prompt)) {
+    if (queryType === 'recentAudioCue') {
       instruction += ` 
     SOUND IDENTIFICATION INSTRUCTIONS:
     The user is asking about a sound/signal that was just played. Do NOT ask them to refer to logs or files.
@@ -107,7 +94,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     const messages = [
       vscode.LanguageModelChatMessage.User(instruction),
-      vscode.LanguageModelChatMessage.User(context),
+      vscode.LanguageModelChatMessage.User(contextData),
       vscode.LanguageModelChatMessage.User(request.prompt)
     ];
 
@@ -124,6 +111,14 @@ export function activate(context: vscode.ExtensionContext) {
   // Add the participant to the extension context's subscriptions for proper cleanup on deactivation
   context.subscriptions.push(a11yAgent);
 
+  const initCommand = 'a11yagent.init';
+
+  const commandHandler = () => {
+    vscode.window.showInformationMessage('Initializing a11yagent...');
+  };
+
+  context.subscriptions.push(vscode.commands.registerCommand(initCommand, commandHandler));
+ 
 }
 
 export function deactivate() {
