@@ -26,7 +26,8 @@ export class AccessibilityHelpSource implements IAccessibilitySource {
         const { JSDOM } = await import('jsdom');
         const dom = new JSDOM(html);
         const main = dom.window.document.querySelector('main');
-        const content = main?.textContent?.trim() || '';
+        let content = '# Accessibility Documentation\n\n';
+        content += main?.textContent?.trim() || '';
 
         // Store the content in the cache file
         fs.writeFileSync(this.cacheFilePath, content, 'utf8');

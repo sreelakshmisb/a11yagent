@@ -29,7 +29,7 @@ export class ReleaseNotesSource implements IAccessibilitySource {
               .filter((f: any) => f.name.endsWith('.md') && f.name.startsWith('v1_'))
               .sort((a: any, b: any) => b.name.localeCompare(a.name, undefined, { numeric: true }));
 
-            let result = '';
+            let result = '# Release Notes\n\n';
 
             for (const file of files) {
               const fileUrl = file.download_url;
@@ -38,7 +38,7 @@ export class ReleaseNotesSource implements IAccessibilitySource {
                 const fileContent = await response.text();
 
                 if (fileContent.includes(currentVersion)) {
-                  result = fileContent;
+                  result += fileContent;
                   break;
                 }
               } catch (error) {

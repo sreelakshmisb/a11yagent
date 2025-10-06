@@ -34,7 +34,8 @@ export class SettingsFileSource implements IAccessibilitySource {
             }
           }
         }
-        const formattedSettings = JSON.stringify(settingsList, null, 2);
+        let formattedSettings = '# Accessibility Settings\n\n';
+        formattedSettings += JSON.stringify(settingsList, null, 2);
         fs.writeFileSync(this.cacheFilePath, formattedSettings, 'utf8');
         //console.log('Settings file content cached successfully.');
         return formattedSettings;
