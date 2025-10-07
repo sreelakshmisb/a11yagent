@@ -62,11 +62,12 @@ export function activate(context: vscode.ExtensionContext) {
     The user relies on a screen reader and uses keyboard navigation as their primary interaction mode.
     Prioritize keyboard accessibility in answers and avoid mouse-only solutions while responding to queries.
     When possible, suggest command palette entries or CLI commands instead of mouse-based or UI workflows.
+    Don't suggest keyboard shortcuts not mentioned in the official VS Code documentation.
     Provide platform-specific keybindings and commands, and clarify any differences in behavior across platforms.
     Format all keyboard shortcuts using backticks. Do not use <kbd> tags or kb(...) macros. 
     Don't provide settings not mentioned in the Accessibility settings section or audio cues not mentioned in the Accessibility Signals section.
     If you're not sure of a setting, audio cue or feature suggest multiple possibilities rather than guessing.
-    Suggestion accessibility-specific features, as much as possible, before general VS Code features.`;
+    Suggest accessibility-specific features, as much as possible, before general VS Code features.`;
 
     const messages = [
       vscode.LanguageModelChatMessage.User(instruction),
