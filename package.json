@@ -23,8 +23,8 @@
         "description": "Ask me accessibility-related questions",
         "commands": [
           {
-             "name": "init",
-              "description": "initialize a11yagent"
+            "name": "init",
+            "description": "initialize a11yagent"
           }
         ],
         "isSticky": true,
@@ -39,6 +39,16 @@
             ]
           }
         ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "a11yagent.logFeature",
+        "title": "a11yagent: Log an Issue or Feature"
+      },
+      {
+        "command": "a11yagent.removeTrackedFeature",
+        "title": "a11yagent: View/Remove a Tracked Issue or Feature"
       }
     ]
   },
@@ -65,6 +75,7 @@
   "dependencies": {
     "@types/jsdom": "^21.1.7",
     "@vscode/extension-telemetry": "^1.0.0",
+    "axios": "^1.12.2",
     "fuse.js": "^7.1.0",
     "jsdom": "^27.0.0",
     "node-fetch": "^3.3.2",

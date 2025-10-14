@@ -5,12 +5,16 @@ import { ReleaseNotesSource } from './sources/ReleaseNotesSource.js';
 import { AudioCuesSource } from './sources/AudioCuesSource.js';
 import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
 import { classifyQueryType } from './utils/queryTypeDecider.js';
+import { logFeature, notifyTrackedFeature, removeTrackedFeature } from './utils/featureTracker.js';
 
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
 export function activate(context: vscode.ExtensionContext) {
 
   // Start telemetry tracking as an ongoing background event
   startTelemetryTracking(context);
+
+  // Notify users of updates to tracked issues when VS Code starts
+  notifyTrackedFeature(context);
 
   // Register sources and pass the context
   const sources: import('./sources/IAccessibilitySource.js').IAccessibilitySource[] = [
@@ -96,6 +100,12 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(vscode.commands.registerCommand(initCommand, commandHandler));
  
+  // Register commands for logging and viewing tracked features
+  const logFeatureCommand = 'a11yagent.logFeature';
+  const removeFeatureCommand = 'a11yagent.removeTrackedFeature';
+
+  context.subscriptions.push(vscode.commands.registerCommand(logFeatureCommand, () => logFeature(context)));
+  context.subscriptions.push(vscode.commands.registerCommand(removeFeatureCommand, () => removeTrackedFeature(context)));
 }
 
 export function deactivate() {
