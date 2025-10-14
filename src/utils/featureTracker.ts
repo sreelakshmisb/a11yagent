@@ -70,7 +70,8 @@ export async function logFeature(context: vscode.ExtensionContext) {
 // Searches GitHub for issues matching the given description
 async function searchGitHubIssues(description: string): Promise<any[]> {
   const repositories = [
-    'sreelakshmisb/portfolio'
+    'microsoft/vscode',
+    'microsoft/vscode-copilot-release'
   ];
 
   const allIssues: any[] = [];
