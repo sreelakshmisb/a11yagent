@@ -49,6 +49,10 @@
       {
         "command": "a11yagent.removeTrackedFeature",
         "title": "a11yagent: View/Remove a Tracked Issue or Feature"
+      },
+      {
+        "command": "a11yagent.updateCheck",
+        "title": "a11yagent: Check for Updates"
       }
     ]
   },

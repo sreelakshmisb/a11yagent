@@ -4,7 +4,7 @@ import axios from 'axios';
 // Add a flag to indicate updates
 const TRACKED_ISSUES_KEY = 'trackedIssues';
 
-// Logs a feature by allowing the user to describe an issue and select relevant GitHub issues to track
+// Logs a feature by allowing the user to describe an issue and selecting relevant GitHub issues to track
 export async function logFeature(context: vscode.ExtensionContext) {
   // Prompt the user to describe the issue they are facing
   const issueDescription = await vscode.window.showInputBox({
@@ -18,17 +18,7 @@ export async function logFeature(context: vscode.ExtensionContext) {
     if (issues.length > 0) {
       // Display the top 3 issues in a quick pick menu
       const quickPick = vscode.window.createQuickPick();
-      quickPick.items = issues.slice(0, 3).map(issue => ({
-        label: issue.title,
-        description: issue.repository,
-        detail: issue.html_url,
-        buttons: [
-          {
-            iconPath: new vscode.ThemeIcon('link-external'),
-            tooltip: 'Open Issue'
-          }
-        ],
-      }));
+      quickPick.items = createQuickPickItems(issues.slice(0, 3));
       quickPick.canSelectMany = true;
       quickPick.placeholder = 'Select issues to track:';
 
@@ -54,7 +44,7 @@ export async function logFeature(context: vscode.ExtensionContext) {
 
         // Save the selected issues to global state
         await context.globalState.update(TRACKED_ISSUES_KEY, trackedIssues);
-        vscode.window.showInformationMessage('Selected issues have been logged and will be tracked.');
+        vscode.window.showInformationMessage('Selected issue(s) have been logged and will be tracked.');
         quickPick.hide();
       });
 
@@ -70,8 +60,7 @@ export async function logFeature(context: vscode.ExtensionContext) {
 // Searches GitHub for issues matching the given description
 async function searchGitHubIssues(description: string): Promise<any[]> {
   const repositories = [
-    'microsoft/vscode',
-    'microsoft/vscode-copilot-release'
+    'sreelakshmisb/portfolio'
   ];
 
   const allIssues: any[] = [];
@@ -89,12 +78,12 @@ async function searchGitHubIssues(description: string): Promise<any[]> {
         html_url: issue.html_url,
         api_url: issue.url,
         repository: repo,
-        state: issue.state // Track the state field instead of updated_at
+        state: issue.state, // Track the state field instead of updated_at
+        hasUpdates: false // Initialize hasUpdates to false
       }));
       allIssues.push(...issues);
     } catch (error) {
       // Log and display an error message if the API request fails
-      console.error(`Error fetching issues from ${repo}:`, error);
       vscode.window.showErrorMessage(`Failed to fetch issues from ${repo}.`);
     }
   }
@@ -102,8 +91,8 @@ async function searchGitHubIssues(description: string): Promise<any[]> {
   return allIssues;
 }
 
-// Notifies the user about updates to tracked issues
-export async function notifyTrackedFeature(context: vscode.ExtensionContext) {
+// Checks for updates to tracked issues and notifies the user about the same
+export async function checkForUpdates(context: vscode.ExtensionContext) {
   const trackedIssues = context.globalState.get<any[]>(TRACKED_ISSUES_KEY, []);
 
   if (trackedIssues.length > 0) {
@@ -149,8 +138,7 @@ export async function notifyTrackedFeature(context: vscode.ExtensionContext) {
 }
 
 // Removes selected issues from the list of tracked issues
-// Update state only when the user clicks the refresh icon
-// Ensure the refresh icon only appears for issues with updates and disappears after refresh
+// For an issue with updates, update the state when the user clicks the refresh icon
 export async function removeTrackedFeature(context: vscode.ExtensionContext) {
   const trackedIssues = context.globalState.get<any[]>(TRACKED_ISSUES_KEY, []);
 
@@ -162,22 +150,7 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
 
   // Display a quick pick menu to select issues to remove
   const quickPick = vscode.window.createQuickPick();
-  quickPick.items = trackedIssues.map(issue => ({
-    label: issue.title,
-    description: issue.repository,
-    detail: issue.html_url,
-    buttons: [
-      {
-        iconPath: new vscode.ThemeIcon('link-external'),
-        tooltip: 'Open Issue'
-      },
-      // Keep the refresh button next to the open external button
-      ...(issue.hasUpdates ? [{
-        iconPath: new vscode.ThemeIcon('refresh'),
-        tooltip: 'Refresh Issue State'
-      }] : [])
-    ]
-  }));
+  quickPick.items = createQuickPickItems(trackedIssues);
 
   // Handle the refresh button click
   quickPick.onDidTriggerItemButton(async (e) => {
@@ -199,25 +172,10 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
           await context.globalState.update(TRACKED_ISSUES_KEY, trackedIssues);
 
           // Update the quick pick items to remove the refresh button
-          quickPick.items = trackedIssues.map(issue => ({
-            label: issue.title,
-            description: issue.repository,
-            detail: issue.html_url,
-            buttons: [
-              {
-                iconPath: new vscode.ThemeIcon('link-external'),
-                tooltip: 'Open Issue'
-              },
-              ...(issue.hasUpdates ? [{
-                iconPath: new vscode.ThemeIcon('refresh'),
-                tooltip: 'Refresh Issue State'
-              }] : [])
-            ]
-          }));
+          quickPick.items = createQuickPickItems(trackedIssues);
 
           vscode.window.showInformationMessage(`State refreshed for issue: ${trackedIssues[issueIndex].title}`);
         } catch (error) {
-          console.error(`Error refreshing state for issue ${issueUrl}:`, error);
           vscode.window.showErrorMessage(`Failed to refresh state for issue: ${trackedIssues[issueIndex].title}`);
         }
       }
@@ -241,10 +199,29 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
 
     // Update the global state with the remaining issues
     await context.globalState.update(TRACKED_ISSUES_KEY, updatedIssues);
-    vscode.window.showInformationMessage('Selected issues have been removed from tracking.');
+    vscode.window.showInformationMessage('Selected issue(s) have been removed from tracking.');
     quickPick.hide();
   });
 
   quickPick.ignoreFocusOut = true;
   quickPick.show();
+}
+
+// Utility function to create QuickPick items for GitHub issues
+function createQuickPickItems(issues: any[]): vscode.QuickPickItem[] {
+  return issues.map(issue => ({
+    label: issue.title,
+    description: issue.repository,
+    detail: issue.html_url,
+    buttons: [
+      {
+        iconPath: new vscode.ThemeIcon('link-external'),
+        tooltip: 'Open Issue'
+      },
+      ...(issue.hasUpdates ? [{
+        iconPath: new vscode.ThemeIcon('refresh'),
+        tooltip: 'Refresh Issue State'
+      }] : [])
+    ],
+  }));
 }
