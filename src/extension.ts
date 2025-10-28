@@ -10,8 +10,22 @@ import { logFeature, checkForUpdates, removeTrackedFeature } from './utils/featu
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
 export function activate(context: vscode.ExtensionContext) {
 
-  // Start telemetry tracking as an ongoing background event
-  startTelemetryTracking(context);
+  // Check if telemetry is enabled before starting telemetry tracking
+  if (vscode.env.isTelemetryEnabled) {
+    startTelemetryTracking(context);
+  }
+
+  // Listen for changes to the telemetry setting
+  const telemetryChangeListener = vscode.env.onDidChangeTelemetryEnabled((isEnabled) => {
+    if (isEnabled) {
+      startTelemetryTracking(context);
+    } else {
+      stopTelemetryTracking();
+    }
+  });
+
+  // Add the listener to the extension's subscriptions for cleanup
+  context.subscriptions.push(telemetryChangeListener);
 
   // Notify users of updates to tracked issues when VS Code starts
   checkForUpdates(context);
@@ -37,10 +51,10 @@ export function activate(context: vscode.ExtensionContext) {
     if (request.command === 'init') {
       try {
         await Promise.all(sources.map(source => source.fetchContext()));
-        vscode.window.showInformationMessage('All sources initialized successfully.');
+        vscode.window.showInformationMessage('Fetched and updated all data sources used by a11yagent.');
       } catch (error) {
-        console.error('Error initializing sources:', error);
-        vscode.window.showErrorMessage('Failed to initialize all sources.');
+        console.error('Error updating data sources used by a11yagent:', error);
+        vscode.window.showErrorMessage('Failed to update all data sources used by a11yagent.');
       }
       return;
     }
@@ -114,11 +128,8 @@ export function deactivate() {
   try {
     // Stop telemetry tracking
     stopTelemetryTracking();
-    
-    // Make sure all other disposables are cleaned up
     console.log('Extension successfully deactivated');
   } catch (error) {
-    // Log any errors during deactivation but don't fail
     console.error('Error during extension deactivation:', error);
   }
 }

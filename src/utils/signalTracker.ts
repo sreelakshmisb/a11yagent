@@ -96,5 +96,6 @@ export function stopTelemetryTracking() {
   
     // Force cleanup by destroying the reference
     telemetryTail = undefined;
+    vscode.window.showInformationMessage('Stopped telemetry tracking.');
   }
 }
