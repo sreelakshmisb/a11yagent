@@ -53,6 +53,11 @@ export function startTelemetryTracking(context: vscode.ExtensionContext) {
   // File path for logging signals
   const logFilePath = path.join(context.extensionPath, 'cache', 'tracked_signals.log');
 
+  // Clear the file if it already exists
+  if (fs.existsSync(logFilePath)) {
+    fs.writeFileSync(logFilePath, '', 'utf8');
+  }
+
   const vscodeLogsFolderPath = path.join(context.globalStorageUri.fsPath, '..', '..', '..', 'logs');
 
   const mostRecentLogFolder = findMostRecentLogFolder(vscodeLogsFolderPath);

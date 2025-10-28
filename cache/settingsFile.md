@@ -655,7 +655,7 @@
   },
   {
     "name": "chat.notifyWindowOnConfirmation",
-    "description": "Controls whether a chat session should notify the user when a confirmation is needed while the window is not in focus. This includes a window badge as well as notification toast."
+    "description": "Controls whether a chat session should present the user with an OS notification when a confirmation is needed while the window is not in focus. This includes a window badge as well as notification toast."
   },
   {
     "name": "chat.tools.global.autoApprove",
@@ -674,6 +674,10 @@
     "description": "Show recent chat history on the empty chat state."
   },
   {
+    "name": "chat.notifyWindowOnResponseReceived",
+    "description": "Controls whether a chat session should present the user with an OS notification when a response is received while the window is not in focus. This includes a window badge as well as notification toast."
+  },
+  {
     "name": "chat.checkpoints.enabled",
     "description": "Enables checkpoints in chat. Checkpoints allow you to restore the chat to a previous state."
   },
@@ -683,7 +687,7 @@
   },
   {
     "name": "chat.mcp.access",
-    "description": "Controls access to Model Context Protocol servers."
+    "description": "Controls access to installed Model Context Protocol servers."
   },
   {
     "name": "chat.mcp.autostart",
@@ -696,10 +700,6 @@
   {
     "name": "chat.mcp.assisted.nuget.enabled",
     "description": "Enables NuGet packages for AI-assisted MCP server installation. Used to install MCP servers by name from the central registry for .NET packages (NuGet.org)."
-  },
-  {
-    "name": "chat.useFileStorage",
-    "description": "Enables storing chat sessions on disk instead of in the storage service. Enabling this does a one-time per-workspace migration of existing sessions to the new format."
   },
   {
     "name": "chat.edits2.enabled",
@@ -726,12 +726,16 @@
     "description": "Control variations of the sign-in dialog."
   },
   {
-    "name": "chat.todoListTool.enabled",
-    "description": "Enables todo lists in chat, which the agent uses as a tool for planning, progress tracking, and context management for complex development workflows."
+    "name": "chat.agent.todoList",
+    "description": "Configures the todo list widget in chat."
   },
   {
     "name": "chat.todoListTool.writeOnly",
     "description": "When enabled, the todo tool operates in write-only mode, requiring the agent to remember todos in context."
+  },
+  {
+    "name": "chat.todoListTool.descriptionField",
+    "description": "When enabled, todo items include detailed descriptions for implementation context. This provides more information but uses additional tokens and may slow down responses."
   },
   {
     "name": "chat.agent.thinkingStyle",
@@ -742,12 +746,16 @@
     "description": "Disable and hide built-in AI features provided by GitHub Copilot, including chat, code completions and next edit suggestions."
   },
   {
-    "name": "chat.useChatSessionsForCloudButton",
-    "description": "Controls whether the 'Delegate to coding agent' button uses the new chat sessions API."
+    "name": "chat.useCloudButtonV2",
+    "description": "Experimental implementation of 'cloud button'"
   },
   {
     "name": "chat.showAgentSessionsViewDescription",
     "description": "Controls whether session descriptions are displayed on a second row in the Chat Sessions view."
+  },
+  {
+    "name": "chat.allowAnonymousAccess",
+    "description": "Controls whether anonymous access is allowed in chat."
   },
   {
     "name": "extensions.autoUpdate",
@@ -784,6 +792,10 @@
   {
     "name": "extensions.verifySignature",
     "description": "When enabled, extensions are verified to be signed before getting installed."
+  },
+  {
+    "name": "extensions.autoRestart",
+    "description": "If activated, extensions will automatically restart following an update if the window is not in focus. There can be a data loss if you have open Notebooks or Custom Editors."
   },
   {
     "name": "extensions.supportNodeGlobalNavigator",
@@ -832,6 +844,10 @@
   {
     "name": "testing.coverageToolbarEnabled",
     "description": "Controls whether the coverage toolbar is shown in the editor."
+  },
+  {
+    "name": "testing.resultsView.layout",
+    "description": "Controls the layout of the Test Results view."
   },
   {
     "name": "files.encoding",
@@ -2454,6 +2470,10 @@
     "description": "Controls where the diff view should be opened when comparing changes in merge conflicts."
   },
   {
+    "name": "mermaid-chat.enabled",
+    "description": "Enable a tool for experimental Mermaid diagram rendering in chat responses."
+  },
+  {
     "name": "debug.javascript.codelens.npmScripts",
     "description": "Where a \"Run\" and \"Debug\" code lens should be shown in your npm scripts. It may be on \"all\", scripts, on \"top\" of the script section, or \"never\"."
   },
@@ -2658,82 +2678,6 @@
     "description": "Additional paths to discover TypeScript Language Service plugins."
   },
   {
-    "name": "eslint.enable",
-    "description": "Controls whether eslint is enabled or not."
-  },
-  {
-    "name": "eslint.packageManager",
-    "description": "The package manager you use to install node modules."
-  },
-  {
-    "name": "eslint.problems.shortenToSingleLine",
-    "description": "Shortens the text spans of underlined problems to their first related line."
-  },
-  {
-    "name": "eslint.trace.server",
-    "description": "Traces the communication between VSCode and the eslint linter service."
-  },
-  {
-    "name": "eslint.run",
-    "description": "Run the linter on save (onSave) or on type (onType)"
-  },
-  {
-    "name": "eslint.autoFixOnSave",
-    "description": "Turns auto fix on save on or off."
-  },
-  {
-    "name": "eslint.quiet",
-    "description": "Turns on quiet mode, which ignores warnings."
-  },
-  {
-    "name": "eslint.onIgnoredFiles",
-    "description": "Whether ESLint should issue a warning on ignored files."
-  },
-  {
-    "name": "eslint.migration.2_x",
-    "description": "Whether ESlint should migrate auto fix on save settings."
-  },
-  {
-    "name": "eslint.useESLintClass",
-    "description": "Since version 7 ESLint offers a new API call ESLint. Use it even if the old CLIEngine is available. From version 8 on forward on ESLint class is available."
-  },
-  {
-    "name": "eslint.experimental.useFlatConfig",
-    "description": "Enables support of experimental Flat Config (aka eslint.config.js). Requires ESLint version >= 8.21 < 8.57.0)."
-  },
-  {
-    "name": "eslint.validate",
-    "description": "An array of language ids which should be validated by ESLint. If not installed ESLint will show an error."
-  },
-  {
-    "name": "eslint.ignoreUntitled",
-    "description": "If true, untitled files won't be validated by ESLint."
-  },
-  {
-    "name": "eslint.probe",
-    "description": "An array of language ids for which the extension should probe if support is installed."
-  },
-  {
-    "name": "eslint.provideLintTask",
-    "description": "Controls whether a task for linting the whole workspace will be available."
-  },
-  {
-    "name": "eslint.lintTask.enable",
-    "description": "Controls whether a task for linting the whole workspace will be available."
-  },
-  {
-    "name": "eslint.format.enable",
-    "description": "Enables ESLint as a formatter."
-  },
-  {
-    "name": "eslint.rules.customizations",
-    "description": "Override the severity of one or more rules reported by this extension, regardless of the project's ESLint config. Use globs to apply default severities for multiple rules."
-  },
-  {
-    "name": "eslint.notebooks.rules.customizations",
-    "description": "A special rules customization section for text cells in notebook documents."
-  },
-  {
     "name": "github.copilot.editor.enableCodeActions",
     "description": "Controls if Copilot commands are shown as Code Actions when available"
   },
@@ -2748,6 +2692,10 @@
   {
     "name": "github.copilot.chat.customInstructionsInSystemMessage",
     "description": "When enabled, custom instructions and mode instructions will be appended to the system message instead of a user message."
+  },
+  {
+    "name": "github.copilot.chat.agent.currentEditorContext.enabled",
+    "description": "When enabled, Copilot will include the name of the current active editor in the context for agent mode."
   },
   {
     "name": "github.copilot.chat.reviewAgent.enabled",
@@ -2778,10 +2726,6 @@
     "description": "Whether to enable new agentic workspace creation."
   },
   {
-    "name": "github.copilot.chat.agent.currentEditorContext.enabled",
-    "description": "When enabled, Copilot will include the name of the current active editor in the context for agent mode."
-  },
-  {
     "name": "github.copilot.chat.notebook.followCellExecution.enabled",
     "description": "Controls whether the currently executing cell is revealed into the viewport upon execution from Copilot."
   },
@@ -2802,20 +2746,108 @@
     "description": "Specifies an experimental alternate prompt to use for GPT-5 models."
   },
   {
+    "name": "github.copilot.chat.gpt5CodexAlternatePrompt",
+    "description": "Specifies an experimental alternate prompt to use for the GPT-5-Codex model."
+  },
+  {
     "name": "github.copilot.chat.grokCodeAlternatePrompt",
     "description": "Specifies an experimental alternate prompt to use for Grok Code models."
   },
   {
-    "name": "action-tracker.ignoredActions",
-    "description": "Actions, containing any of the strings in this array, will not be displayed"
+    "name": "github.copilot.chat.claudeSonnet45AlternatePrompt",
+    "description": "Specifies an experimental alternate prompt to use for Claude Sonnet 4.5."
   },
   {
-    "name": "action-tracker.logFolderPath",
-    "description": "Path to your VSCode logs folder"
+    "name": "lldb-dap.executable-path",
+    "description": "The path to the lldb-dap binary, e.g. /usr/local/bin/lldb-dap"
   },
   {
-    "name": "action-tracker.showInitMessage",
-    "description": "Show initial warning message, asking to set extension's configurations"
+    "name": "lldb-dap.log-path",
+    "description": "The log path for lldb-dap (if any)"
+  },
+  {
+    "name": "lldb-dap.arguments",
+    "description": "The list of additional arguments used to launch the debug adapter executable."
+  },
+  {
+    "name": "lldb-dap.environment",
+    "description": "The environment of the lldb-dap process."
+  },
+  {
+    "name": "lldb-dap.captureSessionLogs",
+    "description": "When enabled, LLDB-DAP session logs will be written to the Extension's log folder if the `lldb-dap.log-path` setting is not explicitly set."
+  },
+  {
+    "name": "lldb-dap.commandEscapePrefix",
+    "description": "The escape prefix to use for executing regular LLDB commands in the Debug Console, instead of printing variables. Defaults to a back-tick (`). If it's an empty string, then all expression in the Debug Console are treated as regular LLDB commands."
+  },
+  {
+    "name": "lldb-dap.customFrameFormat",
+    "description": "If non-empty, stack frames will have descriptions generated based on the provided format. See https://lldb.llvm.org/use/formatting.html for an explanation on format strings for frames. If the format string contains errors, an error message will be displayed on the Debug Console and the default frame names will be used. This might come with a performance cost because debug information might need to be processed to generate the description."
+  },
+  {
+    "name": "lldb-dap.customThreadFormat",
+    "description": "If non-empty, threads will have descriptions generated based on the provided format. See https://lldb.llvm.org/use/formatting.html for an explanation on format strings for threads. If the format string contains errors, an error message will be displayed on the Debug Console and the default thread names will be used. This might come with a performance cost because debug information might need to be processed to generate the description."
+  },
+  {
+    "name": "lldb-dap.detachOnError",
+    "description": "Detach from the program."
+  },
+  {
+    "name": "lldb-dap.disableASLR",
+    "description": "Enable or disable Address space layout randomization if the debugger supports it."
+  },
+  {
+    "name": "lldb-dap.disableSTDIO",
+    "description": "Don't retrieve STDIN, STDOUT and STDERR as the program is running."
+  },
+  {
+    "name": "lldb-dap.displayExtendedBacktrace",
+    "description": "Enable language specific extended backtraces."
+  },
+  {
+    "name": "lldb-dap.enableAutoVariableSummaries",
+    "description": "Enable auto generated summaries for variables when no summaries exist for a given type. This feature can cause performance delays in large projects when viewing variables."
+  },
+  {
+    "name": "lldb-dap.enableSyntheticChildDebugging",
+    "description": "If a variable is displayed using a synthetic children, also display the actual contents of the variable at the end under a [raw] entry. This is useful when creating sythetic child plug-ins as it lets you see the actual contents of the variable."
+  },
+  {
+    "name": "lldb-dap.timeout",
+    "description": "The time in seconds to wait for a program to stop at entry point when launching with \"launchCommands\". Defaults to 30 seconds."
+  },
+  {
+    "name": "lldb-dap.targetTriple",
+    "description": "Triplet of the target architecture to override value derived from the program file."
+  },
+  {
+    "name": "lldb-dap.platformName",
+    "description": "Name of the execution platform to override value derived from the program file."
+  },
+  {
+    "name": "lldb-dap.initCommands",
+    "description": "Initialization commands executed upon debugger startup."
+  },
+  {
+    "name": "lldb-dap.preRunCommands",
+    "description": "Commands executed just before the program is launched."
+  },
+  {
+    "name": "lldb-dap.postRunCommands",
+    "description": "Commands executed just as soon as the program is successfully launched when it's in a stopped state prior to any automatic continuation."
+  },
+  {
+    "name": "lldb-dap.stopCommands",
+    "description": "Commands executed each time the program stops."
+  },
+  {
+    "name": "lldb-dap.exitCommands",
+    "description": "Commands executed when the program exits."
+  },
+  {
+    "name": "lldb-dap.terminateCommands",
+    "description": "Commands executed when the debugging session ends."
   },
   {
     "name": "debugpy.debugJustMyCode",
@@ -2994,180 +3026,60 @@
     "description": "Workspace search paths for Python environments. Can be absolute paths or relative directory paths searched within the workspace."
   },
   {
-    "name": "jupyter.experiments.enabled",
-    "description": "Enables/disables A/B tests."
+    "name": "remote.SSH.configFile",
+    "description": "The absolute file path to a custom SSH config file."
   },
   {
-    "name": "jupyter.showVariableViewWhenDebugging",
-    "description": "Bring up the Variable View when starting a Run by Line session."
+    "name": "remote.SSH.showLoginTerminal",
+    "description": "Always reveal the SSH login terminal."
   },
   {
-    "name": "jupyter.logging.level",
-    "description": "The logging level the extension logs at."
+    "name": "remote.SSH.defaultForwardedPorts",
+    "description": "A list of ports to forward when the connection is established."
   },
   {
-    "name": "jupyter.askForLargeDataFrames",
-    "description": "Warn the user before trying to open really large data frames."
+    "name": "remote.SSH.defaultExtensions",
+    "description": "List of extensions that should be installed automatically on all SSH hosts."
   },
   {
-    "name": "jupyter.askForKernelRestart",
-    "description": "Warn the user before restarting a kernel."
+    "name": "remote.SSH.path",
+    "description": "An absolute path to the SSH executable. When empty, it will use \"ssh\" on the path or in common install locations."
   },
   {
-    "name": "jupyter.exportWithOutputEnabled",
-    "description": "Enable exporting a Python file into a Jupyter notebook and run all cells when doing so."
+    "name": "remote.SSH.serverInstallPath",
+    "description": "A map of remote host to absolute path where the VS Code server will be installed. By default the server is installed in the home directory of every remote. **Note**: By changing this setting you may need to clean up other installations of `.vscode-server` on your remote that isn't in the path you've configured."
   },
   {
-    "name": "jupyter.jupyterLaunchTimeout",
-    "description": "Amount of time (in ms) to wait for the Jupyter Notebook server to start."
+    "name": "remote.SSH.enableDynamicForwarding",
+    "description": "Whether to use SSH dynamic forwarding to allow setting up new port tunnels over an existing SSH connection. When this is used, a password only needs to be entered once for each remote window."
   },
   {
-    "name": "jupyter.jupyterLaunchRetries",
-    "description": "Number of times to attempt to connect to the Jupyter Notebook"
+    "name": "remote.SSH.allowLocalServerDownload",
+    "description": "If downloading the VS Code server fails on the host, this allows the extension to fall back to downloading on the client and transferring it to the host with scp."
   },
   {
-    "name": "jupyter.jupyterCommandLineArguments",
-    "description": "If and when a Jupyter server is started, these arguments will be passed to the Jupyter Notebook CLI. By default, this list is generated by the Jupyter extension."
+    "name": "remote.SSH.localServerDownload",
+    "description": "Whether the extension can download the VS Code Server on the client and transfer it to the host with scp, instead of downloading it on the host."
   },
   {
-    "name": "jupyter.useDefaultConfigForJupyter",
-    "description": "When running Jupyter locally, create a default empty Jupyter config"
+    "name": "remote.SSH.connectTimeout",
+    "description": "Specifies the timeout in seconds used for the SSH command that connects to the remote."
   },
   {
-    "name": "jupyter.jupyterInterruptTimeout",
-    "description": "Amount of time (in ms) to wait for an interrupt before asking to restart the Jupyter kernel."
+    "name": "remote.SSH.logLevel",
+    "description": "The log level for the extension."
   },
   {
-    "name": "jupyter.interactiveWindow.textEditor.executeSelection",
-    "description": "When pressing shift+enter, send selected code in a Python file to the Jupyter interactive window as opposed to the Python terminal."
+    "name": "remote.SSH.suppressWindowsSshWarning",
+    "description": "Due to a bug with password handling in some versions of the SSH client bundled with Windows, the extension prefers a non-Windows SSH client, such as the one bundled with Git, and will show a warning when another one can't be found. This setting disables that warning."
   },
   {
-    "name": "jupyter.interactiveWindow.textEditor.normalizeSelection",
-    "description": "Selected text will be normalized before it is executed in the Interactive Window."
+    "name": "remote-explorer.foldersSortOrder",
+    "description": "Specifies the order in which to display folders under Remote targets in the Remote Explorer."
   },
   {
-    "name": "jupyter.interactiveWindow.splitRunFileIntoCells",
-    "description": "A file run in the Interactive Window will be run in individual cells if it has them."
-  },
-  {
-    "name": "jupyter.variableExplorerExclude",
-    "description": "Types to exclude from showing in the Interactive variable explorer"
-  },
-  {
-    "name": "jupyter.interactiveWindow.cellMarker.codeRegex",
-    "description": "Regular expression used to identify code cells. All code until the next match is considered part of this cell."
-  },
-  {
-    "name": "jupyter.interactiveWindow.cellMarker.default",
-    "description": "Cell marker used for delineating a cell in a Python file."
-  },
-  {
-    "name": "jupyter.interactiveWindow.cellMarker.markdownRegex",
-    "description": "Regular expression used to identify markdown cells. All comments after this expression are considered part of the markdown."
-  },
-  {
-    "name": "jupyter.themeMatplotlibPlots",
-    "description": "In the Interactive window and Notebook Editor theme matplotlib outputs to match the VS Code editor theme."
-  },
-  {
-    "name": "jupyter.interactiveWindow.cellMarker.decorateCells",
-    "description": "Draw a highlight behind the currently active cell, or all cells, in a Python file."
-  },
-  {
-    "name": "jupyter.interactiveWindow.codeLens.enable",
-    "description": "Enables code lens for 'cells' in a Python file."
-  },
-  {
-    "name": "jupyter.interactiveWindow.textEditor.autoMoveToNextCell",
-    "description": "Enables moving to the next cell when clicking on a 'Run Cell' code lens."
-  },
-  {
-    "name": "jupyter.allowUnauthorizedRemoteConnection",
-    "description": "Allow for connecting the Interactive window to a https Jupyter server that does not have valid certificates. This can be a security risk, so only use it for known and trusted servers."
-  },
-  {
-    "name": "jupyter.interactiveWindow.codeLens.commands",
-    "description": "Set of commands to put as code lens above a cell."
-  },
-  {
-    "name": "jupyter.interactiveWindow.codeLens.debugCommands",
-    "description": "Set of debug commands to put as code lens above a cell while debugging."
-  },
-  {
-    "name": "jupyter.debugpyDistPath",
-    "description": "Path to debugpy bits for debugging cells."
-  },
-  {
-    "name": "jupyter.stopOnFirstLineWhileDebugging",
-    "description": "When debugging a cell, stop on the first line."
-  },
-  {
-    "name": "jupyter.disableJupyterAutoStart",
-    "description": "When true, disables Jupyter from being automatically started for you. You must instead run a cell to start Jupyter."
-  },
-  {
-    "name": "jupyter.interactiveWindow.codeLens.enableGotoCell",
-    "description": "After running a cell, add a 'Goto' code lens on the cell. Note, disabling all code lenses disables this code lens as well."
-  },
-  {
-    "name": "jupyter.interactiveWindow.creationMode",
-    "description": "Behavior of the Interactive Window. 'perFile' will create a new interactive window for every file that runs a cell. 'single' allows a single window. 'multiple' allows the creation of multiple."
-  },
-  {
-    "name": "jupyter.interactiveWindow.notebookRepl",
-    "description": "Experimental. The interactive window will use a notebook as the editor model."
-  },
-  {
-    "name": "jupyter.interactiveWindow.textEditor.cellFolding",
-    "description": "Enable folding regions for code cells in Python files. This setting requires a reload of VS Code."
-  },
-  {
-    "name": "jupyter.interactiveWindow.viewColumn",
-    "description": "Where to open an Interactive Window that is not associated with a Python file. 'beside' will open the interactive window to the right of the active editor. 'active' will open the interactive window in place of the active editor. 'secondGroup' will open the interactive window in the second editor group."
-  },
-  {
-    "name": "jupyter.interactiveWindow.textEditor.magicCommandsAsComments",
-    "description": "Uncomment shell assignments (#!), line magic (#!%) and cell magic (#!%%) when parsing code cells."
-  },
-  {
-    "name": "jupyter.pythonExportMethod",
-    "description": "The method to use when exporting a notebook to a Python file. 'direct' will copy over the code directly as is. 'commentMagics' will comment out lines starting with line magics (%), cell magics (%%), and shell commands(!). 'nbconvert' will install nbconvert and use that for the conversion which can translate iPython syntax into Python syntax."
-  },
-  {
-    "name": "jupyter.runStartupCommands",
-    "description": "A series of Python instructions or iPython magic commands. Can be either an array of strings or a single string with commands separated by '\\n'. Commands will be silently executed whenever a Jupyter kernel is started or restarted. For instance, set this to '%load_ext autoreload\n%autoreload 2' to automatically reload changes made to imported files without having to restart the Jupyter kernel."
-  },
-  {
-    "name": "jupyter.debugJustMyCode",
-    "description": "When debugging, only step through user-written code. Disable this to allow stepping into library code."
-  },
-  {
-    "name": "jupyter.showOutlineButtonInNotebookToolbar",
-    "description": "Show the Outline button in the Jupyter notebook toolbar."
-  },
-  {
-    "name": "jupyter.interactiveWindow.textEditor.autoAddNewCell",
-    "description": "Append a new empty cell to an interactive window file on running the currently last cell."
-  },
-  {
-    "name": "jupyter.pythonCompletionTriggerCharacters",
-    "description": "Characters which trigger auto completion on a Python Jupyter kernel."
-  },
-  {
-    "name": "jupyter.logKernelOutputSeparately",
-    "description": "Creates separate output panels for kernels/Jupyter server console output"
-  },
-  {
-    "name": "jupyter.excludeUserSitePackages",
-    "description": "Add PYTHONNOUSERSITE to kernels before starting. This prevents global/user site-packages from being used in the PYTHONPATH of the kernel."
-  },
-  {
-    "name": "jupyter.executionAnalysis.enabled",
-    "description": "Experimental feature to enable execution analysis in notebooks"
-  },
-  {
-    "name": "jupyter.formatStackTraces",
-    "description": "Inject stack frame links into the stored traceback for the notebook."
+    "name": "remote-explorer.collapseRecentFolders",
+    "description": "Collapse the recent folders under Remote targets in the Remote Explorer."
   },
   {
     "name": "liveServer.settings.port",
@@ -3250,6 +3162,10 @@
     "description": "This the entry point of server when you're in multiroot workspace"
   },
   {
+    "name": "swift.excludeFromCodeCoverage",
+    "description": "A list of paths to exclude from code coverage reports. Paths can be absolute or relative to the workspace root."
+  },
+  {
     "name": "workbench.editor.autoLockGroups",
     "description": "If an editor matching one of the listed types is opened as the first in an editor group and more than one group is open, the group is automatically locked. Locked groups will only be used for opening editors when explicitly chosen by a user gesture (for example drag and drop), but not by default. Consequently, the active editor in a locked group is less likely to be replaced accidentally with a different editor."
   },
@@ -3264,6 +3180,10 @@
   {
     "name": "settingsSync.ignoredSettings",
     "description": "Configure settings to be ignored while synchronizing."
+  },
+  {
+    "name": "accessibility.voice.keywordActivation",
+    "description": "Controls whether the keyword phrase 'Hey Code' is recognized to start a voice chat session. Enabling this will start recording from the microphone but the audio is processed locally and never sent to a server."
   },
   {
     "name": "terminal.explorerKind",
