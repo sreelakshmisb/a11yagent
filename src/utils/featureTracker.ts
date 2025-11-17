@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { getGitHubBearer } from '../auth.js';
 
 // Add a flag to indicate updates
 const TRACKED_ISSUES_KEY = 'trackedIssues';
@@ -12,15 +13,28 @@ export async function logFeature(context: vscode.ExtensionContext) {
   });
 
   if (issueDescription) {
-    // Search GitHub for issues matching the description
-    const issues = await searchGitHubIssues(issueDescription);
+    // Refine the issue description before searching GitHub issues
+    const refinedDescription = await refineDescription(issueDescription);
+
+    // Search GitHub for issues matching the refined description
+    const issues = await searchGitHubIssues(refinedDescription);
 
     if (issues.length > 0) {
       // Display the top 3 issues in a quick pick menu
       const quickPick = vscode.window.createQuickPick();
-      quickPick.items = createQuickPickItems(issues.slice(0, 3));
-      quickPick.canSelectMany = true;
       quickPick.placeholder = 'Select issues to track:';
+      quickPick.canSelectMany = false;
+      quickPick.items = createQuickPickItems(issues.slice(0, 3));
+
+      // Add a last row entry to create an issue in the VS Code GitHub repository
+      quickPick.items = [
+        ...quickPick.items,
+        {
+          label: '$(add) Create Issue in VS Code Repo',
+          detail: 'Create a new issue in the VS Code repository',
+          alwaysShow: true, // Ensure the button is always visible
+        },
+      ];
 
       // Open the issue URL when the external link button is clicked
       quickPick.onDidTriggerItemButton(async (e) => {
@@ -30,29 +44,40 @@ export async function logFeature(context: vscode.ExtensionContext) {
         }
       });
 
-      // Handle the selection of issues to track
       quickPick.onDidAccept(async () => {
-        const selectedItems = quickPick.selectedItems;
+        const selectedItem = quickPick.selectedItems[0];
         const trackedIssues = context.globalState.get<any[]>(TRACKED_ISSUES_KEY, []);
 
-        selectedItems.forEach(async selectedItem => {
+        if (selectedItem.detail === 'Create a new issue in the VS Code repository') {
+          // Open the GitHub issue creation page for VS Code
+          await createGitHubIssue(issueDescription);
+        } else {
+          // Handle tracking selected issues
           const issue = issues.find(issue => issue.html_url === selectedItem.detail);
           if (issue) {
             trackedIssues.push(issue);
           }
-        });
+        }
 
-        // Save the selected issues to global state
+        // Save the selected issue to global state
         await context.globalState.update(TRACKED_ISSUES_KEY, trackedIssues);
-        vscode.window.showInformationMessage('Selected issue(s) have been logged and will be tracked.');
+        vscode.window.showInformationMessage('Selected issue has been logged and will be tracked.');
         quickPick.hide();
+
       });
 
       quickPick.ignoreFocusOut = true;
       quickPick.show();
+
     } else {
       // Inform the user if no relevant issues were found
-      vscode.window.showInformationMessage('No relevant GitHub issues found for your description.');
+      const action = await vscode.window.showInformationMessage(
+        'No relevant GitHub issues found for your description.',
+        'Create Issue in VS Code Repo'
+      );
+      if (action === 'Create Issue in VS Code Repo') {
+        await createGitHubIssue(issueDescription);
+      }
     }
   }
 }
@@ -63,9 +88,7 @@ async function searchGitHubIssues(description: string): Promise<any[]> {
     'microsoft/vscode',
     'microsoft/vscode-copilot-release'
   ];
-
   const allIssues: any[] = [];
-
   for (const repo of repositories) {
     try {
       // Query the GitHub API for open issues in the specified repositories
@@ -88,8 +111,15 @@ async function searchGitHubIssues(description: string): Promise<any[]> {
       vscode.window.showErrorMessage(`Failed to fetch issues from ${repo}.`);
     }
   }
-
   return allIssues;
+}
+
+// Function to create a GitHub issue in vs code repo
+async function createGitHubIssue(description: string) {
+  const body = encodeURIComponent(description);
+  const url = `https://github.com/microsoft/vscode/issues/new?body=${body}`;
+  await vscode.env.openExternal(vscode.Uri.parse(url));
+ 
 }
 
 // Checks for updates to tracked issues and notifies the user about the same
@@ -139,7 +169,7 @@ export async function checkForUpdates(context: vscode.ExtensionContext) {
 }
 
 // Removes selected issues from the list of tracked issues
-// For an issue with updates, update the state when the user clicks the refresh icon
+// For an issue with updates, updates the state when the user clicks the refresh icon
 export async function removeTrackedFeature(context: vscode.ExtensionContext) {
   const trackedIssues = context.globalState.get<any[]>(TRACKED_ISSUES_KEY, []);
 
@@ -152,6 +182,7 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
   // Display a quick pick menu to select issues to remove
   const quickPick = vscode.window.createQuickPick();
   quickPick.items = createQuickPickItems(trackedIssues);
+  quickPick.canSelectMany = true;
 
   // Handle the refresh button click
   quickPick.onDidTriggerItemButton(async (e) => {
@@ -188,18 +219,12 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
     }
   });
 
-  quickPick.canSelectMany = true;
-  quickPick.placeholder = 'Remove issues from tracking by selecting them and clicking on OK';
-
-  // Handle the selection of issues to remove
   quickPick.onDidAccept(async () => {
     const selectedItems = quickPick.selectedItems;
-    const updatedIssues = trackedIssues.filter(
-      issue => !selectedItems.some(selectedItem => issue.html_url === selectedItem.detail)
-    );
+    const updatedTrackedIssues = trackedIssues.filter(issue => !selectedItems.find(selected => selected.detail === issue.html_url));
 
-    // Update the global state with the remaining issues
-    await context.globalState.update(TRACKED_ISSUES_KEY, updatedIssues);
+    // Save the updated tracked issues list to global state
+    await context.globalState.update(TRACKED_ISSUES_KEY, updatedTrackedIssues);
     vscode.window.showInformationMessage('Selected issue(s) have been removed from tracking.');
     quickPick.hide();
   });
@@ -225,4 +250,34 @@ function createQuickPickItems(issues: any[]): vscode.QuickPickItem[] {
       }] : [])
     ],
   }));
+}
+
+// Utility function to refine the user's issue description before running a GitHub search
+async function refineDescription(prompt: string): Promise<string> {
+  const instruction = `
+  From the following detailed issue description, generate a concise, search-optimized GitHub query.
+  Focus on the core technical elements: features, key error messages, function/class/module names, APIs, file paths,libraries/frameworks, versions, and the main symptom or behavior.
+  Output only the final query string, suitable for use in a GitHub issue search.
+  Do not add decorative wording; reuse the user's own terms where possible and avoid complicated language not already present in the description.
+  `;
+    const messages = [
+        vscode.LanguageModelChatMessage.User(instruction),
+        vscode.LanguageModelChatMessage.User(prompt)
+    ];
+
+    try {
+        const [model] = await vscode.lm.selectChatModels({ vendor: 'copilot', family: 'gpt-4o' });
+        const cts = new vscode.CancellationTokenSource();
+        const chatResponse = await model.sendRequest(messages, {}, cts.token);
+        let refinedDescription = '';
+
+        for await (const fragment of chatResponse.text) {
+            refinedDescription += fragment;
+        }
+
+        return refinedDescription.trim(); // Return the refined description
+    } catch (error) {
+        vscode.window.showErrorMessage('Error refining the issue description. Using the original description.');
+        return prompt; // Fallback to the original prompt if refinement fails
+    }
 }

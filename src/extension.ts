@@ -5,8 +5,9 @@ import { ReleaseNotesSource } from './sources/ReleaseNotesSource.js';
 import { AudioCuesSource } from './sources/AudioCuesSource.js';
 import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
 import { classifyQueryType } from './utils/queryTypeDecider.js';
-import { logFeature, checkForUpdates, removeTrackedFeature } from './utils/featureTracker.js';
-
+import { logFeature, removeTrackedFeature, checkForUpdates} from './utils/featureTracker.js';
+//import { logFeature, removeTrackedFeature } from './utils/mcpFeatureTracker.js';
+ 
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
 export function activate(context: vscode.ExtensionContext) {
 
@@ -47,7 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
   ): Promise<any> => {
     let contextData = '';
 
-        // If the command is 'init', initialize all sources
+    // If the command is 'init', initialize all sources
     if (request.command === 'init') {
       try {
         await Promise.all(sources.map(source => source.fetchContext()));
