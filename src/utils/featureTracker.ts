@@ -158,7 +158,7 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
     if (e.button.tooltip === "Refresh State") {
       const issueUrl = e.item.detail;
 
-      if (e.item.description === "microsoft/vscode" || e.item.description === "microsoft/vscode-copilot-release") {
+      if (e.item.description === "sreelakshmisb/portfolio") {
         // Handle refresh for issues
         const issueIndex = trackedIssues.findIndex(
           (issue) => issue.html_url === issueUrl,
@@ -286,9 +286,9 @@ async function searchGitHubIssues(description: string): Promise<any[]> {
   // Refine the issue description before searching GitHub issues
   const refinedDescription = await refineDescription(description);
   const repositories = [
-    'microsoft/vscode',
-    'microsoft/vscode-copilot-release'
-    //"sreelakshmisb/portfolio",
+    //'microsoft/vscode',
+    //'microsoft/vscode-copilot-release'
+    "sreelakshmisb/portfolio",
   ];
   const allIssues: any[] = [];
   for (const repo of repositories) {
