@@ -271,7 +271,7 @@ function closeReportIssue() {
               
             
                     
-                      Chat Overview
+                      Overview
                     
                       
                     
@@ -314,7 +314,7 @@ function closeReportIssue() {
             
                     
                     
-                      Code Completions
+                      Inline Suggestions
                     
                       
                     
@@ -338,7 +338,7 @@ function closeReportIssue() {
                     
                       
                     
-                      Custom Modes
+                      Custom Agents
                     
                       
                     
@@ -1023,6 +1023,10 @@ function closeReportIssue() {
                       Jupyter Notebooks on the Web
                     
                       
+                    
+                      Data science in Microsoft Fabric
+                    
+                      
               
             
                 
@@ -1059,7 +1063,11 @@ function closeReportIssue() {
                     
                       
                     
-                      Fine-tune
+                      Fine-tuning (Automated Setup)
+                    
+                      
+                    
+                      Fine-tuning (Project Template)
                     
                       
                     
@@ -1404,7 +1412,7 @@ function closeReportIssue() {
                     
                     
             
-                      Chat Overview
+                      Overview
                       
                       Chat Sessions
                       
@@ -1426,7 +1434,7 @@ function closeReportIssue() {
                       
                     
             
-                    Code Completions
+                    Inline Suggestions
                     
                     Copilot Coding Agent
                     
@@ -1438,7 +1446,7 @@ function closeReportIssue() {
                       
                       Prompt Files
                       
-                      Custom Modes
+                      Custom Agents
                       
                       Language Models
                       
@@ -1788,6 +1796,8 @@ function closeReportIssue() {
                     
                     Jupyter Notebooks on the Web
                     
+                    Data science in Microsoft Fabric
+                    
               
               
               
@@ -1806,7 +1816,9 @@ function closeReportIssue() {
                     
                     Evaluation
                     
-                    Fine-tune
+                    Fine-tuning (Automated Setup)
+                    
+                    Fine-tuning (Project Template)
                     
                     Model Conversion
                     
@@ -2103,7 +2115,7 @@ Code Navigation - Move quickly through your source code.
 
             
             
-            10/09/2025
+            11/12/2025
             
         
 

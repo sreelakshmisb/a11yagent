@@ -47,6 +47,11 @@ export class AudioCuesSource implements IAccessibilitySource {
                 result += `- ${signal}\n`;
             }
             // Store the results in the cache file
+            // Ensure the cache folder exists
+            const cacheDir = path.dirname(this.cacheFilePath);
+            if (!fs.existsSync(cacheDir)) {
+              fs.mkdirSync(cacheDir, { recursive: true });
+            }
             fs.writeFileSync(this.cacheFilePath, result, 'utf8');
             //console.log('Signals cached successfully.');
             return result;

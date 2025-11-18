@@ -21,6 +21,12 @@ export class AccessibilityHelpSource implements IAccessibilitySource {
       }
       const html = await response.text();
 
+      // Ensure the cache folder exists
+      const cacheDir = path.dirname(this.cacheFilePath);
+      if (!fs.existsSync(cacheDir)) {
+        fs.mkdirSync(cacheDir, { recursive: true });
+      }
+
       // Use JSDOM to extract the main readable content from the HTML
       try {
         const { JSDOM } = await import('jsdom');

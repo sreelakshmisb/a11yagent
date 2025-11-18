@@ -310,6 +310,10 @@
     "description": "Controls where the command palette should ask chat questions."
   },
   {
+    "name": "workbench.commandPalette.showAskInChat",
+    "description": "Controls whether the command palette shows 'Ask in Chat' option at the bottom."
+  },
+  {
     "name": "workbench.commandPalette.experimental.enableNaturalLanguageSearch",
     "description": "Controls whether the command palette should include similar commands. You must have an extension installed that provides Natural Language support."
   },
@@ -348,6 +352,10 @@
   {
     "name": "workbench.secondarySideBar.defaultVisibility",
     "description": "Controls the default visibility of the secondary side bar in workspaces or empty windows that are opened for the first time."
+  },
+  {
+    "name": "workbench.secondarySideBar.enableDefaultVisibilityInOldWorkspace",
+    "description": "Enables the default secondary sidebar visibility in older workspaces before we had default visibility support."
   },
   {
     "name": "workbench.statusBar.visible",
@@ -658,16 +666,8 @@
     "description": "Controls whether a chat session should present the user with an OS notification when a confirmation is needed while the window is not in focus. This includes a window badge as well as notification toast."
   },
   {
-    "name": "chat.tools.global.autoApprove",
-    "description": "Global auto approve also known as \"YOLO mode\" disables manual approval completely for all tools in all workspaces, allowing the agent to act fully autonomously. This is extremely dangerous and is *never* recommended, even containerized environments like Codespaces and Dev Containers have user keys forwarded into the container that could be compromised.\n\nThis feature disables critical security protections and makes it much easier for an attacker to compromise the machine."
-  },
-  {
     "name": "chat.sendElementsToChat.enabled",
     "description": "Controls whether elements can be sent to chat from the Simple Browser."
-  },
-  {
-    "name": "chat.emptyChatState.enabled",
-    "description": "Shows a modified empty chat state with hints in the input placeholder text."
   },
   {
     "name": "chat.emptyState.history.enabled",
@@ -726,12 +726,8 @@
     "description": "Enables the default Marketplace for Model Context Protocol (MCP) servers."
   },
   {
-    "name": "chat.setup.signInDialogVariant",
-    "description": "Control variations of the sign-in dialog."
-  },
-  {
-    "name": "chat.agent.todoList",
-    "description": "Configures the todo list widget in chat."
+    "name": "chat.tools.todos.showWidget",
+    "description": "Controls whether to show the todo list widget above the chat input. When enabled, the widget displays todo items created by the agent and updates as progress is made."
   },
   {
     "name": "chat.todoListTool.writeOnly",
@@ -747,7 +743,7 @@
   },
   {
     "name": "chat.disableAIFeatures",
-    "description": "Disable and hide built-in AI features provided by GitHub Copilot, including chat, code completions and next edit suggestions."
+    "description": "Disable and hide built-in AI features provided by GitHub Copilot, including chat and inline suggestions."
   },
   {
     "name": "chat.useCloudButtonV2",
@@ -760,6 +756,18 @@
   {
     "name": "chat.allowAnonymousAccess",
     "description": "Controls whether anonymous access is allowed in chat."
+  },
+  {
+    "name": "chat.signInWithAlternateScopes",
+    "description": "Controls whether sign-in with alternate scopes is used."
+  },
+  {
+    "name": "chat.extensionUnification.enabled",
+    "description": "Enables the unification of GitHub Copilot extensions. When enabled, all GitHub Copilot functionality is served from the GitHub Copilot Chat extension. When disabled, the GitHub Copilot and GitHub Copilot Chat extensions operate independently."
+  },
+  {
+    "name": "chat.customAgentInSubagent.enabled",
+    "description": "Whether the runSubagent tool is able to use custom agents. When enabled, the tool can take the name of a custom agent, but it must be given the exact name of the agent."
   },
   {
     "name": "extensions.autoUpdate",
@@ -800,6 +808,10 @@
   {
     "name": "extensions.supportNodeGlobalNavigator",
     "description": "When enabled, Node.js navigator object is exposed on the global scope."
+  },
+  {
+    "name": "extensions.requestTimeout",
+    "description": "Controls the timeout in milliseconds for HTTP requests made when fetching extensions from the Marketplace"
   },
   {
     "name": "testing.automaticallyOpenPeekView",
@@ -1142,6 +1154,10 @@
     "description": "Controls how many repositories are visible in the Source Control Repositories section. Set to 0, to be able to manually resize the view."
   },
   {
+    "name": "scm.repositories.selectionMode",
+    "description": "Controls the selection mode of the repositories in the Source Control Repositories view."
+  },
+  {
     "name": "scm.workingSets.enabled",
     "description": "Controls whether to store editor working sets when switching between source control history item groups."
   },
@@ -1164,6 +1180,14 @@
   {
     "name": "scm.graph.badges",
     "description": "Controls which badges are shown in the Source Control Graph view. The badges are shown on the right side of the graph indicating the names of history item groups."
+  },
+  {
+    "name": "scm.graph.showIncomingChanges",
+    "description": "Controls whether to show incoming changes in the Source Control Graph view."
+  },
+  {
+    "name": "scm.graph.showOutgoingChanges",
+    "description": "Controls whether to show outgoing changes in the Source Control Graph view."
   },
   {
     "name": "debug.showVariableTypes",
@@ -1518,6 +1542,22 @@
     "description": "Whether to hide the terminal view when the last terminal is closed. This will only happen when the terminal is the only visible view in the view container."
   },
   {
+    "name": "terminal.integrated.developer.ptyHost.latency",
+    "description": "Simulated latency in milliseconds applied to all calls made to the pty host. This is useful for testing terminal behavior under high latency conditions."
+  },
+  {
+    "name": "terminal.integrated.developer.ptyHost.startupDelay",
+    "description": "Simulated startup delay in milliseconds for the pty host process. This is useful for testing terminal initialization under slow startup conditions."
+  },
+  {
+    "name": "terminal.integrated.developer.devMode",
+    "description": "Enable developer mode for the terminal. This shows additional debug information and visualizations for shell integration sequences."
+  },
+  {
+    "name": "chat.tools.terminal.enableAutoApprove",
+    "description": "Controls whether to allow auto approval in the run in terminal tool."
+  },
+  {
     "name": "terminal.integrated.localEchoLatencyThreshold",
     "description": "Length of network delay, in milliseconds, where local edits will be echoed on the terminal without waiting for server acknowledgement. If '0', local echo will always be on, and if '-1' it will be disabled."
   },
@@ -1528,10 +1568,6 @@
   {
     "name": "terminal.integrated.localEchoStyle",
     "description": "Terminal style of locally echoed text; either a font style or an RGB color."
-  },
-  {
-    "name": "chat.tools.terminal.enableAutoApprove",
-    "description": "Controls whether to allow auto approval in the run in terminal tool."
   },
   {
     "name": "task.quickOpen.skip",
@@ -1926,6 +1962,10 @@
     "description": "Configure editor settings to be overridden for a language."
   },
   {
+    "name": "[markdown]",
+    "description": "Configure editor settings to be overridden for a language."
+  },
+  {
     "name": "[python]",
     "description": "Configure editor settings to be overridden for a language."
   },
@@ -1938,12 +1978,80 @@
     "description": "Configure editor settings to be overridden for a language."
   },
   {
+    "name": "css.completion.triggerPropertyValueCompletion",
+    "description": "By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior."
+  },
+  {
+    "name": "css.completion.completePropertyWithSemicolon",
+    "description": "Insert semicolon at end of line when completing CSS properties."
+  },
+  {
+    "name": "css.validate",
+    "description": "Enables or disables all validations."
+  },
+  {
     "name": "css.hover.documentation",
     "description": "Show property and value documentation in CSS hovers."
   },
   {
     "name": "css.hover.references",
     "description": "Show references to MDN in CSS hovers."
+  },
+  {
+    "name": "css.lint.compatibleVendorPrefixes",
+    "description": "When using a vendor-specific prefix make sure to also include all other vendor-specific properties."
+  },
+  {
+    "name": "css.lint.vendorPrefix",
+    "description": "When using a vendor-specific prefix, also include the standard property."
+  },
+  {
+    "name": "css.lint.duplicateProperties",
+    "description": "Do not use duplicate style definitions."
+  },
+  {
+    "name": "css.lint.emptyRules",
+    "description": "Do not use empty rulesets."
+  },
+  {
+    "name": "css.lint.importStatement",
+    "description": "Import statements do not load in parallel."
+  },
+  {
+    "name": "css.lint.zeroUnits",
+    "description": "No unit for zero needed."
+  },
+  {
+    "name": "css.lint.hexColorLength",
+    "description": "Hex colors must consist of 3, 4, 6 or 8 hex numbers."
+  },
+  {
+    "name": "css.lint.argumentsInColorFunction",
+    "description": "Invalid number of parameters."
+  },
+  {
+    "name": "css.lint.unknownProperties",
+    "description": "Unknown property."
+  },
+  {
+    "name": "css.lint.validProperties",
+    "description": "A list of properties that are not validated against the `unknownProperties` rule."
+  },
+  {
+    "name": "css.lint.ieHack",
+    "description": "IE hacks are only necessary when supporting IE7 and older."
+  },
+  {
+    "name": "css.lint.unknownVendorSpecificProperties",
+    "description": "Unknown vendor specific property."
+  },
+  {
+    "name": "css.lint.idSelector",
+    "description": "Selectors should not contain IDs because these rules are too tightly coupled with the HTML."
+  },
+  {
+    "name": "css.lint.unknownAtRules",
+    "description": "Unknown at-rule."
   },
   {
     "name": "css.trace.server",
@@ -1954,6 +2062,18 @@
     "description": "Enable/disable default CSS formatter."
   },
   {
+    "name": "scss.completion.triggerPropertyValueCompletion",
+    "description": "By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior."
+  },
+  {
+    "name": "scss.completion.completePropertyWithSemicolon",
+    "description": "Insert semicolon at end of line when completing CSS properties."
+  },
+  {
+    "name": "scss.validate",
+    "description": "Enables or disables all validations."
+  },
+  {
     "name": "scss.hover.documentation",
     "description": "Show property and value documentation in SCSS hovers."
   },
@@ -1962,8 +2082,76 @@
     "description": "Show references to MDN in SCSS hovers."
   },
   {
+    "name": "scss.lint.compatibleVendorPrefixes",
+    "description": "When using a vendor-specific prefix make sure to also include all other vendor-specific properties."
+  },
+  {
+    "name": "scss.lint.vendorPrefix",
+    "description": "When using a vendor-specific prefix, also include the standard property."
+  },
+  {
+    "name": "scss.lint.duplicateProperties",
+    "description": "Do not use duplicate style definitions."
+  },
+  {
+    "name": "scss.lint.emptyRules",
+    "description": "Do not use empty rulesets."
+  },
+  {
+    "name": "scss.lint.importStatement",
+    "description": "Import statements do not load in parallel."
+  },
+  {
+    "name": "scss.lint.zeroUnits",
+    "description": "No unit for zero needed."
+  },
+  {
+    "name": "scss.lint.hexColorLength",
+    "description": "Hex colors must consist of 3, 4, 6 or 8 hex numbers."
+  },
+  {
+    "name": "scss.lint.argumentsInColorFunction",
+    "description": "Invalid number of parameters."
+  },
+  {
+    "name": "scss.lint.unknownProperties",
+    "description": "Unknown property."
+  },
+  {
+    "name": "scss.lint.validProperties",
+    "description": "A list of properties that are not validated against the `unknownProperties` rule."
+  },
+  {
+    "name": "scss.lint.ieHack",
+    "description": "IE hacks are only necessary when supporting IE7 and older."
+  },
+  {
+    "name": "scss.lint.unknownVendorSpecificProperties",
+    "description": "Unknown vendor specific property."
+  },
+  {
+    "name": "scss.lint.idSelector",
+    "description": "Selectors should not contain IDs because these rules are too tightly coupled with the HTML."
+  },
+  {
+    "name": "scss.lint.unknownAtRules",
+    "description": "Unknown at-rule."
+  },
+  {
     "name": "scss.format.enable",
     "description": "Enable/disable default SCSS formatter."
+  },
+  {
+    "name": "less.completion.triggerPropertyValueCompletion",
+    "description": "By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior."
+  },
+  {
+    "name": "less.completion.completePropertyWithSemicolon",
+    "description": "Insert semicolon at end of line when completing CSS properties."
+  },
+  {
+    "name": "less.validate",
+    "description": "Enables or disables all validations."
   },
   {
     "name": "less.hover.documentation",
@@ -1972,6 +2160,62 @@
   {
     "name": "less.hover.references",
     "description": "Show references to MDN in LESS hovers."
+  },
+  {
+    "name": "less.lint.compatibleVendorPrefixes",
+    "description": "When using a vendor-specific prefix make sure to also include all other vendor-specific properties."
+  },
+  {
+    "name": "less.lint.vendorPrefix",
+    "description": "When using a vendor-specific prefix, also include the standard property."
+  },
+  {
+    "name": "less.lint.duplicateProperties",
+    "description": "Do not use duplicate style definitions."
+  },
+  {
+    "name": "less.lint.emptyRules",
+    "description": "Do not use empty rulesets."
+  },
+  {
+    "name": "less.lint.importStatement",
+    "description": "Import statements do not load in parallel."
+  },
+  {
+    "name": "less.lint.zeroUnits",
+    "description": "No unit for zero needed."
+  },
+  {
+    "name": "less.lint.hexColorLength",
+    "description": "Hex colors must consist of 3, 4, 6 or 8 hex numbers."
+  },
+  {
+    "name": "less.lint.argumentsInColorFunction",
+    "description": "Invalid number of parameters."
+  },
+  {
+    "name": "less.lint.unknownProperties",
+    "description": "Unknown property."
+  },
+  {
+    "name": "less.lint.validProperties",
+    "description": "A list of properties that are not validated against the `unknownProperties` rule."
+  },
+  {
+    "name": "less.lint.ieHack",
+    "description": "IE hacks are only necessary when supporting IE7 and older."
+  },
+  {
+    "name": "less.lint.unknownVendorSpecificProperties",
+    "description": "Unknown vendor specific property."
+  },
+  {
+    "name": "less.lint.idSelector",
+    "description": "Selectors should not contain IDs because these rules are too tightly coupled with the HTML."
+  },
+  {
+    "name": "less.lint.unknownAtRules",
+    "description": "Unknown at-rule."
   },
   {
     "name": "less.format.enable",
@@ -2310,6 +2554,10 @@
     "description": "Controls whether the built-in HTML language support suggests HTML5 tags, properties and values."
   },
   {
+    "name": "html.suggest.hideEndTagSuggestions",
+    "description": "Controls whether the built-in HTML language support suggests closing tags. When disabled, end tag completions like `</div>` will not be shown."
+  },
+  {
     "name": "html.validate.scripts",
     "description": "Controls whether the built-in HTML language support validates embedded scripts."
   },
@@ -2582,6 +2830,10 @@
     "description": "Enable/disable implementations CodeLens on interface methods."
   },
   {
+    "name": "typescript.implementationsCodeLens.showOnAllClassMethods",
+    "description": "Enable/disable showing implementations CodeLens above all class methods instead of only on abstract methods."
+  },
+  {
     "name": "typescript.reportStyleChecksAsWarnings",
     "description": "Report style checks as warnings."
   },
@@ -2818,22 +3070,6 @@
     "description": "Enables an experimental alternate prompt for GPT models instead of the default prompt."
   },
   {
-    "name": "github.copilot.chat.gpt5AlternatePrompt",
-    "description": "Specifies an experimental alternate prompt to use for GPT-5 models."
-  },
-  {
-    "name": "github.copilot.chat.gpt5CodexAlternatePrompt",
-    "description": "Specifies an experimental alternate prompt to use for the GPT-5-Codex model."
-  },
-  {
-    "name": "github.copilot.chat.grokCodeAlternatePrompt",
-    "description": "Specifies an experimental alternate prompt to use for Grok Code models."
-  },
-  {
-    "name": "github.copilot.chat.claudeSonnet45AlternatePrompt",
-    "description": "Specifies an experimental alternate prompt to use for Claude Sonnet 4.5."
-  },
-  {
     "name": "action-tracker.ignoredActions",
     "description": "Actions, containing any of the strings in this array, will not be displayed"
   },
@@ -3020,6 +3256,10 @@
   {
     "name": "python-env.workspaceSearchPaths",
     "description": "Workspace search paths for Python environments. Can be absolute paths or relative directory paths searched within the workspace."
+  },
+  {
+    "name": "python-envs.alwaysUseUv",
+    "description": "When set to true, uv will be used to manage all virtual environments if available. When set to false, uv will only manage virtual environments explicitly created by uv."
   },
   {
     "name": "jupyter.experiments.enabled",
@@ -3278,14 +3518,6 @@
     "description": "This the entry point of server when you're in multiroot workspace"
   },
   {
-    "name": "workbench.editor.autoLockGroups",
-    "description": "If an editor matching one of the listed types is opened as the first in an editor group and more than one group is open, the group is automatically locked. Locked groups will only be used for opening editors when explicitly chosen by a user gesture (for example drag and drop), but not by default. Consequently, the active editor in a locked group is less likely to be replaced accidentally with a different editor."
-  },
-  {
-    "name": "workbench.editor.defaultBinaryEditor",
-    "description": "The default editor for files detected as binary. If undefined, the user will be presented with a picker."
-  },
-  {
     "name": "settingsSync.keybindingsPerPlatform",
     "description": "Synchronize keybindings for each platform."
   },
@@ -3312,6 +3544,14 @@
   {
     "name": "terminal.external.linuxExec",
     "description": "Customizes which terminal to run on Linux."
+  },
+  {
+    "name": "workbench.editor.autoLockGroups",
+    "description": "If an editor matching one of the listed types is opened as the first in an editor group and more than one group is open, the group is automatically locked. Locked groups will only be used for opening editors when explicitly chosen by a user gesture (for example drag and drop), but not by default. Consequently, the active editor in a locked group is less likely to be replaced accidentally with a different editor."
+  },
+  {
+    "name": "workbench.editor.defaultBinaryEditor",
+    "description": "The default editor for files detected as binary. If undefined, the user will be presented with a picker."
   },
   {
     "name": "window.newWindowProfile",

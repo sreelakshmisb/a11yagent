@@ -50,8 +50,14 @@ function findMostRecentLogFolder(vscodeLogsFolderPath: string): string {
 }
 
 export function startTelemetryTracking(context: vscode.ExtensionContext) {
+  // Ensure the cache folder exists
+  const cacheFolderPath = path.join(context.extensionPath, 'cache');
+  if (!fs.existsSync(cacheFolderPath)) {
+    fs.mkdirSync(cacheFolderPath, { recursive: true });
+  }
+
   // File path for logging signals
-  const logFilePath = path.join(context.extensionPath, 'cache', 'tracked_signals.log');
+  const logFilePath = path.join(cacheFolderPath, 'tracked_signals.log');
 
   // Clear the file if it already exists
   if (fs.existsSync(logFilePath)) {

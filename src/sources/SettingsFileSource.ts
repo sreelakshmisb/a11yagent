@@ -19,6 +19,12 @@ export class SettingsFileSource implements IAccessibilitySource {
       const doc = await vscode.workspace.openTextDocument(uri);
       const text = doc.getText();
 
+      // Ensure the cache folder exists
+      const cacheDir = path.dirname(this.cacheFilePath);
+      if (!fs.existsSync(cacheDir)) {
+        fs.mkdirSync(cacheDir, { recursive: true });
+      }
+
       try {
         const settingsObject = JSON.parse(text);
         const settingsList: { name: string, description: string }[] = [];

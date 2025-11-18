@@ -1,47 +1,59 @@
 # Release Notes
 
 ---
-Order: 114
-TOCTitle: September 2025
-PageTitle: Visual Studio Code September 2025
-MetaDescription: Learn what is new in the Visual Studio Code September 2025 Release (1.105).
-MetaSocialImage: 1_105/release-highlights.png
-Date: 2025-10-09
-DownloadVersion: 1.105.1
+Order: 115
+TOCTitle: October 2025
+PageTitle: Visual Studio Code October 2025
+MetaDescription: Learn what is new in the Visual Studio Code October 2025 Release (1.106).
+MetaSocialImage: 1_106/release-highlights.png
+Date: 2025-11-12
+DownloadVersion: 1.106.1
 ---
-# September 2025 (version 1.105)
+# October 2025 (version 1.106)
 
-_Release date: October 9, 2025_
+_Release date: November 12, 2025_
 
-**Security update**: The following extension has security updates: [GitHub.copilot-chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat).
-
-**Update 1.105.1**: The update addresses these [issues in core](https://github.com/microsoft/vscode/issues?q=is%3Aissue+is%3Aclosed+milestone%3A%22September+2025+Recovery+1%22+) and these issues in the [GitHub Copilot Chat extension](https://github.com/microsoft/vscode/issues?q=is%3Aissue%20is%3Aclosed%20milestone%3A%22September%202025%20Chat%20Recovery%202%22).
-
-**Update**: Check out the announcements from [VS Code at GitHub Universe](#vs-code-at-github-universe).
+**Update 1.106.1**: The update addresses these [issues](https://github.com/microsoft/vscode/issues?q=is%3Aissue+is%3Aclosed+milestone%3A%22October+2025+Recovery+1%22+)
 
 <!-- DOWNLOAD_LINKS_PLACEHOLDER -->
 
 ---
 
-Welcome to the September 2025 release of Visual Studio Code. There are many updates in this version that we hope you'll like, some of the key highlights include:
+Welcome to the October 2025 release of Visual Studio Code.
+
+![Graphic showing the key highlights of the October 2025 release: Agent HQ, Security and trust, and great editor experience.](images/1_106/release-highlights.png)
+
+This release brings significant updates across three key areas:
+
+* **Agent HQ** is your single view to kick off, monitor, and review agent sessions, whether they're local or remote, from Copilot or OpenAI Codex
+* **Security and trust** help you stay in control and confidently delegate more tasks to AI
+* **A great editor experience** to make your day-to-day coding smoother and more enjoyable
+
+Watch our [VS Code 1.106 release highlights video](https://www.youtube.com/live/IdPtTBbYOtw?si=hvIO0MP-H9nR_8F1&t=93) to hear about these features from our engineers!
+
+Happy Coding!
+
+<!--
+There are many updates in this version that we hope you'll like, some of the key highlights include:
 
 <table class="highlights-table">
   <tr>
-    <th>OS integration</th>
-    <th>Developer productivity</th>
-    <th>Agent tools</th>
+    <th>AI</th>
+    <th>Productivity and UX</th>
+    <th>Enterprise</th>
   </tr>
   <tr>
-    <td>Get notified about task completion and chat responses <a href="#os-notifications-for-chat-responses"><br>Show more</a></td>
-    <td>Plan and hand off complex coding tasks <a href="#plan-agent"><br>Show more</a></td>
-    <td>OpenAI Codex integration <a href="#integration-with-openai-codex"><br>Show more</a></td>
+    <td>Plan complex coding tasks with the plan agent and monitor agent sessions across background agents <a href="#agents"><br>Show more</a></td>
+    <td>Select text from deleted code in the diff editor <a href="#code-editing"><br>Show more</a></td>
+    <td>Manage MCP server access with custom MCP registry <a href="#mcp-server-access-for-your-organization"><br>Show more</a></td>
   </tr>
   <tr>
-    <td>Native authentication experience on macOS <a href="#macos-native-broker-support-for-microsoft-authentication"><br>Show more</a></td>
-    <td>Resolve merge conflicts with AI assistance <a href="#resolve-merge-conflicts-with-ai"><br>Show more</a></td>
-    <td>Use subagents to improve context management <a href="#isolated-subagents"><br>Show more</a></td>
+    <td>Inline suggestions are now open source <a href="#inline-suggestions-are-open-source"><br>Show more</a></td>
+    <td>Experience the more modern, refreshed product icons <a href="#editor-experience"><br>Show more</a></td>
+    <td>Manage Linux devices with JSON policies <a href="#linux-policy-support"><br>Show more</a></td>
   </tr>
 </table>
+-->
 
 <br>
 
@@ -56,17 +68,23 @@ Welcome to the September 2025 release of Visual Studio Code. There are many upda
   <nav id="toc-nav">
     <div>In this update</div>
     <ul>
-      <li><a href="#vs-code-at-github-universe">GitHub Universe</a></li>
+      <li><a href="#agents">Agents</a></li>
+      <li><a href="#code-editing">Code Editing</a></li>
+      <li><a href="#editor-experience">Editor Experience</a></li>
       <li><a href="#chat">Chat</a></li>
       <li><a href="#mcp">MCP</a></li>
       <li><a href="#accessibility">Accessibility</a></li>
-      <li><a href="#editor-experience">Editor Experience</a></li>
+      <li><a href="#notebooks">Notebooks</a></li>
       <li><a href="#source-control">Source Control</a></li>
+      <li><a href="#debugging">Debugging</a></li>
       <li><a href="#tasks">Tasks</a></li>
       <li><a href="#terminal">Terminal</a></li>
+      <li><a href="#authentication">Authentication</a></li>
       <li><a href="#languages">Languages</a></li>
+      <li><a href="#remote-development">Remote Development</a></li>
       <li><a href="#contributions-to-extensions">Contributions to extensions</a></li>
       <li><a href="#extension-authoring">Extension Authoring</a></li>
+      <li><a href="#proposed-apis">Proposed APIs</a></li>
       <li><a href="#engineering">Engineering</a></li>
       <li><a href="#notable-fixes">Notable fixes</a></li>
       <li><a href="#thank-you">Thank you</a></li>
@@ -75,410 +93,574 @@ Welcome to the September 2025 release of Visual Studio Code. There are many upda
   <div class="notes-main">
 Navigation End -->
 
-## VS Code at GitHub Universe
+## Agents
 
-![GitHub Universe 2025 banner image.](images/1_105/universe-banner.png)
-
-At GitHub Universe, we shared several updates to help you be more productive with AI-powered development in VS Code. You can now use the built-in plan agent to research and plan complex tasks, manage context better with subagents, and manage background agents like OpenAI Codex and GitHub Copilot CLI.
-
-Download [VS Code Insiders](https://code.visualstudio.com/insiders/) to try out these features today.
-
-### Plan agent
-
-> **Note**: This feature is currently only available in [VS Code Insiders](https://code.visualstudio.com/insiders/).
-
-To help you better prepare for complex coding tasks, VS Code now includes a built-in plan agent. The plan agent helps you analyze tasks, break them down into steps, and generate implementation plans before starting development. This approach helps avoid missing important requirements.
-
-To use the plan agent, open the Chat view (`kb(workbench.action.chat.open)`), select **Plan** from the agents dropdown, and describe your task.
-
-![Screenshot of the Chat view with the Plan agent selected and a prompt to create an implementation plan for a feature.](images/1_105/plan-agent-sample.png)
-
-After finalizing the plan, you can start the implementation immediately or save the plan for later use. The plan agent makes use of the new [handoff feature for custom chat modes](#handoffs).
-
-Learn more about how to use the [built-in plan agent in VS Code](https://code.visualstudio.com/docs/copilot/chat/chat-planning).
-
-### Handoffs
-
-> **Note**: This feature is currently only available in [VS Code Insiders](https://code.visualstudio.com/insiders/).
-
-Handoffs let you create guided workflows that transition between chat modes with suggested next steps. After a chat response completes, handoff buttons appear that let users move to the next mode with relevant context and a pre-filled prompt.
-
-Handoffs are useful for orchestrating multi-step development workflows, for example:
-
-Handoffs let you specify how to transition from one chat mode to another and define custom, structured workflows. When transitioning to another mode, you can specify a prompt that should be used.
-
-You specify the handoff in the Frontmatter metadata of your custom chat mode definition:
-
-```markdown
----
-description: Generate an implementation plan
-tools: ['search', 'fetch']
-handoffs:
-  - label: Start Implementation
-    agent: implementation
-    prompt: Now implement the plan outlined above.
-    send: true
----
-```
-
-Learn more about [using handoffs in custom chat modes](https://code.visualstudio.com/docs/copilot/customization/custom-chat-modes#_handoffs).
-
-### Isolated subagents
-
-> **Note**: This feature is currently only available in [VS Code Insiders](https://code.visualstudio.com/insiders/).
-
-Subagents let you delegate tasks to autonomous agents within your chat sessions. Subagents have their own context window and operate without user interaction, making them ideal for tasks like research, analysis, and context gathering.
-
-After the subagent completes its task, it returns the results to the main chat session. Subagents have their own context window, which helps optimize context management in your main chat session.
-
-To use subagents in your chat prompts or custom chat modes, reference the `#runSubagent` tool to have the main agent invoke a subagent. For example:
-
-* `"Run #runSubagent tool for context gathering and research about auth mechanisms for this app."`
-
-Learn more about [using subagents in VS Code](https://code.visualstudio.com/docs/copilot/chat/chat-sessions#_subagents).
-
-### Integration with OpenAI Codex
-
-> **Note**: This feature is currently only available in [VS Code Insiders](https://code.visualstudio.com/insiders/).
-
-The new [Agent Sessions view](https://code.visualstudio.com/docs/copilot/chat/chat-sessions#_agent-sessions-view) in VS Code Insiders now also integrates with OpenAI Codex. Manage both local and cloud-based agent sessions from a unified interface, making it easier to track progress and delegate tasks across multiple AI coding assistants.
-
-![Screenshot of the Agent Sessions view showing an OpenAI Codex session.](images/1_105/agent-sessions-codex.png)
-
-OpenAI Codex can now be powered by your Copilot subscription. Once the Codex extension is installed and configured, Codex will automatically appear in the Agent Sessions view. Use your Copilot Pro+ subscription to authenticate and access Codex without additional setup.
-
-Get more information about [GitHub Copilot billing and premium requests](https://docs.github.com/en/copilot/concepts/billing/copilot-requests) in the GitHub documentation.
-
-### Integration with Copilot CLI
-
-The new [Agent Sessions view](https://code.visualstudio.com/docs/copilot/chat/chat-sessions#_agent-sessions-view) in VS Code Insiders now supports the GitHub Copilot CLI. You can manage both local and cloud-based agent sessions from a unified interface, making it easier to track progress and delegate tasks across the Copilot CLI and Copilot Coding agent.
-
-![Screenshot of the Agent Sessions view showing a Copilot CLI session.](images/1_105/agent-sessions-copilot-cli.png)
-
-* Kick off and resume CLI sessions in a chat editor or an integrated terminal.
-* Use `/delegate` in a CLI chat editor to delegate your work to the coding agent in the cloud.
-* Improve the CLI experience in VS Code, such as attaching context from your editor like you would in ask or agent mode today.
-
-## Chat
-
-### Fully qualified tool names
-
-Prompt files and custom chat modes enable you to specify which tools can be used. To avoid naming conflicts between built-in tools and tools provided by MCP servers or extensions, we now support fully qualified tool names for prompt files and chat modes. This also helps with discovering missing extensions or MCP servers.
-
-Tool names are now qualified by the MCP server, extension, or tool set they are part of. For example, instead of `codebase`, you would use `search/codebase` or `list_issues` would be `github/github-mcp-server/list_issues`.
-
-You can still use the previous notation, however a code action helps you migrate to the new names.
-
-![Screenshot of a prompt file showing a Code Action to update an unqualified tool name.](images/1_105/qualified_tool_names.png)
-
-### Improved edit tools for custom models
-
-**Setting**: `setting(github.copilot.chat.customOAIModels)`
-
-We improved the set of edit tools for [Bring Your Own Key (BYOK)](https://code.visualstudio.com/docs/copilot/customization/language-models#_bring-your-own-language-model-key) custom models to better integrate with VS Code built-in tools. In addition, we enhanced our default tools and added a 'learning' mechanism to select the optimal tool set for custom models.
-
-If you're [using OpenAI-compatible models](https://code.visualstudio.com/docs/copilot/customization/language-models#_use-an-openaicompatible-model), you can also explicitly configure the list of edit tools with the `setting(github.copilot.chat.customOAIModels)` setting.
-
-### Support for nested AGENTS.md files (Experimental)
-
-**Setting**: `setting(chat.useNestedAgentsMdFiles)`
-
-Last milestone, we introduced support for `AGENTS.md` at the root of your workspace. This functionality is now generally available and enabled by default.
-
-We now also added support for nested `AGENTS.md` files in subfolders of your workspace. This enables you to provide more specific context and instructions for different parts of your codebase. For example, you might have different instructions for frontend and backend code. This functionality is currently experimental and can be enabled with the `setting(chat.useNestedAgentsMdFiles)` setting.
-
-Learn more about [customizing chat in VS Code](https://code.visualstudio.com/docs/copilot/customization/overview) to your practices and team workflows.
-
-### Chat user experience improvements
-
-#### OS notifications for chat responses
-
-**Setting**: `setting(chat.notifyWindowOnResponseReceived)`
-
-In VS Code 1.103, we introduced OS notifications for chat sessions that required a user confirmation when the VS Code window was not focused. In this release, we are expanding this functionality to show an OS badge and notification toast when a chat response is received. The notification includes a preview of the response, and selecting it brings focus to the chat input.
-
-![Screenshot showing an OS notification while the VS Code window is unfocused.](images/1_105/chat-notification.png)
-
-You can control the notification behavior with the `setting(chat.notifyWindowOnResponseReceived)` setting.
-
-#### Chain of thought (Experimental)
-
-**Setting**: `setting(chat.agent.thinkingStyle)`
-
-Chain of thought shows the model’s reasoning as it responds, which can be great for debugging or understanding suggestions the model provides. With the introduction of GPT-5-Codex, thinking tokens are now shown in chat as expandable sections in the response.
-
-![Screenshot of a chat response showing thinking tokens as expandable sections in the response.](images/1_105/chat-thinking-tokens.png)
-
-You can configure how to display or hide chain of thought with the `setting(chat.agent.thinkingStyle)` setting. Thinking tokens will soon be available in more models as well!
-
-#### Show recent chat sessions (Experimental)
-
-**Setting**: `setting(chat.emptyState.history.enabled)`
-
-Last milestone, we introduced [prompt file suggestions](https://code.visualstudio.com/updates/v1_104#_configure-prompt-file-suggestions-experimental) to help you get started when creating a new chat session (`kb(workbench.action.chat.newChat)`). In this release, we are building on that by showing your recent local chat conversations. This helps you quickly pick up where you left off or revisit past conversations.
-
-![Screenshot of the Chat view showing recent local chat conversations when there are no active chat sessions.](images/1_105/chat-history-on-empty.png)
-
-By default, this functionality is off, but you can enable it with the `setting(chat.emptyState.history.enabled)` setting.
-
-#### Keep or undo changes during an agent loop
-
-Previously, when an agent was still processing your chat request, you could not keep or undo file edits until the agent finished. Now, you can keep or undo changes to files while an edit loop is happening. This enables you to have more control, especially for long-running tasks.
-
-#### Keyboard shortcuts for navigating user chat messages
-
-To quickly navigate through your previous chat prompts in the chat session, we added keyboard shortcuts for navigating up and down through your chat messages:
-
-* Navigate previous:  `kb(workbench.action.chat.previousUserPrompt)`
-* Navigate next:  `kb(workbench.action.chat.nextUserPrompt)`
-
-### Agent sessions
-
-This milestone, we made several improvements to the Chat Sessions view and the experience of delegating tasks to remote coding agents:
-
-#### Chat Sessions view enhancements
+### Agent Sessions view
 
 **Setting**: `setting(chat.agentSessionsViewLocation)`
 
-The [Chat Sessions view](https://code.visualstudio.com/docs/copilot/copilot-coding-agent#_manage-sessions-with-dedicated-chat-editor-experimental) provides a centralized location for managing both local chat conversations and remote coding agent sessions. This view enables you to work with multiple AI sessions simultaneously, track their progress, and manage long-running tasks efficiently.
+As you hand off tasks to various coding agents, it's important to have a clear overview of all your active sessions. The Agent Sessions view provides a centralized location for managing your active chat sessions. This includes both local sessions in VS Code and sessions created by background agents in other environments, such as [Copilot coding agent](https://code.visualstudio.com/docs/copilot/copilot-coding-agent), [GitHub Copilot CLI](https://github.com/features/copilot/cli/), or [OpenAI's Codex](https://marketplace.visualstudio.com/items?itemName=OpenAI.chatgpt). The Agent Sessions view is now enabled by default, and can be managed via the `setting(chat.agentSessionsViewLocation)` setting.
 
-In this release, we made several UI refinements and performance improvements to enhance the Chat Sessions experience.
+By default, the Agent Sessions view lists all your active chat sessions organized by their source. The view is divided into sections for local chat sessions in VS Code and for background agent sessions:
 
-* The Chat Sessions view continues to support features like Status Bar tracking for monitoring multiple coding agents, context menus for session management, and rich descriptions to provide detailed context for each session.
+![Screenshot of the Agent Sessions view in the Primary Side Bar, showing a view for local chat sessions, and coding agents like Copilot coding agent, Copilot CLI and Codex.](images/1_106/agent-sessions-view.png)
 
-* Quickly initiate a new session by using the "+" button in the view header.
+If you prefer to have one consolidated view of your sessions across all providers, you can enable the `single-view` option for the `setting(chat.agentSessionsViewLocation)` setting. This option also moves the Agent Sessions view next to the Chat view in the Secondary Side Bar, making it easier to switch between chat and managing your sessions.
 
-    ![Screenshot of the Chat Sessions view with a new session open via the + button.](images/1_105/chat-sessions.png)
+<video src="images/1_106/agent-sessions.mp4" title="Video showing new agent sessions view." autoplay loop controls muted></video>
 
-### Delegating to remote coding agents
+Note that not all functionality is available in the consolidated view yet. We are actively working on making this view the default in the near future.
 
-A typical scenario for working with remote coding agents is to first discuss and plan a task in a local chat session, where you have access to the full context of your codebase, and then delegate the implementation work to a remote coding agent. The remote agent can then work on the task in the background and create a pull request with the solution.
+The Agent Sessions view now also supports search (`kb(list.find)`) to help you easily find your sessions in the list.
 
-If you're working in a repository that has [Copilot coding agent enabled](https://aka.ms/coding-agent-docs), the **Delegate to coding agent** button in the Chat view now appears by default.
+<video src="images/1_106/sessionsPaneSearch.mp4" title="Video showing search in the Agent Sessions view to find sessions that match your query." autoplay loop controls muted></video>
 
-![Screenshot of the Chat view with the Delegate to coding agent button highlighted.](images/1_105/delegate-button.png)
+Learn more about the [Agent Sessions view](https://code.visualstudio.com/docs/copilot/chat/chat-sessions/#_agent-sessions-view) in the VS Code documentation.
 
-When you use the delegate action, all context from your chat conversation, including file references, is forwarded to the coding agent. If your conversation exceeds the coding agent's context window, VS Code automatically summarizes and condenses the information to fit the window.
+### Plan agent
 
-### Chat terminal profiles
+A new plan agent helps developers break down complex tasks step-by-step before any code is written. Select **Plan** from the agents dropdown in the Chat view to get started. When tackling a multi-step implementation, VS Code prompts you with clarifying questions and generates a detailed implementation plan that you approve first, ensuring all requirements and context are captured upfront.
 
-We added platform-specific settings `setting(chat.tools.terminal.terminalProfile.windows)`, `setting(chat.tools.terminal.terminalProfile.osx)` and `setting(chat.tools.terminal.terminalProfile.linux)` for configuring the shell that is launched by the run-in-terminal tool.
+<video src="images/1_106/plan-mode.mp4" title="Video showing the plan agent in action." autoplay loop controls muted></video>
 
-Having a chat-specific shell is useful to simplify or remove interactive elements from your regular shell setup and make it easier for the agent to use. At the same time, it keeps your regular environment and shell launch scripts unchanged.
+We recommend spending time iterating on the plan before implementation. You can refine requirements, adjust scope, and address open questions multiple times to build a solid foundation. Once you approve the plan, Copilot implements it either locally in VS Code or via [cloud agents](https://code.visualstudio.com/docs/copilot/copilot-coding-agent), giving you greater control and visibility into the development process. This helps you catch gaps or missing decisions early, reducing rework and improving code quality.
 
-```jsonc
-"chat.tools.terminal.terminalProfile.osx": {
-  "path": "bash", // bash instead of zsh
-  "args": [], // non-login instead of login on macOS
-  "env": {
-    "COPILOT": "1" // environment variable that can be used in init scripts
-  }
-}
-```
+You can also create your own custom plan agent tailored to your team's specific workflow and tools. Use the **Configure Custom Agent** menu to copy the built-in plan agent as a starting point, then customize the planning style, tools, and prompts to match your development process. Learn more about [planning in VS Code chat](https://code.visualstudio.com/docs/copilot/chat/chat-planning) and [creating custom agents](https://code.visualstudio.com/docs/copilot/customization/custom-agents).
 
-### Terminal commands
+### Cloud agents
 
-#### Auto-reply to terminal prompts (Experimental)
+In this release, we have made quite a few updates to cloud agent sessions in the editor.
 
-**Setting**: `setting(chat.tools.terminal.autoReplyToPrompts)`
+We migrated the Copilot coding agent integration from the GitHub Pull Request extension into the Copilot Chat extension to provide a more native cloud agent experience in VS Code. This integration paves the way for smoother transitions and interactions between VS Code and [GitHub Mission Control](https://github.com/copilot/agents), such as opening a cloud agent session directly from the Agent Sessions view in the browser and vice versa.
 
-We introduced an opt-in setting, `setting(chat.tools.terminal.autoReplyToPrompts)`, which enables the agent to respond to prompts for input in the terminal automatically, like `Confirm? y/n`.
+<video src="images/1_106/deeplink.mp4" title="Video showing GitHub Mission Control integration with VS Code." autoplay loop controls muted></video>
 
-#### Terminal free-form input request detection
+### CLI agents
 
-When the terminal requires free-form input, we now display a confirmation prompt. This lets you stay focused on your current work and only shift attention when input is needed.
+In this release, we have also shipped an initial integration with the [Copilot CLI](https://github.com/features/copilot/cli/). You can create new and resume existing CLI agent sessions in a chat editor or an integrated terminal.
 
-### Sign in with Apple accounts
+![Screenshot of the CLI dropdown menu showing options to create a new CLI agent session or resume an existing one.](images/1_106/cli-dropdown.png)
 
-In addition to signing in with a GitHub or Google account, you can now also sign in or set up a GitHub Copilot account by using an Apple account. This functionality will be rolling out to VS Code users.
+In a CLI agent editor, you can send messages to the Copilot CLI just as you would in a terminal, switch models, and attach context.
 
-![Screenshot showing the sign in dialog showing the option to use an Apple account.](images/1_105/apple-sign-in.png)
+![Screenshot showing a CLI agent editor and an integrated terminal with Copilot CLI sessions.](images/1_106/cli-editor-and-terminal.png)
 
-You can find more information about this in the announcement [GitHub blog post](https://github.blog/changelog/2025-10-07-github-now-supports-social-login-with-apple/).
+### Agent delegation
 
-### Model availability
+We continue to improve the experience for delegating to cloud agents.
 
-This milestone, we added support for the following models in chat. The available models depend on your Copilot plan and configuration.
+When you use the cloud button to delegate to an agent from the chat panel, you'll be provided a set of available agents to which you can delegate. You can also delegate to the Copilot coding agent from the CLI, via the `/delegate` command in a CLI editor or terminal instance.
 
-* **GPT-5-Codex**, OpenAI’s GPT-5 model, optimized for agentic coding.
+![Screenshot showing delegating from a CLI agent editor.](images/1_106/cli-delegate-editor.png)
 
-* **Claude Sonnet 4.5**, Anthropic’s most advanced model for coding and real-world agents.
+### CLI agent edit tracking
 
-You can choose between different models with the model picker in chat. Learn more about [language models in VS Code](https://code.visualstudio.com/docs/copilot/customization/language-models).
+Chat edit sessions now track edits made by background agents, such as the Copilot CLI. When you create sessions from the Agent Sessions view, you can see edits tracked through both inline edit pills and the working set view, making it easier to understand what changes agents are making to your workspace.
 
-## MCP
+### Chat modes renamed to custom agents
 
-### MCP marketplace (Preview)
+Chat modes have been renamed to custom agents throughout VS Code to better align with terminology used in other environments.
 
-**Setting**: `setting(chat.mcp.gallery.enabled)`
+![Screenshot of the agent picker control.](images/1_106/agent-picker.png)
 
-VS Code now includes a built-in MCP marketplace that enables users to browse and install MCP servers directly from the Extensions view. This is powered by the [GitHub MCP registry](https://github.com/mcp) and provides a seamless experience for discovering and managing MCP servers directly within the editor.
+When you create custom agents, the definition files are now located in `.github/agents` in your workspace. These files can use the `.agents.md` suffix and can also be used as GitHub Copilot Cloud Agents and CLI Agents.
 
-> **Note**: This feature is currently in preview. Not all features are available yet and the experience might still have some rough edges.
+Use **Chat: New Custom Agent...** to create a new agent and **Chat: Configure Custom Agents...** to manage them.
 
-The MCP marketplace is disabled by default. When no MCP servers are installed, you see a welcome view in the Extensions view that provides easy access to enable the marketplace. You can also enable the MCP marketplace manually by using the `setting(chat.mcp.gallery.enabled)` setting.
+If you have existing custom chat modes (`.chatmode.md` files in `.github/chatmodes`), they continue to work and are automatically treated as custom agents. When you open a chat agent file in the editor, an info marker appears on the first line with a quick fix to migrate it to a custom agent file.
 
-![Screenshot showing the MCP Servers welcome view with text describing how to browse and install Model Context Protocol servers, and an "Enable MCP Servers Marketplace" button.](images/1_105/mcp-servers-welcome.png)
+### Custom agent metadata
 
-To browse the MCP servers from the Extensions view:
+Custom agent `.agent.md` files now accept an additional `target` frontmatter property to describe how an agent should run across environments:
 
-* Use the `@mcp` filter in the Extensions view search box
-* Select **MCP Servers** from the filter dropdown in the Extensions view
-* Search for specific MCP servers by name
+* `target: vscode`: optimizes the agent for local chat and unlocks `name`, `description`, `argument-hint`, `model`, `tools`, and `handoffs` properties. Any tool installed in VS Code can be used.
+* `target: github-copilot`: prepares the agent for Copilot cloud agents or the GitHub CLI with support for `name`, `description`, `tools`, `mcp-servers`, and `target`. Tools can be `edit`, `search`, `shell`, `custom-agent`, and tools from MCP servers
 
-![Screenshot showing the GitHub MCP server details from the MCP server marketplace inside VS Code.](images/1_105/mcp-server-editor.png)
+All agents can be run in all environments. Each environment ignores unknown attributes and tools.
 
-### Autostart MCP servers
+* `name`: lets you override the agent label without renaming the file.
+* `argument-hint`: surfaces guidance in the chat input so teammates know how to prompt the agent.
+* `handoffs`: wires guided transitions to other agents, letting you chain multi-step workflows.
 
-**Setting**: `setting(chat.mcp.autostart)`
+The agent file editor provides validation, code completions, hovers and code actions.
 
-In this release, new or outdated MCP servers are now started automatically when you send a chat message. VS Code also avoids triggering interactions such as dialogs when autostarting a server, and instead adds an indicator in chat to let you know that a server needs attention.
+![GIF of validation while editing custom agent files.](images/1_106/agent-file-editing.gif)
 
-![Screenshot of the Chat view, showing a notification message that the GitHub MCP requires restarting.](./images/1_105/mcp_autostart_prompt.png)
+Learn more about [custom agents and agent handoffs](https://code.visualstudio.com/docs/copilot/customization/custom-agents) in our documentation.
 
-With MCP autostart on by default, we no longer eagerly activate extensions and instead only activate MCP-providing extensions when the first chat message is sent.
+## Code Editing
 
-For extension developers, we also added support for the `when` clause on the `mcpServerDefinitionProviders` contribution point, so you can avoid activation when it's not relevant.
+### Deleted code in diff editor is now selectable
 
-### Improved representation of MCP resources returned from tools
+Previously, when you deleted code and viewed the changes in the diff editor, you couldn't copy those deleted lines. In this release, you can now select and copy text from deleted lines in the diff editor when using the inline diff view.
 
-Previously, our implementation of tool results that contain resources left it up to the model to retrieve those resources, without clear instructions on how to do so. In this version of VS Code, by default, we include a preview of the resource content and add instructions to retrieve the complete contents. This should lead to better model performance when using such tools.
+<video src="images/1_106/diff-editor-select-deleted-lines-text.mp4" title="Video showing selecting text in deleted lines in the diff editor." autoplay loop controls muted></video>
 
-### MCP specification updates
+### Inline suggestions are open source
 
-This milestone, we adopted the following updates to the MCP specification:
+This release continues our journey to make VS Code an open source AI editor. Following our first milestone of open sourcing GitHub Copilot Chat, we've now open sourced inline suggestions by merging them into the vscode-copilot-chat repository.
 
-* [SEP-973](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/955), which lets MCP servers specify `icons` to associate with their data. This can be used to give a custom icon to servers, resources, and tools.
+As part of this milestone, we're consolidating the GitHub Copilot extension and GitHub Copilot Chat extension into a single extension experience. The Chat extension now serves all inline suggestions, providing the same intelligent code suggestions you're used to while maintaining all chat and agent functionality. The change should be transparent, you'll continue getting the same code suggestions as you type. If you encounter any issues, you can temporarily revert using the `setting(chat.extensionUnification.enabled)` setting.
 
-    ![Screenshot of the tools picker, showing one of the MCP servers in the list with a custom icon.](./images/1_105/mcp_icons.png)
+The GitHub Copilot extension will be deprecated by early 2026. Learn more about this milestone and explore the open source code in our [blog post](https://code.visualstudio.com/blogs/2025/11/04/openSourceAIEditorSecondMilestone).
 
-    HTTP MCP servers must provide icons from the same authority that the MCP server itself is listening on, while stdio servers are allowed to reference `file:///` URIs on disk.
+### Snooze inline suggestions from gutter
 
-* [SEP-1034](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/1035), which lets MCP servers provide `default` values when using elicitation.
+You can now snooze inline suggestions directly from the gutter icon. When you hover over the gutter icon, a control appears with a **Snooze** option. Select it and choose a duration to pause suggestions.
 
-## Accessibility
+![Screenshot showing the Snooze button in the gutter context menu for inline suggestions.](images/1_106/nes-snooze.png)
 
-### Shell integration for pwsh on Windows support for screen readers
+### Go to line improvements
 
-PSReadLine has historically been disabled when a screen reader is detected to avoid overwhelming users with excessive auditory feedback. Since our terminal's shell integration relies on PSReadLine support, we now activate a streamlined version of PSReadLine in screen reader mode. This ensures shell integration and its features work for screen reader users.
+This iteration, we've made several enhancements to the **Go to Line** command (`kb(workbench.action.gotoLine)`), improving navigation within files.
 
-### Chat improvements
+The **Go to Line** command now supports navigating to a specific character position in a file by using the `::` syntax. This is useful when tools report errors at specific character offsets, such as "error at position 599".
 
-**Setting**: `setting(accessibility.verboseChatProgressUpdates)`
+To navigate to a character offset, type `::` followed by the character number in the **Go to Line** input box. For example:
 
-A new setting, `setting(accessibility.verboseChatProgressUpdates)`, enables more detailed announcements for screen reader users about chat activity.
+* `::599` - Navigate to character 599 in the file
+* `::-100` - Navigate 100 characters from the end of the file
 
-From the chat input, users can focus the last focused chat response item `kb(workbench.chat.action.focusLastFocused)`.
+Use the toggle in the input box to switch between 1-based (default) and 0-based offset calculations.
 
-### Accessible view persistence
+<video src="images/1_106/go-to-line.mp4" title="Video showing editor navigation using Go To Line command." autoplay loop controls muted></video>
 
-When switching between VS Code and other windows, we now maintain the user's position in the Accessible view for a seamless workflow.
+In addition, the **Go to Line** command also handles out-of-range values more gracefully and makes it easier to navigate to the start or end of files and lines:
+
+* **Line numbers**: Typing a line number larger than the file's line count navigates to the last line.
+* **Column numbers**: Using negative column numbers navigates from the end of a line. For example, `:12:-1` takes you to the last character on line 12. Typing a column number larger than the length of the line takes you to the end of the line.
 
 ## Editor Experience
 
-### Override default shortcuts for Quick Input
+### Refreshed iconography
 
-The Quick Input controls, like the ones used in the Command Palette (Quick Pick, Input Box), used to hard-code keyboard shortcuts for navigation, such as moving up or down the list, accepting (`kbstyle(Enter)`), and a few other interactions.
+In this release, the codicon icon set has had a facelift. The new icons have been refined with curves, new modifier designs, and more accurate metaphors to make them feel modern, friendly and more legible.
 
-These actions are now moved to commands, which enables you to override their keyboard shortcuts. For example, if you want `kbstyle(Tab)` to be used to accept something in the Quick Pick, this is now possible. To see all keyboard shortcuts that you can override, open the Keyboard Shortcuts editor `(kb(workbench.action.openGlobalKeybindings))` and search for `quickInput.`
+![Screenshot of updated product icons showing a more modern appearance and increased legibility.](images/1_106/refreshed-iconography.png)
 
-### Disallow whitespace-only next edit suggestions
+### Linux policy support
 
-**Setting**: `setting(github.copilot.nextEditSuggestions.allowWhitespaceOnlyChanges)`
+We've introduced support for managing VS Code policies on Linux systems using JSON files. This allows administrators to enforce specific settings and configurations across all users on a Linux machine.
 
-It is now possible to disallow next edit suggestions (NES) to propose whitespace-only changes such as code formatting.
+For more details, see [JSON Policies on Linux](https://code.visualstudio.com/docs/setup/enterprise#_json-policies-on-linux).
+
+### Navigate changes in multi file diff editor
+
+Just like you can navigate to next or previous changes in a diff editor for a single file, you can now do so across files in the multi-file diff editor. Use keybindings or the navigation up and down arrow keys to review your changes across files.
+
+<video src="images/1_106/multiFileDiffNav.mp4" title="Video showing navigating changes in multi-file diff editor." autoplay loop controls muted></video>
+
+### Copy diagnostic hover text
+
+A copy button now appears in diagnostic hovers (errors, warnings, info, and hints) to make copying error messages easier. When you hover over a diagnostic marker, move your mouse over the hover message to reveal a copy button in the top-right corner.
+
+![Screenshot of hovering over a diagnostic hover revealing a copy button in the top-right corner.](images/1_106/hover-copy-button.png)
+
+### Accent-insensitive command filtering
+
+The Command Palette now ignores character accents when searching for commands, making it easier to find what you need regardless of your keyboard layout or language preferences. For example, when searching for a command containing the word `Générer` (French for `Generate`), type `generer` without accents and matching commands appear in the results.
+
+This is helpful when using different keyboard layouts or when mistyping while looking for a command. The filtering is based on [Unicode Normalization Form D](https://www.unicode.org/reports/tr15/#Norm_Forms) and supports all Unicode languages.
+
+<video src="images/1_106/filtering.mp4" title="Video showing filtering in Command Palette." autoplay loop controls muted></video>
+
+### Advanced VS Code settings
+
+VS Code now supports the concept of advanced settings. These settings are meant for configuring specialized scenarios and are intended for advanced users who need fine-grained control over their environment. By default, advanced settings are hidden in the Settings editor, keeping the interface streamlined while making these powerful options available when needed.
+
+To view and configure advanced settings, select **Advanced** from the filter dropdown menu in the Settings editor, or type `@tag:advanced` in the search box:
+
+![Screenshot showing the Settings editor with the Advanced filter applied, displaying advanced settings with the Advanced tag badge](images/1_106/advanced-settings.png)
+
+When you search for a specific setting by its exact name or use the `@id:` filter, advanced settings appear in the results without having to apply the **Advanced** filter. This ensures you can always find the settings you're looking for.
+
+Advanced settings can be combined with other filters such as `@modified` or `@feature:` to help you find exactly what you need. For example, `@tag:advanced @feature:terminal` shows only advanced settings related to the terminal.
+
+>**Note:** Extension authors can mark their settings as advanced by adding the `advanced` tag to the setting configuration.
+
+## Chat
+
+### Embeddings-based tool selection
+
+In this release we've significantly improved how we filter and group tools for users that have many (over 100) tools enabled in chat. You should see the "Optimizing tool selection..." loading state less often and for a shorter period of time. We also improved tool selection with a lower probability of agent confusion to make sure the right tools are chosen.
+
+### Tool approvals and trust
+
+#### Post-approval for external data
+
+Agent tools that pull in external data now support post-approval. This helps protect against potential prompt injection attacks by letting you review the data before it's used in your chat session.
+
+<video src="images/1_106/post-approval.mp4" autoplay loop controls muted></video>
+
+Post-approval is enabled for the `#fetch` tool and for Model Context Protocol (MCP) tools that declare `openWorldHint`.
+
+#### Trust all tools for a server or extension
+
+You can now trust MCP servers and extension tools at the source level through the **Allow** button dropdown. This means that you can approve all tools from a specific MCP server or extension at once, rather than having to approve each tool individually.
+
+We have also updated the **Chat: Manage Tool Approval** command experience to let you manage both pre- and post-approval of tools.
+
+![Screenshot of the Manage Tool Approval command experience, enabling tools to skip approval and skipping content review.](images/1_106/manage-tool-approvals.png)
+
+#### Tool auto approval status moved
+
+Auto approval status has moved from being inline inside the chat view to the tool call status/tick icon:
+
+![Screenshot of hovering a tool's tick icon will reveal why it was auto approved](images/1_106/tool-auto-approve-hover.png)
+
+### Terminal tool
+
+#### Auto approve parser improvements
+
+Previously, subcommand detection in the terminal tool used the naive approach of just splitting on certain strings such as `|` or `&&`. This failed in several ways but the bigger ones were when pipe was used inside strings like `echo "a|b|c"`, which would detect the subcommands `echo`, `b` and `c"`. Another important one is that since we couldn't reliably pull subcommands, we outright banned parenthesis pairs, curly brace pairs, and backticks to be more on the safe side and prevent accidental execution.
+
+This release, we integrated a [parser](https://tree-sitter.github.io/tree-sitter/) into the feature and use a [PowerShell grammar](https://github.com/airbus-cert/tree-sitter-powershell) or a [bash grammar](https://github.com/tree-sitter/tree-sitter-bash) for everything else\*. So, even really complex cases should be correctly extracted:
+
+![Screenshot of detecting "$()" inside echo calls.](images/1_106/tool-terminal-parser.png)
+
+\* _Note that this means it can fail to catch subcommands when the shell syntax differs from bash, such as `;` in zsh_
+
+#### File write/redirection detection (Experimental)
+
+Thanks to the new parser, we're able to fairly reliably extract files being written to via redirection. There's the new experimental setting `setting(chat.tools.terminal.blockDetectedFileWrites)` that will prevent auto approval conditionally.
+
+![Screenshot showing that writing outside the workspace by default will block auto approval.](images/1_106/tool-terminal-redirection.png)
+
+#### Disable default auto approve rules (Experimental)
+
+The new experimental setting `setting(chat.tools.terminal.ignoreDefaultAutoApproveRules)` allows disabling the default rules (both allow and deny rules). This is useful if you want more control without needing to look up the defaults.
+
+#### Shell specific prompts and command rewriting
+
+The terminal tool now has shell-specific descriptions for PowerShell, bash, zsh and fish. This should make commands suggested by the agent more reliable and less likely to fail, especially for PowerShell.
+
+In addition to this, for PowerShell we also re-write `&&` to `;` since the `&&` chain operator is not supported in Windows PowerShell (v5). Note that this is temporarily also happening for PowerShell 7 until [vscode#274548](https://github.com/microsoft/vscode/issues/274548) is actioned.
+
+#### Attach terminal commands to chat
+
+You can now attach a terminal command to chat as context from the command decoration's context menu. The attachment shares the command line, captured output, and exit code so the agent understands precisely what happened. This applies to any command tracked by shell integration, making it easy to escalate troubleshooting without copying and pasting text.
+
+<video src="images/1_106/terminal-attachment.mp4" title="Video showing attaching terminal commands to chat." autoplay loop controls muted></video>
+
+#### View terminal output inside chat (Experimental)
+
+The new `setting(chat.tools.terminal.outputLocation)` setting controls where the output is displayed. The default `none` value prevents the terminals from cluttering the panel.
+
+Every chat terminal invocation now surfaces two actions on the progress element:
+
+* **Show Terminal** reveals and focuses hidden sessions, and with rich shell integration, scrolls directly to the relevant command. With basic or no shell integration, the action still focuses the correct terminal tab.
+* **Show Output** opens the terminal's final output inline within the chat view. The output view expands automatically when a command exits with a non-zero code.
+
+When `npm i` fails, the output is automatically expanded. The terminal is revealed with the **Show Terminal** inline action.
+
+<video src="images/1_106/terminal-chat-output.mp4" title="Video showing terminal output showing inline in the Chat view and the option to open it in the terminal." autoplay loop controls muted></video>
+
+#### Discover hidden chat terminals (Experimental)
+
+When `setting(chat.tools.terminal.outputLocation):none`, a new **X hidden terminal(s)** button appears in the terminal tabs view when there is at least one hidden chat terminal. It opens a quick pick that lists each chat terminal alongside its chat session so you can immediately focus the right process. The same picker is available from the terminal overflow menu under **View Hidden Chat Terminals**, and it disappears once all chat terminals are visible again.
+
+The agent runs `ls -la`, which succeeds, so the output is collapsed. The **hidden terminal** action is taken from the tabs view and the terminal is selected, revealed, and scrolled to highlight the command.
+
+<video src="images/1_106/terminal-chat-hidden.mp4" title="Video showing discovering hidden chat terminals." autoplay loop controls muted></video>
+
+### Save conversation as prompt
+
+You can now save your chat conversations as reusable prompts with the `/savePrompt` command. When you invoke `/savePrompt` in an active chat session, VS Code generates a prompt file containing a generalized prompt based on your conversation. The editor displays a blue button that lets you save this prompt to a valid location, either at the user or workspace level.
+
+![Screenshot of the Save prompt button in the editor.](images/1_106/save-prompt-prompt.png)
+
+This feature replaces the previous `/save` command and provides a more streamlined workflow for capturing and sharing useful conversation patterns. The generated prompts can be easily reused in future chat sessions or shared with your team. Learn more about [custom prompt files](https://code.visualstudio.com/docs/copilot/customization/prompt-files).
+
+### Edit welcome prompts
+
+You can now right-click on suggested prompts in the Chat welcome view to access additional actions. When you right-click a prompt (or press `kbstyle(Shift+F10)`), a context menu appears with an **Edit Prompt File** option to open the corresponding prompt file directly in the editor.
+
+Editing a prompt file works for prompts that have an associated file, including user-defined prompts and project-specific prompts configured through the `setting(chat.promptFilesRecommendations)` setting.
+
+![Screenshot of a context menu for a suggested prompt.](images/1_106/welcome-prompt-context.png)
+
+Learn more about [custom prompt files](https://code.visualstudio.com/docs/copilot/customization/prompt-files).
+
+### Automatically open edited files
+
+**Setting**: `setting(chat.openEditedFilesAutomatically)`
+
+We changed the default behavior of the agent to no longer automatically open edited files in an editor. If you prefer the previous behavior, you can enable the setting `setting(accessibility.openChatEditedFiles)`.
+
+### Reasoning (Experimental)
+
+**Setting**: `setting(chat.agent.thinkingStyle)`, `setting(chat.agent.thinking.collapsedTools)`
+
+Last iteration, we added the `setting(chat.agent.thinkingStyle)` setting which enabled displaying thinking tokens in chat. This is now available in more models! As of this release, GPT-5-Codex, GPT-5, GPT-5 mini, and Gemini 2.5 Pro support this.
+
+The `setting(chat.agent.thinkingStyle)` was adjusted to three more common styles, with `fixedScrolling` as the default to show the most recent chain of thoughts.
+
+An additional setting, `setting(chat.agent.thinking.collapsedTools)`, adds tool calls into the collapsible thinking UI.
+
+![Screenshot showing reasoning tokens displayed in chat with interleaved tool calls and reasoning output. This is the UI with `fixedScrolling` and `readOnly` for the respective thinking settings.](images/1_106/reasoning.png)
+
+### Inline chat v2 (Preview)
+
+**Setting**: `setting(inlineChat.enableV2:true)`
+
+We have ramped up our efforts to modernize inline chat. It's built to be
+
+* single prompt,
+* single file,
+* and for code changes only
+
+This makes the overall experience much lighter and allows for a simplified UI. For tasks it cannot handle, you'll be automatically upgraded to the Chat view.
+
+<video src="images/1_106/inline-chat.mp4" title="Showing Inline chat in action" autoplay loop controls muted></video>
+
+### Chat view UX improvements
+
+We tweaked some parts of the Chat view to make it feel more pleasant to use:
+
+* The action to create a new Chat is now a dropdown with options to create a chat session in the editor or in a new window
+* The tools and MCP server actions moved right next to the model picker
+* The configuration dropdown is cleaned up
+
+![Screenshot of the action to create a new chat dropdown menu.](images/1_106/chat-view.png)
+
+It is now also possible to copy math source by right-clicking math expressions in the chat view.
+
+## MCP
+
+### MCP server access for your organization
+
+**Settings**: `setting(chat.mcp.gallery.serviceUrl)`, `setting(chat.mcp.access)`
+
+VS Code now supports MCP registry configured through GitHub organization policies. This enables organizations to set up a custom MCP registry and control which MCP servers can be installed and started.
+
+When an MCP registry endpoint is configured in your organization's policies, VS Code will:
+
+* Provide browsing and installing of MCP servers from the configured registry
+* Restrict starting MCP servers to only those available in the registry when access restriction is enabled
+
+When your organization has configured these policies, the `setting(chat.mcp.gallery.serviceUrl)` setting specifies the MCP registry endpoint URL, and the `setting(chat.mcp.access)` setting controls whether access is restricted to only the servers in that registry. These settings will be marked as "(Managed by organization)" in the Settings editor:
+
+![Screenshot showing MCP settings managed by organization policy, including the Gallery Service URL and Access control settings](images/1_106/mcp-registry-policies.png)
+
+To learn more about configuring MCP server access for your organization or enterprise, see [Configure MCP server access](https://docs.github.com/en/copilot/how-tos/administer-copilot/configure-mcp-server-access).
+
+### Install MCP servers to workspace configuration
+
+When installing an MCP server, you can now choose whether to install it globally or to the workspace configuration. Right-click on an MCP server in the extensions view and select **Install (Workspace)** from the context menu, or use the **Install (Workspace)** action directly in the MCP server editor. This adds the MCP server to the `.vscode/mcp.json` file in your current workspace, making it easier to share MCP servers with your team.
+
+![Screenshot showing the context menu for an MCP server with the Install (Workspace) option highlighted](images/1_106/mcp-install-workspace.png)
+
+### Authentication: Client ID Metadata Document authentication flow
+
+Authentication support for remote MCPs now supports the [Client ID Metadata Document (CIMD)](https://www.ietf.org/archive/id/draft-parecki-oauth-client-id-metadata-document-00.html) authentication flow, which is the future standard for OAuth in MCP. This flow enables a more secure and scalable solution to authentication over [Dynamic Client Registration (DCR)](https://datatracker.ietf.org/doc/html/rfc7591) because now authorization servers do not have to worry about issuing client IDs per-client.
+
+When connecting to an MCP server that uses an authorization server that supports CIMD, VS Code will automatically use that flow over DCR.
+
+_For more information about CIMD, take a look at [the resources on oauth.net](https://oauth.net/2/client-id-metadata-document/)._
+
+### Authentication: `WWW-Authenticate` scope step up
+
+Authentication support for remote MCPs now supports dynamic scope escalation through the `WWW-Authenticate` header for remote MCP servers. This is called out in [the OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6750#section-3). This allows MCP servers to request additional permissions when needed, rather than requiring all scopes upfront. For example, connecting to a server might require a minimal set of scopes, but specific tool calls can request broader permissions only when necessary. This provides better security by following the principle of least privilege.
+
+_This is currently called out in the [latest draft of the MCP specification](https://modelcontextprotocol.io/specification/draft/basic/authorization#scope-selection-strategy) which is expected to be finalized soon._
+
+## Accessibility
+
+### Speech timeout is disabled by default
+
+The configuration `setting(accessibility.voice.speechTimeout)` has changed to be `0` by default. This means, a voice session no longer ends automatically after a certain delay (e.g. a Chat request would not be triggered automatically if you pause). We feel this is a better default experience, but you can always change back to the previous default (`2500`).
+
+### Chat input improvements
+
+The chat input now announces the active agent and model in a clearer order so screen reader users hear the most relevant context first. The chat accessibility help also calls out that you can press **Delete** to remove attached context items, making attachment management fully keyboard-accessible.
+
+## Notebooks
+
+### Notebook search
+
+Notebooks now support searching across cells. Use key bindings (`kb(notebook.findNext.fromWidget)` and `kb(notebook.findPrevious.fromWidget)`) to navigate to the next and previous match, just like you would in the editor.
+
+<video src="images/1_106/notebookSearch.mp4" title="Video showing search in notebook cells." autoplay loop controls muted></video>
 
 ## Source Control
 
-### Resolve merge conflicts with AI
+### Folding support in git commit messages
 
-When opening a file with git merge conflict markers, you are now able to resolve merge conflicts with AI. We added a new action in the lower right-hand corner of the editor. Selecting this new action opens the Chat view and starts an agentic flow with the merge base and changes from each branch as context.
+**Settings**: `setting(git.verboseCommit)`, `setting(git.useEditorAsCommitInput)`
 
-![Screenshot of the proposed merge conflict resolution in the editor.](images/1_105/merge-conflict-resolution.png)
+When writing git commit messages in the editor, you can now fold sections of the commit message to keep things organized. To use this feature, enable the `setting(git.verboseCommit)` and `setting(git.useEditorAsCommitInput)` settings.
 
-You can review the proposed merge conflict resolution in the editor and follow up with additional context if needed. You can customize the merge conflict resolution by using an `AGENTS.md` file.
+![Screenshot showing folding nodes in the gutter and a partially collapsed commit message in the editor.](images/1_106/commit-folding.png)
 
-### Add file commit to chat context
+### Graph incoming/outgoing changes
 
-A couple of milestones ago, we added the capability to view the files in each history item shown in the Source Control Graph view. You can now add a file from a history item as context to a chat request. This can be useful when you want to provide the contents of a specific version of a file as context to your chat prompt.
+**Settings**: `setting(scm.graph.showIncomingChanges)`, `setting(scm.graph.showOutgoingChanges)`
 
-To add a file from a past commit to chat, select a commit to view the list of files, right-click on a particular file, and then select **Add to Chat** from the context menu.
+This milestone, we are adding the capability to easily view incoming and outgoing changes in the Source Control Graph view. For active branches that have incoming or outgoing changes, the graph displays an "Incoming Changes" and "Outgoing Changes" node. Selecting each node displays the list of incoming or outgoing files.
 
-![Screenshot of the Source Control Graph view showing the context menu for a file in a history item with the Add to Chat option highlighted.](images/1_105/add-history-item-to-chat.png)
+![Screenshot showing incoming and outgoing changes nodes in the Source Control Graph view.](images/1_106/graph-incoming-outgoing.png)
+
+You can hide this information from the Graph view by using the `setting(scm.graph.showIncomingChanges:false)` and `setting(scm.graph.showOutgoingChanges:false)` settings.
+
+### Graph compare references
+
+We have added a new command to the Source Control Graph context menu, **Compare with...**, that enables you to compare a history item in the graph with an arbitrary branch or tag. This feature lets you view changes that are in the history item but not in the branch or tag.
+
+In the context menu, there are shortcuts commands, **Compare with Remote** and **Compare with Merge Base** for comparing a history item with the remote branch and merge base respectively.
+
+### Repositories selection mode
+
+**Setting**: `setting(scm.repositories.selectionMode)`
+
+The Source Control Repositories view shows the list of opened repositories in the workspace and is used to control the repositories shown in the Source Control Changes view.
+
+We are looking to expand the functionality of the Repositories view and in preparation for that, we are introducing a setting, `setting(scm.repositories.selectionMode)`, to control the selection mode in the Repositories view to either a single repository or multiple repositories.
+
+Apart from the new functionality in the Repositories view, this also allows us to remove the repository picker in the Graph view's title and have a global repository picker across all source control views. You can toggle the selection mode using the setting, or from the "..." menu of the Repositories view.
+
+![Screenshot showing the Repositories view with single selection mode enabled and the context menu to toggle selection mode.](images/1_106/repositories-selection-mode.png)
+
+### Repositories explorer (experimental)
+
+**Settings**: `setting(scm.repositories.explorer:true)`, `setting(scm.repositories.selectionMode:single)`
+
+We are looking at enhancing the Repositories view and showing additional information for each repository. To try out this experimental feature, set `setting(scm.repositories.selectionMode:single)` and `setting(scm.repositories.explorer:true)`.
+
+In this first iteration, we have focused on branches and tags. You can create new branches, tags, view the list of branches and tags, and take various actions of each branch/tag (ex: checkout, etc.). In the upcoming milestone, we will add more information (ex: stashes, remotes, etc). Give this experimental feature a try and let us know what you think.
+
+![Screenshot showing the Repositories explorer with branches and tags for a single selected repository.](images/1_106/repositories-explorer.png)
 
 ## Testing
 
-### Run tests with code coverage
+### Navigate uncovered lines in test coverage
 
-If you have a testing extension installed for your code, the `runTests` tool in chat enables the agent to run tests in your codebase by using the [VS Code testing integration](https://code.visualstudio.com/docs/debugtest/testing) rather than running them from the command line.
+When reviewing test coverage, you can now easily navigate between uncovered lines using new navigation commands. Two commands are available in the editor toolbar when viewing coverage information:
 
-In this release, the `runTests` tool now also reports test code coverage to the agent. This enables the agent to generate and verify tests that cover the entirety of your code.
+* **Go to Next Uncovered Line** - Jumps to the next line that is not covered by tests
+* **Go to Previous Uncovered Line** - Jumps to the previous line that is not covered by tests
 
-### Swap test result column
-
-You can change the side on which the result tree is displayed in the Test Results view by using the new swap ↔️ button in the view's title menu.
-
-![Screenshot of the Test Results view with the swap button highlighted.](images/1_105/swap-test-result-column.png)
-
-## Tasks
-
-### OS notification for long-running task completion
-
-**Setting**: `setting(task.notifyWindowOnTaskCompletion)`
-
-When a user-initiated, long-running task completes while the VS Code window is not focused, an OS badge and notification toast are shown. Selecting the notification focuses the window where the task completed. You can configure this behavior with the `setting(task.notifyWindowOnTaskCompletion)` setting.
-
-![Screenshot of an OS notification that shows a task completion message saying Task "build" completed in 1 minute 21 seconds.](images/1_105/task-notification.png)
-
-### Task terminal title persistence
-
-**Setting**: `setting(terminal.integrated.tabs.title)`
-
-You can configure the title of terminal tabs with the `setting(terminal.integrated.tabs.title)` setting. By default, the value is `${process}`, which shows the name of the process running in the terminal.
-
-For tasks, this means that the terminal title might change when the task starts a different process, which can be confusing. To address this, we now persist the task's name as the terminal title when a task is started.
+These commands help you quickly identify coverage gaps and focus on areas that need additional test coverage, making it easier to improve the overall test quality of your codebase.
 
 ## Terminal
 
-### Start dictation exposed
+### Terminal IntelliSense
 
-We added the **Start dictation** action to the terminal overflow menu. This action enables you to use voice dictation to input text into the terminal.
-A corresponding **Stop dictation** action appears when relevant.
+Terminal IntelliSense has been in the product as an experimental/preview feature [for around 1.5 years](https://code.visualstudio.com/updates/v1_89#_vs-codenative-intellisense-for-powershell)! This release we're removing the preview tag and will be doing a staged roll out as the default to all users on stable.
 
-![Screenshot of the terminal overflow menu with a Start Dictation option.](images/1_105/start-dictation-terminal.png)
+When enabled, typing in the terminal will bring up IntelliSense similar to the editor for PowerShell, bash, zsh and fish:
+
+![Screenshot of typing "write" in PowerShell will bring up completions starting with the word write.](images/1_106/terminal-suggest-write.png)
+
+The completions have various sources, paths for example are all handled by core:
+
+<video src="images/1_106/terminal-suggest-cd.mp4" title="cd presents directories, pressing tab will refresh the entries" autoplay loop controls muted></video>
+
+Some commands feature advanced specifications, like git which has the ability to pull in branch names:
+
+<video src="images/1_106/terminal-suggest-git.mp4" title="git completions support sub-commands, branch names, tags and so on" autoplay loop controls muted></video>
+
+If we learned anything when building this feature it's that no one size fits all, so there are many options to tweak the behavior to get what you're after:
+
+- `setting(terminal.integrated.suggest.quickSuggestions)` - Show automatically depending on the content of the command line, as opposed to manually via `kbstyle(Ctrl+Space)`.
+- `setting(terminal.integrated.suggest.suggestOnTriggerCharacters)` - Show automatically after a "trigger character" such as `-` or `/`.
+- `setting(terminal.integrated.suggest.runOnEnter)` - Optionally run the command when `kbstyle(Enter)` is used (not `kbstyle(Tab)`).
+- `setting(terminal.integrated.suggest.windowsExecutableExtensions)` - The list of extensions that are treated as executables on Windows.
+- `setting(terminal.integrated.suggest.providers)` - Provides the ability to disable specific providers, for example extensions may contribute completions you don't want.
+- `setting(terminal.integrated.suggest.showStatusBar)` - Whether to show the status bar at the bottom of the IntelliSense popup.
+- `setting(terminal.integrated.suggest.cdPath)` - Whether to enable `$CDPATH` integration.
+- `setting(terminal.integrated.suggest.inlineSuggestion)` - Whether to integrate with shell "ghost text" and how to present it.
+- `setting(terminal.integrated.suggest.upArrowNavigatesHistory)` - Whether up arrow is sent to the shell instead of browsing completions, this is particularly useful on zsh where you can filter and then press up to do a history search with that prefix.
+- `setting(terminal.integrated.suggest.selectionMode)` - How the Intellisense popup is focused which determines what `kbstyle(Enter)` and `kbstyle(Tab)` do.
+- (New!) `setting(terminal.integrated.suggest.insertTrailingSpace)` - Insert a trailing space and re-trigger completions after accepting.
+
+If you don't see the feature yet, make sure you have [shell integration](https://code.visualstudio.com/docs/terminal/shell-integration) enabled and enable IntelliSense explicitly in settings via `setting(terminal.integrated.suggest.enabled)`.
+
+Apart from overall polish, this is what is coming to the feature this release:
+
+- `copilot` and `azd` CLIs now have completions
+- The extension API is close to finalization
+- Git commit completions show the commit message
+
+![Screenshot of git commit completions showing branch names and their associated commit messages in the terminal suggest details view.](images/1_106/terminal-suggest-commit.png)
+
+### Consolidated shell integration timeout setting
+
+We now have one unified configurable setting, `setting(terminal.integrated.shellIntegration.timeout)`, that controls how long VS Code waits for shell integration to become ready before executing commands in the terminal, including those triggered through the executeCommand API and by Copilot terminal tool.
+
+`setting(chat.tools.terminal.shellIntegrationTimeout)` has been deprecated in favor of this consolidation.
 
 ## Authentication
 
-### macOS native broker support for Microsoft Authentication
+### Manage extension account preferences discoverability
 
-**Setting**: `setting(microsoft-authentication.implementation)`
+The **Manage Extension Account Preferences** command is now more discoverable. In addition to being available in the Command Palette and extension context menus, it now appears in the Account Menu alongside **Manage Language Model Access**. This makes it easier to find and configure which accounts extensions can access.
 
-This milestone, we adopted the latest MSAL libraries and with that you are now able to sign in through a native experience on macOS (in addition to Windows):
+![Screenshot of Manage Extension Account Preferences in the Account menu.](images/1_106/manageExtensionAccountPref.png)
 
-![Screenshot of a native broker dialog window asking to sign into VS Code.](images/1_105/macOS-auth-broker.png)
+### Last version of `classic` Microsoft authentication - use `msal-no-broker` if you experience issues
 
-Native broker authentication is only available for:
+We will be removing the `classic` option for `setting(microsoft-authentication.implementation)`. This means that VS Code release 1.106 is the final version that has the `classic` option.
 
-* M-series (also known as ARM) macOS devices
-* macOS machines that are Intune-enrolled with the policy to go through the broker
+The `setting(microsoft-authentication.implementation)` setting has been around to let users opt-out of native brokered authentication for Microsoft accounts if they experienced issues. The values for this setting are:
 
-This enables nice single sign-on flows and is the recommended way of acquiring a Microsoft authentication session. The MSAL team will enable this up for the remaining platforms (Linux, Windows ARM, macOS Intel/x64) over time, so stay tuned!
+* `msal` - Use MSAL with brokered authentication when available (default)
+* `msal-no-broker` - Use MSAL without brokered authentication (introduced recently)
+* `classic` - Use the classic Microsoft authentication flow without MSAL
 
-> NOTE: If you have trouble authenticating via the broker, you can change the `setting(microsoft-authentication.implementation)` to `msal-no-broker`, which will use your browser to authenticate instead.
+We will remove the `classic` option since its usage is very low and most issues with the `msal` option are due to the brokering, which is remedied with `msal-no-broker`.
 
-### PKCE support for GitHub Authentication
+### Device code flow for Microsoft authentication
 
-[GitHub recently enabled](https://github.blog/changelog/2025-07-14-pkce-support-for-oauth-and-github-app-authentication/) PKCE ([Proof Key for Code Exchange](https://www.rfc-editor.org/rfc/rfc7636)) support in their authentication flows. We have adopted this in the flow that VS Code uses to authenticate to GitHub.
+Microsoft authentication now supports the device code flow in non-brokered scenarios, particularly useful for remote development environments. When other authentication methods fail, VS Code automatically falls back to device code flow, which displays a code that you can enter on another device to complete authentication.
+
+### Manage accounts command
+
+Manage your authentication accounts directly from the Command Palette using the **Accounts: Manage Accounts** command. This command provides access to account management features when the Account menu is hidden or not easily accessible.
+
+![Screenshot of the Manage Accounts menu.](images/1_106/manage-accounts-menu.png)
+
+When you run the **Manage Accounts** command, you'll see a quick pick menu listing all your active accounts. You can select an account to view available actions, including:
+
+* **Manage Trusted Extensions** - Control which extensions can access the selected account
+* **Manage Trusted MCP Servers** - Manage MCP server access permissions for accounts that support this capability
+* **Sign Out** - Sign out of the account
 
 ## Languages
 
 ### Python
 
-#### Copy test ID action
+#### Python Environments Extension: Support for python.poetryPath setting
 
-The run gutter icon context menu now includes a **Copy Test Id** command to copy the fully qualified pytest or unittest test identifier.
+The Python Environments Extension now respects the existing `python.poetryPath` user setting. This allows you to specify which Poetry executable to use. The provided path will be searched for and selected when managing Poetry environments.
 
-<video src="images/1_105/py_copy_test_id.mp4" title="Video showing the Copy Test Id command in the run gutter context menu." autoplay loop controls muted></video>
+#### Python Environments Extension: Improved venv creation: dev-requirements.txt detection
+
+When creating a new virtual environment, the extension now detects both requirements.txt and dev-requirements.txt files and installs dependencies automatically.
+
+#### Add Copilot Hover Summaries as docstring
+
+You can now add your AI-generated documentation directly into your code as a docstring using the new **Add as docstring** command in Copilot Hover Summaries. When you generate a summary for a function or class, navigate to the symbol definition and hover over it to access the **Add as docstring** command, which inserts the summary below your cursor formatted as a proper docstring.
+
+This streamlines the process of documenting your code, allowing you to quickly enhance readability and maintainability without retyping.
+
+<video src="images/1_106/pylance-add-hover-summaries-as-docstring.mp4" title="Add as docstring command in Copilot Hover Summaries." autoplay loop controls muted></video>
+
+#### Localized Copilot Hover Summaries
+
+GitHub Copilot Hover Summaries inside Pylance now respect your display language within VS Code. When you invoke an AI-generated summary, you'll get strings in the language you've set for your editor, making it easier to understand the generated documentation.
+
+![Screenshot of a Copilot Hover Summary generated in Portuguese.](images/1_106/hover-summaries-in-portuguese.png)
+
+#### Convert wildcard imports Code Action
+
+Wildcard imports (from module import *) are often discouraged in Python because they can clutter your namespace and make it unclear where names come from, reducing code clarity and maintainability.
+Pylance now helps you clean up modules that still rely on `from module import *` via a new Code Action. It replaces the wildcard with the explicit symbols, preserving aliases and keeping the import to a single statement. To try it out, you can click on the line with the wildcard import and press `kbstyle(Ctrl+.)` (or `kbstyle(Cmd+.)` on macOS) to select the **Convert to explicit imports** Code Action.
+
+![Screenshot of the Convert wildcard imports Code Action.](images/1_106/wildcard-import.png)
+
+### dotenv
+
+There is built-in basic support for dotenv files (`.env`), which are commonly used to define environment variables for applications.
 
 ## Contributions to extensions
 
@@ -486,103 +668,263 @@ The run gutter icon context menu now includes a **Copy Test Id** command to copy
 
 There has been more progress on the [GitHub Pull Requests](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github) extension, which enables you to work on, create, and manage pull requests and issues. New features include:
 
-* The `#openPullRequest` tool recognizes open PR diffs and PR files as being the "open pull request".
-* The setting `setting(githubIssues.issueAvatarDisplay)` can be used to control whether the first assignee's avatar or the author's avatar is shown in the Issues view.
-* Instead of always running the pull request queries that back the Pull Requests view when refreshing, we now check to see if there are new PRs in the repo before running the queries. This should reduce API usage when there are no new PRs.
+* AI-generated PR descriptions (via `setting(githubPullRequests.pullRequestDescription:copilot)`) will respect the repository PR template if there is one.
+* Drafts in the Pull Requests view now render in italics instead of having a `[DRAFT]` prefix.
+* Pull requests can be opened from a URL, for example: `vscode-insiders://github.vscode-pull-request-github/checkout-pull-request?uri=https://github.com/microsoft/vscode-css-languageservice/pull/460`
 
-Review the [changelog for the 0.120.0](https://github.com/microsoft/vscode-pull-request-github/blob/main/CHANGELOG.md#01200) release of the extension to learn about everything in the release.
+Review the [changelog for the 0.122.0](https://github.com/microsoft/vscode-pull-request-github/blob/main/CHANGELOG.md#01220) release of the extension to learn about everything in the release.
+
+## Preview Features
+
+### Language Models editor
+
+A new **Language Models** editor provides a centralized place to view and manage all available language models for GitHub Copilot Chat. You can open it from the chat model picker or via the command **Chat: Manage Language Models**.
+
+>**Note:** This feature is only available in [VS Code Insiders](https://code.visualstudio.com/insiders/).
+
+![Screenshot showing the Language Models editor with a list of models organized by provider.](images/1_106/language-models-editor.png)
+
+The editor displays:
+
+* All available models organized by provider
+* Model capabilities (tools, vision, agent)
+* Context size and multiplier information
+* Model visibility status
+
+You can search and filter models using:
+
+* Text search with highlighting
+* Provider filter: `@provider:"OpenAI"`
+* Capability filters: `@capability:tools`, `@capability:vision`, `@capability:agent`
+* Visibility filter: `@visible:true/false`
+
+Hover over model names or context sizes to see detailed information including model ID, version, status, and token breakdown.
+
+#### Manage model visibility
+
+Control which models appear in the chat model picker by toggling their visibility with the eye icon next to each model. When a model is visible, it appears in the model picker dropdown when you're using GitHub Copilot Chat, making it available for selection. Hidden models remain in the Language Models editor but won't appear in the model picker, helping you keep your model selection focused on the ones you use most frequently.
+
+![Screenshot showing the eye icon to toggle model visibility with a tooltip displaying "Show in the chat model picker"](images/1_106/toggle-language-model-visibility.png)
+
+This is particularly useful when you have access to many models and want to streamline your workflow by showing only your preferred models in the picker.
+
+#### Add models from installed providers
+
+Use the **Add Models...** button to configure and add models from language model providers you've already installed. When you select this button, you'll see a dropdown list of all installed model providers, such as Copilot, Anthropic, Azure, Google, Groq, Ollama, OpenAI, and others. Select a provider from the list to configure it and start using its models in GitHub Copilot Chat.
+
+![Screenshot showing the Add Models dropdown with a list of installed language model providers including Copilot, Anthropic, Azure, Google, and more](images/1_106/add-language-models-dropdown.png)
+
+This makes it easy to activate additional model providers you've installed without needing to navigate away from the Language Models editor. Access provider management by selecting the gear icon on provider rows.
 
 ## Extension Authoring
 
-### Microsoft Authentication now supports WWW-Authenticate claims challenges
+### ID token in authentication sessions
 
-[Azure is now enforcing](https://learn.microsoft.com/entra/identity/authentication/concept-mandatory-multifactor-authentication) that all create/delete operations to Azure resources must be done using authenticated sessions that used MFA to sign in. While some organizations require MFA for any authentication reason, some organizations do not enforce this, and those are affected by this MFA enforcement.
+The `AuthenticationSession` interface now includes an optional `idToken` property. This allows authentication providers to return ID tokens in addition to access tokens, which is particularly useful for scenarios that require user identity information. The Microsoft authentication provider returns this field, while other providers like GitHub may not.
 
-If you have an extension that uses Microsoft Authentication and talks to ARM, you need to handle the case when the ARM API call returns a `401 Unauthorized` with a `WWW-Authenticate` header like so:
+ID tokens contain claims about the authenticated user and are signed by the identity provider, making them useful for verifying user identity. For more information about the difference between ID tokens and access tokens, see <https://oauth.net/id-tokens-vs-access-tokens/>.
 
-```text
-Bearer realm="", authorization_uri="https://login.microsoftonline.com/common/oauth2/authorize", error="insufficient_claims", claims="SOME VALUE HERE"
-```
-
-The good news is that we have introduced a finalized API that you can use to handle this status code:
-
-```ts
-const wwwAuthenticateFromRequest = headers['WWW-Authenticate']; // the string above
-vscode.authentication.getSession(
-  'microsoft',
-  {
-    wwwAuthenticate: wwwAuthenticateFromRequest,
-    fallbackScopes: scopesFromOriginalRequest
-  },
-  {
-    createIfNone: true
-  })
-```
-
-All you have to do is pass in, verbatim, that `WWW-Authenticate` value along with the scopes that you originally asked for (most likely the ARM scope), and the Microsoft Authentication Provider handles the rest and makes sure the user goes through MFA.
-
-We have worked with the Azure Tools team, who owns the Azure Resources extension, to adopt this new API. If you are using that extension or something that uses that extension, this enforcement should be handled. If you experience problems, open an issue on the [Azure Resources extension](https://github.com/microsoft/vscode-azureresourcegroups).
-
-> NOTE: Looking to support `WWW-Authenticate` challenges in _your_ `AuthenticationProvider`? Provide your thoughts on the proposed API in issue [#267992](https://github.com/microsoft/vscode/issues/267992).
-
-### Prompt and instructions file contributions
-
-Extensions can now contribute prompt and instructions files.
-
-```json
-  "contributes": {
-    "chatPromptFiles": [
-      {
-        "name": "ReviewAndCreateIssue",
-        "description": "Review the selected code and create an issue",
-        "path": "./prompts/reviewAndCreateIssue.prompt.md"
-      }
-    ],
-    "chatInstructions": [
-      {
-        "name": "TextMateGuidelines",
-        "description": "Use these instructions when creating or modifying TextMate grammars",
-        "path": "./prompts/textMateGuidelines.instructions.md"
-      }
-    ]
-  }
-```
-
-Chat mode contributions (`chatModes`) are currently behind a proposed API flag.
-
-### List keys in SecretStorage
-
-This iteration, we have finalized the API to list all keys that your extension has stored in Secret Storage. This can be found in the `context.secrets` object:
-
-```ts
-export function activate(context: ExtensionContext) {
-  const keys: string[] = await context.secrets.keys();
-
-  const value = await context.secrets.get(keys[0]); // a value that exists
+```typescript
+export interface AuthenticationSession {
+  /**
+   * The ID token.
+   */
+  readonly idToken?: string;
 }
 ```
 
-One example where this can be used is on `deactivate`, where you might want to delete all secret storage data.
+### Git extension `getRepositoryWorkspace` API
+
+The built-in Git extension offers a new API for getting a folder that's known to be associated with a git repository remote. This works by caching a repository-remote to folder mapping when the user opens a folder with a git remote.
+
+### View containers in Secondary Side Bar
+
+Extension authors can now register view containers in the Secondary Side Bar by using the new `secondarySidebar` contribution point. This lets extensions place their custom views alongside built-in views like Chat in the Secondary Side Bar and provide a better integration with VS Code's dual side bar layout.
+
+```json
+{
+  "contributes": {
+    "viewsContainers": {
+      "secondarySidebar": [
+        {
+          "id": "myExtensionViews",
+          "title": "My Extension",
+          "icon": "$(extensions)"
+        }
+      ]
+    },
+    "views": {
+      "myExtensionViews": [
+        {
+          "id": "myCustomView",
+          "name": "Custom View",
+          "when": "true"
+        }
+      ]
+    }
+  }
+}
+```
+
+## Proposed APIs
+
+### Quick Pick and Quick Input improvements
+
+The Quick Pick and Quick Input APIs include several new capabilities that give extension developers more flexibility in creating interactive user interfaces.
+
+<video src="images/1_106/quick-pick-api.mp4" title="Video showing quick pick with prompt, toggle and file icons." autoplay loop controls muted></video>
+
+#### Proposed API: Toggle button support
+
+Extensions can add toggle buttons to Quick Pick and Quick Input interfaces through the `toggles` property on `QuickInput`. This enables scenarios like a password visibility toggle in the input box area, allowing users to interact with controls without leaving the quick pick interface.
+
+Your comments and feedback on this API proposal are appreciated (please refer to the [GitHub issue](https://github.com/microsoft/vscode/issues/144956)).
+
+```typescript
+export enum QuickInputButtonLocation {
+  ...
+
+  /**
+   * The button is rendered at the far end inside the input box.
+   */
+  Input = 3
+}
+
+export interface QuickInputButton {
+  ...
+
+  /**
+   * When present, indicates that the button is a toggle button that can be checked or unchecked.
+   *
+   * **Note:** This property is currently only applicable to buttons with {@link QuickInputButtonLocation.Input} location.
+   * It must be set for such buttons, and the state will be updated when the button is toggled.
+   * It cannot be set for buttons with other location values.
+   */
+  readonly toggle?: { checked: boolean };
+}
+```
+
+#### Proposed API: Prompt support for Quick Pick
+
+Quick Pick supports a `prompt` property, similar to the one available in Input Box. The prompt displays persistent text beneath the input box that remains visible while users type, providing helpful guidance or instructions that doesn't disappear when the user starts entering text.
+
+Your comments and feedback on this API proposal are appreciated (please refer to the [GitHub issue](https://github.com/microsoft/vscode/issues/78335)).
+
+```typescript
+export interface QuickPick<T extends QuickPickItem> extends QuickInput {
+  /**
+   * Optional text that provides instructions or context to the user.
+   *
+   * The prompt is displayed below the input box and above the list of items.
+   */
+  prompt: string | undefined;
+}
+
+export interface QuickPickOptions {
+  /**
+   * Optional text that provides instructions or context to the user.
+   *
+   * The prompt is displayed below the input box and above the list of items.
+   */
+  prompt?: string;
+}
+```
+
+#### Proposed API: File icons for Quick Pick items
+
+Quick Pick items can display file-type-specific icons through the `resourceUri` property on `QuickPickItem`. When you provide a resource URI, VS Code automatically derives the appropriate label, description, and icon based on the resource type, matching your current theme's file icon set. This is particularly useful when building file or folder selection interfaces, as users can quickly identify items by their familiar file type icons.
+
+Your comments and feedback on this API proposal are appreciated (please refer to the [GitHub issue](https://github.com/microsoft/vscode/issues/59826)).
+
+```typescript
+export interface QuickPickItem {
+  /**
+   * A {@link Uri} representing the resource associated with this item.
+   *
+   * When set, this property is used to automatically derive several item properties if they are not explicitly provided:
+   * - **Label**: Derived from the resource's file name when {@link QuickPickItem.label label} is not provided or is empty.
+   * - **Description**: Derived from the resource's path when {@link QuickPickItem.description description} is not provided or is empty.
+   * - **Icon**: Derived from the current file icon theme when {@link QuickPickItem.iconPath iconPath} is set to
+   *   {@link ThemeIcon.File} or {@link ThemeIcon.Folder}.
+   */
+  resourceUri?: Uri;
+}
+```
+
+### GitHub-style alerts in MarkdownStrings ([#209652](https://github.com/microsoft/vscode/issues/209652))
+
+We have added support for rendering [GitHub-style alert syntax](https://github.com/orgs/community/discussions/16925) in `MarkdownString` by setting a new property `supportAlertSyntax`.
+
+```typescript
+const markdown = new vscode.MarkdownString();
+markdown.supportAlertSyntax = true;
+markdown.value = `
+> [!NOTE]
+> Useful information that users should know, even when skimming content.
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
+`;
+```
+
+This enables extensions to render alerts in various places in the UI, such as comments:
+
+![Screenshot showing GitHub-style alerts displayed in a comment thread showing each alert type with their respective icons and styling.](images/1_106/markdown-alerts.png)
+
+### MarkdownString support in TreeItem labels ([#115365](https://github.com/microsoft/vscode/issues/115365))
+
+Extension authors can now use `MarkdownString` in tree view item labels, enabling a subset of Markdown syntax including codicons and text formatting. This allows extensions to create more visually rich tree views.
+
+```typescript
+// Codicons
+const itemWithIcon = new vscode.TreeItem({ label: new vscode.MarkdownString('$(star) Starred item', true) });
+
+// Text formatting (must surround the entire string)
+const italicItem = new vscode.TreeItem({ label: new vscode.MarkdownString('_Italic item_') });
+
+// Formatting and codicons can be combined
+const combined = new vscode.TreeItem({ label: new vscode.MarkdownString('_~~**$(check) Done $(star)**~~_', true) });
+```
+
+The above items render as:
+![Screenshot of a tree view showing three items: a starred item with an icon, an italic item, and a combined item with check and star icons plus bold, italic, and strikethrough formatting.](images/1_106/markdown-labels.png)
 
 ## Engineering
 
-### Playwright VS Code MCP server
+### Exploration of automated UX PR testing
 
-We further explored using an MCP server that can control a local build of VS Code to help in the development loop for VS Code. While we had mixed results on model comprehension for parsing screenshots, orchestration for subagents using the `#executePrompt` tool (which can be enabled with `setting(github.copilot.chat.executePrompt.enabled)`) was effective at not polluting context.
+We've introduced a new automation workflow that helps reviewers understand UI changes in pull requests without manually checking out and running the code. By adding the `~copilot-video-please` label to a pull request with UI changes, an automated process kicks off that:
 
-We plan to explore this further in future releases, so stay tuned!
+* Builds VS Code from the PR branch
+* Uses GitHub Copilot CLI to interact with the changes and record a video along the way - leveraging [playwright-mcp](https://github.com/microsoft/playwright-mcp)
+* Generates a Playwright trace for detailed inspection
+* Posts the results as a comment on the PR
 
-To try this MCP Server, you can find it [in the test/mcp folder](https://github.com/microsoft/vscode/tree/main/test/mcp) of the vscode repo. It's very easy to get started:
+While it's still early, this workflow can reduce the manual effort required for code review, especially for small UI changes. The videos and traces help reviewers quickly verify that changes work as expected. Currently, the videos are only accessible to team members.
 
-1. Follow the [Contribution Guidelines](https://github.com/microsoft/vscode/wiki/How-to-Contribute) for getting a local version of Code OSS running.
-2. Use [our trivial (for now) prompt file](https://github.com/microsoft/vscode/blob/cd7de11f65cd5ff6a491f04fc013e363780bde31/.github/prompts/playwright.prompt.md) in agent mode to ask a question: `/playwright <your question here>`.
+For more details about this automation, see <https://github.com/microsoft/vscode/issues/272529>.
+
+### macOS 11.0 support has ended
+
+VS Code `1.106` is the last release that supports macOS 11.0 (macOS Big Sur). Refer to our [FAQ](https://code.visualstudio.com/docs/supporting/faq#_can-i-run-vs-code-on-old-macos-versions) for additional information.
 
 ## Notable fixes
 
-* [vscode#265842](https://github.com/microsoft/vscode/issues/265842) - Chat: fix a file corruption issue affecting Sonnet, Gemini, and Grok models
-* [vscode#221255](https://github.com/microsoft/vscode/issues/221255) - Fix terminal links opening regardless of confirmation of "Opening URIs can be insecure" warning.
-* [vscode#229374](https://github.com/microsoft/vscode/issues/229374) - Fix to open terminal OSC 8 hyperlink to a folder in VS Code's explorer instead of native file explorer.
-* [vscode#268443](https://github.com/microsoft/vscode/issues/268443) - Settings links in Release Notes do nothing.
+* [vscode#258236](https://github.com/microsoft/vscode/issues/258236) - Add setting for extensions request timeout used when installing extensions
+* [vscode#272945](https://github.com/microsoft/vscode/issues/272945) - Tasks do not trigger `onDidStartTerminalShellExecution`
+* [vscode#273372](https://github.com/microsoft/vscode/issues/273372) - `/**` is automatically closed with `*/` in .gitignore files
+* [vscode#243584](https://github.com/microsoft/vscode/issues/243584) - First input gets ignored on pwsh/conpty
+* [vscode#271952](https://github.com/microsoft/vscode/pull/271952) - Copilot 'configure instructions' quickpick doesn't show workspace-level agent instruction files (copilot-instructions.md, AGENTS.md)
+* [vscode#274631](https://github.com/microsoft/vscode/pull/274631) - Network: Load intermediate certification authorities on Windows
 
 ## Thank you
 
@@ -590,89 +932,110 @@ To try this MCP Server, you can find it [in the test/mcp folder](https://github.
 
 Contributions to our issue tracking:
 
-* [@gjsjohnmurray (John Murray)](https://github.com/gjsjohnmurray)
-* [@albertosantini (Alberto Santini)](https://github.com/albertosantini)
 * [@RedCMD (RedCMD)](https://github.com/RedCMD)
+* [@gjsjohnmurray (John Murray)](https://github.com/gjsjohnmurray)
 * [@IllusionMH (Andrii Dieiev)](https://github.com/IllusionMH)
+* [@albertosantini (Alberto Santini)](https://github.com/albertosantini)
+* [@Accurio (Accurio)](https://github.com/Accurio)
 
 ### Pull Requests
 
 Contributions to `vscode`:
 
-* [@alpalla (Alessio Palladino)](https://github.com/alpalla): Maintain line breaks in transform to Camel and Pascal case actions [PR #263781](https://github.com/microsoft/vscode/pull/263781)
-* [@andr8928](https://github.com/andr8928): Suggest widget: Bug fix - when widget is too tall, ensure larger of above and below space is used. [PR #260583](https://github.com/microsoft/vscode/pull/260583)
-* [@avarayr (avarayr)](https://github.com/avarayr): Fix: Disable window shadows on macOS Tahoe to prevent GPU performance issues [PR #267724](https://github.com/microsoft/vscode/pull/267724)
-* [@bwateratmsft (Brandon Waterloo [MSFT])](https://github.com/bwateratmsft): Fix the type incompatibility issue in the MCP HTTP server handler [PR #268548](https://github.com/microsoft/vscode/pull/268548)
-* [@CGNonofr (Loïc Mangeonjean)](https://github.com/CGNonofr)
-  * fix: race condition on supported task types [PR #265847](https://github.com/microsoft/vscode/pull/265847)
-  * fix: properly update cloned stylesheets on mutation in firefox [PR #269126](https://github.com/microsoft/vscode/pull/269126)
-* [@dmiska25 (Dylan Miska)](https://github.com/dmiska25): dispose of ref instead of object itself to avoid null objects. [PR #266299](https://github.com/microsoft/vscode/pull/266299)
-* [@DrSergei (Sergei Druzhkov)](https://github.com/DrSergei): Improve canSetExpressionValue check [PR #268952](https://github.com/microsoft/vscode/pull/268952)
-* [@essjay05 (Joy Serquiña)](https://github.com/essjay05): fix: adds aria-description to provide screen reader context for tooltip [PR #267818](https://github.com/microsoft/vscode/pull/267818)
-* [@garciasdos (Diego García)](https://github.com/garciasdos): fix: elicitation email validator [PR #265326](https://github.com/microsoft/vscode/pull/265326)
-* [@harbin1053020115 (ermin.zem)](https://github.com/harbin1053020115): feat: split editor group direction according to workbench.editor.splitInGroupLayout configuration when clicking walkthrough ':toSide' commands  [PR #267557](https://github.com/microsoft/vscode/pull/267557)
-* [@hron (Aleksei Gusev)](https://github.com/hron): Allow to bind `diffEditor.revert` to keyboard [PR #225881](https://github.com/microsoft/vscode/pull/225881)
-* [@leonard520 (Xiaoyun Ding)](https://github.com/leonard520): Add conversation id to mcp meta [PR #265303](https://github.com/microsoft/vscode/pull/265303)
-* [@lukocode](https://github.com/lukocode): fix: ensure SVG images are loaded before clipboard copy
- [PR #263799](https://github.com/microsoft/vscode/pull/263799)
-* [@mawosoft (Matthias Wolf)](https://github.com/mawosoft)
-  * Fix PowerShell shell integration when strict mode is enabled. [PR #266260](https://github.com/microsoft/vscode/pull/266260)
-  * Restore PSReadline key remapping in PowerShell shell integration [PR #267311](https://github.com/microsoft/vscode/pull/267311)
-* [@narbit (Natalya Arbit)](https://github.com/narbit): Do not allow localhost redirect in favor of loopback IP redirect [PR #267546](https://github.com/microsoft/vscode/pull/267546)
-* [@Peter-developer01 (Peter)](https://github.com/Peter-developer01): Fix a typo in nls.localize(...) in localization.contribution.ts [PR #263228](https://github.com/microsoft/vscode/pull/263228)
-* [@RedCMD (RedCMD)](https://github.com/RedCMD): Fix RangeFormat wrong document race condition [PR #267628](https://github.com/microsoft/vscode/pull/267628)
+* [@AminSajedian (Amin Sajedian)](https://github.com/AminSajedian): Issue #210694 add hoverforeground and hoverbackground to activity bars [PR #263146](https://github.com/microsoft/vscode/pull/263146)
+* [@avarayr (avarayr)](https://github.com/avarayr): fix: Increase workbench border radius on macos tahoe [PR #270236](https://github.com/microsoft/vscode/pull/270236)
+* [@baptiste0928 (Baptiste Girardeau)](https://github.com/baptiste0928): fix: resolve renamed paths on merge editor [PR #254677](https://github.com/microsoft/vscode/pull/254677)
+* [@barroit (barroit)](https://github.com/barroit): Fix tabstop calc in tokenizeLineToHTML() [PR #263387](https://github.com/microsoft/vscode/pull/263387)
+* [@Benimautner](https://github.com/Benimautner): Fix: don't apply inertial scrolling if input device is a mouse. [PR #268284](https://github.com/microsoft/vscode/pull/268284)
+* [@danielbayley (Daniel Bayley)](https://github.com/danielbayley): Add `TM_DIRECTORY_BASE` snippets variable [PR #270262](https://github.com/microsoft/vscode/pull/270262)
+* [@dibarbet (David Barbet)](https://github.com/dibarbet): Hookup semantic tokens range refresh notification to the viewport contribution [PR #271419](https://github.com/microsoft/vscode/pull/271419)
+* [@dnicolson (Dave Nicolson)](https://github.com/dnicolson): Update activation event linter message [PR #269156](https://github.com/microsoft/vscode/pull/269156)
+* [@DrSergei (Sergei Druzhkov)](https://github.com/DrSergei): Fix disassembly view [PR #270361](https://github.com/microsoft/vscode/pull/270361)
+* [@gjsjohnmurray (John Murray)](https://github.com/gjsjohnmurray): Show the `Learn How to Hide AI Features` in more situations (fix #268450) [PR #268462](https://github.com/microsoft/vscode/pull/268462)
+* [@imbant (imbant)](https://github.com/imbant): fix(chat): correct file icon rendering in Files & Folders picker [PR #255384](https://github.com/microsoft/vscode/pull/255384)
+* [@JeffreyCA](https://github.com/JeffreyCA): Add Fig spec for Azure Developer CLI (azd) [PR #272348](https://github.com/microsoft/vscode/pull/272348)
+* [@jlelong (Jerome Lelong)](https://github.com/jlelong)
+  * Make pair colorizer ignore \@ifnextchar [PR #272329](https://github.com/microsoft/vscode/pull/272329)
+  * Exclude trailing underscore from bracket pairs in LaTeX [PR #272758](https://github.com/microsoft/vscode/pull/272758)
+* [@jmg-duarte (José Duarte)](https://github.com/jmg-duarte): Fix localization for terminal.hoverHighlightBackground [PR #264228](https://github.com/microsoft/vscode/pull/264228)
+* [@Mingpan](https://github.com/Mingpan): Copy selection for deleted chunk in inline diff [PR #267991](https://github.com/microsoft/vscode/pull/267991)
+* [@obrobrio2000 (Giovanni Magliocchetti)](https://github.com/obrobrio2000)
+  * Add "Go to Next/Previous Uncovered Line" navigation for Test Coverage [PR #269505](https://github.com/microsoft/vscode/pull/269505)
+  * html: add setting to disable end tag suggestions [PR #269605](https://github.com/microsoft/vscode/pull/269605)
+* [@ohah (ohah)](https://github.com/ohah): fix: file-found Badge vertical (#235159)  [PR #238757](https://github.com/microsoft/vscode/pull/238757)
+* [@rajniszp (Piotr Rajnisz)](https://github.com/rajniszp): i18n: add missing localizations for monaco-editor [PR #268038](https://github.com/microsoft/vscode/pull/268038)
+* [@RedCMD (RedCMD)](https://github.com/RedCMD): Fix soft wrapping on \n [PR #258407](https://github.com/microsoft/vscode/pull/258407)
+* [@remcohaszing (Remco Haszing)](https://github.com/remcohaszing): Add dotenv support [PR #273074](https://github.com/microsoft/vscode/pull/273074)
+* [@ritesh006 (Ritesh Kudkelwar)](https://github.com/ritesh006): feat(ts-codeLens): show "implementations" CodeLens for overridden methods #263749 [PR #264546](https://github.com/microsoft/vscode/pull/264546)
+* [@Selva-Ganesh-M (Selva Ganesh M)](https://github.com/Selva-Ganesh-M): fix(editor)(#261780): transform UPPER_CASE to PascalCase [PR #262959](https://github.com/microsoft/vscode/pull/262959)
 * [@SimonSiefke (Simon Siefke)](https://github.com/SimonSiefke)
-  * fix: memory leak in ReplAccessibilityAnnouncer [PR #264937](https://github.com/microsoft/vscode/pull/264937)
-  * fix: memory leak in chat widget [PR #265002](https://github.com/microsoft/vscode/pull/265002)
-  * reduce memory by ~1.2 MB [PR #267785](https://github.com/microsoft/vscode/pull/267785)
-  * fix: memory leak in folding [PR #269071](https://github.com/microsoft/vscode/pull/269071)
-* [@Skn0tt (Simon Knott)](https://github.com/Skn0tt): Treat ellipsis character as search wildcard [PR #262462](https://github.com/microsoft/vscode/pull/262462)
-* [@tmm1 (Aman Karmani)](https://github.com/tmm1): Fix disposable leak in BrowserSocketFactory [PR #263736](https://github.com/microsoft/vscode/pull/263736)
-* [@turansky (Victor Turansky)](https://github.com/turansky): fix: `lm.registerLanguageModelChatProvider` jsdoc formatting [PR #266485](https://github.com/microsoft/vscode/pull/266485)
-* [@witsaint (DQ)](https://github.com/witsaint): fix: confirmation btn style [PR #267438](https://github.com/microsoft/vscode/pull/267438)
-* [@yiliang114 (易良)](https://github.com/yiliang114): Fix to #263546, for submenu of treeView view/item/context z-index iss… [PR #263555](https://github.com/microsoft/vscode/pull/263555)
+  * fix: memory leak in gettingStarted [PR #216876](https://github.com/microsoft/vscode/pull/216876)
+  * fix: memory leak in output view [PR #221605](https://github.com/microsoft/vscode/pull/221605)
+  * fix: memory leak in notebook text model [PR #265013](https://github.com/microsoft/vscode/pull/265013)
+  * fix: memory leak in InlayHints [PR #265185](https://github.com/microsoft/vscode/pull/265185)
+  * fix: memory leak in chat session tracker [PR #269027](https://github.com/microsoft/vscode/pull/269027)
+  * fix: memory leak in getTerminalActionBarArgs [PR #269516](https://github.com/microsoft/vscode/pull/269516)
+  * fix: memory leak in sticky scroll [PR #271102](https://github.com/microsoft/vscode/pull/271102)
+  * fix: memory leak in chat welcome [PR #271121](https://github.com/microsoft/vscode/pull/271121)
+* [@sinsincp](https://github.com/sinsincp): Fix AppUserModelID for code-workspace association [PR #272753](https://github.com/microsoft/vscode/pull/272753)
+* [@Skn0tt (Simon Knott)](https://github.com/Skn0tt): Testing - Uncompleted result should be marked as skipped [PR #273742](https://github.com/microsoft/vscode/pull/273742)
+* [@subin-chella (subin)](https://github.com/subin-chella): fix the bug #209943 [PR #216662](https://github.com/microsoft/vscode/pull/216662)
+* [@tamuratak (Takashi Tamura)](https://github.com/tamuratak)
+  * chat: always apply prompt file and auto-attach instructions. Fix #271624 [PR #272020](https://github.com/microsoft/vscode/pull/272020)
+  * fix(chat): guard against undefined customModes.custom Fix #272223 and #272236 [PR #272263](https://github.com/microsoft/vscode/pull/272263)
+* [@yavanosta (Dmitry Guketlev)](https://github.com/yavanosta): Fix memory leak in InlineEditsGutterIndicator (#273549) [PR #273550](https://github.com/microsoft/vscode/pull/273550)
 
 Contributions to `vscode-copilot-chat`:
 
-* [@24anisha](https://github.com/24anisha): Adding accept/reject and survival to GH Telemetry [PR #1059](https://github.com/microsoft/vscode-copilot-chat/pull/1059)
-* [@DGideas (Wanlin Wang 王万霖)](https://github.com/DGideas): improve custom OpenAI Compatible model URL resolution [PR #1074](https://github.com/microsoft/vscode-copilot-chat/pull/1074)
-* [@johan-j (Johan Jansson)](https://github.com/johan-j): Grouping of BYOK custom models in model picker [PR #1111](https://github.com/microsoft/vscode-copilot-chat/pull/1111)
-* [@shaunm-msft (Shaun Miller)](https://github.com/shaunm-msft)
-  * Modifications to allow direct-endpoint tests to use responses api [PR #1047](https://github.com/microsoft/vscode-copilot-chat/pull/1047)
-  * restore correct service creation for list-models [PR #1090](https://github.com/microsoft/vscode-copilot-chat/pull/1090)
-* [@vritant24 (Vritant Bhardwaj)](https://github.com/vritant24): Ungroup tools based on embedding rankings [PR #678](https://github.com/microsoft/vscode-copilot-chat/pull/678)
-* [@yemohyleyemohyle](https://github.com/yemohyleyemohyle)
-  * Yemohyle/dedup messages telemetry [PR #952](https://github.com/microsoft/vscode-copilot-chat/pull/952)
-  * Yemohyle/edit feedback msft internal [PR #984](https://github.com/microsoft/vscode-copilot-chat/pull/984)
+* [@24anisha](https://github.com/24anisha): Built-in toolsets for default tools [PR #1139](https://github.com/microsoft/vscode-copilot-chat/pull/1139)
+* [@AbdelrahmanAbouelenin (ababouelenin)](https://github.com/AbdelrahmanAbouelenin): Custom vsc model prompt  [PR #1504](https://github.com/microsoft/vscode-copilot-chat/pull/1504)
+* [@devm33 (Devraj Mehta)](https://github.com/devm33): Update repo URL in @vscode/chat-lib package [PR #1255](https://github.com/microsoft/vscode-copilot-chat/pull/1255)
+* [@DGideas (Wanlin Wang 王万霖)](https://github.com/DGideas): Improve error handling for Copilot Chat when 404 [PR #1073](https://github.com/microsoft/vscode-copilot-chat/pull/1073)
+* [@IanMatthewHuff (Ian Huff)](https://github.com/IanMatthewHuff): Fix issue with internal git repo telemetry collection [PR #1408](https://github.com/microsoft/vscode-copilot-chat/pull/1408)
+* [@joelverhagen (Joel Verhagen)](https://github.com/joelverhagen): Allow latest server.json schema in assisted NuGet MCP install flow [PR #1268](https://github.com/microsoft/vscode-copilot-chat/pull/1268)
+* [@phawrylak (Paweł Hawrylak)](https://github.com/phawrylak): Add security-sensitive file extensions to workspace indexing exclusion list [PR #1157](https://github.com/microsoft/vscode-copilot-chat/pull/1157)
 
-Contributions to `vscode-eslint`:
+Contributions to `vscode-html-languageservice`:
 
-* [@frodi-karlsson (Fróði Karlsson)](https://github.com/frodi-karlsson)
-  * Support realpaths with config [PR #2068](https://github.com/microsoft/vscode-eslint/pull/2068)
-  * support setting command in config for lintTask [PR #2081](https://github.com/microsoft/vscode-eslint/pull/2081)
-* [@fronterior (Low Front)](https://github.com/fronterior): Fix workspaceFolder check to use optional chaining [PR #2075](https://github.com/microsoft/vscode-eslint/pull/2075)
+* [@obrobrio2000 (Giovanni Magliocchetti)](https://github.com/obrobrio2000): Add setting to disable end tag suggestions [PR #219](https://github.com/microsoft/vscode-html-languageservice/pull/219)
 
 Contributions to `vscode-json-languageservice`:
 
-* [@danila-schelkov (Danila Schelkov)](https://github.com/danila-schelkov): feat: examples completion for propertyNames [PR #286](https://github.com/microsoft/vscode-json-languageservice/pull/286)
+* [@Legend-Master (Tony)](https://github.com/Legend-Master): Escape plain text description hover correctly [PR #283](https://github.com/microsoft/vscode-json-languageservice/pull/283)
 
-Contributions to `vscode-mypy`:
+Contributions to `vscode-languageserver-node`:
 
-* [@cnaples79 (Chase Naples)](https://github.com/cnaples79): Fix: parse mypy diagnostics from stderr in non_interactive mode [PR #375](https://github.com/microsoft/vscode-mypy/pull/375)
+* [@dibarbet (David Barbet)](https://github.com/dibarbet): Clear workspace pull state on document close to prevent stale diagnostics [PR #1674](https://github.com/microsoft/vscode-languageserver-node/pull/1674)
 
-Contributions to `vscode-python-environments`:
+Contributions to `vscode-pull-request-github`:
 
-* [@almarouk (Abdelrahman AL MAROUK)](https://github.com/almarouk): fix conda env refresh not waiting for promises [PR #751](https://github.com/microsoft/vscode-python-environments/pull/751)
-* [@renan-r-santos (Renan Santos)](https://github.com/renan-r-santos): Display activate button when a terminal is moved to the editor window [PR #764](https://github.com/microsoft/vscode-python-environments/pull/764)
+* [@bendrucker (Ben Drucker)](https://github.com/bendrucker): Enable all LLM tools in prompts (agent mode) [PR #6956](https://github.com/microsoft/vscode-pull-request-github/pull/6956)
+* [@gerardbalaoro (Gerard Balaoro)](https://github.com/gerardbalaoro): Make branch list timeout configurable (#2840) [PR #7927](https://github.com/microsoft/vscode-pull-request-github/pull/7927)
+* [@wankun-tcj](https://github.com/wankun-tcj): Fix avatar display issue in Pull Request tree view [PR #7851](https://github.com/microsoft/vscode-pull-request-github/pull/7851)
 
-Contributions to `vscode-vsce`:
+Contributions to `vscode-test-cli`:
 
-* [@joyceerhl (Joyce Er)](https://github.com/joyceerhl): fix: generate language model tag for `languageModelChatProvider` contributions [PR #1199](https://github.com/microsoft/vscode-vsce/pull/1199)
+* [@bwateratmsft (Brandon Waterloo [MSFT])](https://github.com/bwateratmsft): Bump version ahead of release [PR #86](https://github.com/microsoft/vscode-test-cli/pull/86)
 
 Contributions to `debug-adapter-protocol`:
 
-* [@dmjio (David M. Johnson)](https://github.com/dmjio): Update debug adapters list in adapters.md [PR #562](https://github.com/microsoft/debug-adapter-protocol/pull/562)
+* [@rsubtil (Ricardo Subtil)](https://github.com/rsubtil): Add Godot to the list of DAP adapters [PR #568](https://github.com/microsoft/debug-adapter-protocol/pull/568)
 
+Contributions to `language-server-protocol`:
+
+* [@kristoff-it (Loris Cro)](https://github.com/kristoff-it): Update servers.md [PR #2192](https://github.com/microsoft/language-server-protocol/pull/2192)
+
+Contributions to `monaco-editor`:
+
+* [@flofriday (Florian Freitag)](https://github.com/flofriday): Fix Kotlin number literals [PR #4973](https://github.com/microsoft/monaco-editor/pull/4973)
+
+Contributions to `node-pty`:
+
+* [@devm33 (Devraj Mehta)](https://github.com/devm33): Load native addons directly from prebuilds directory [PR #809](https://github.com/microsoft/node-pty/pull/809)
+
+Contributions to `python-environment-tools`:
+
+* [@VictorColomb (Victor Colomb)](https://github.com/VictorColomb): fix(poetry): pep503 normalize package name [PR #242](https://github.com/microsoft/python-environment-tools/pull/242)
 
 We really appreciate people trying our new features as soon as they are ready, so check back here often and learn what's new.
 
