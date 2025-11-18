@@ -5,8 +5,10 @@ import { ReleaseNotesSource } from './sources/ReleaseNotesSource.js';
 import { AudioCuesSource } from './sources/AudioCuesSource.js';
 import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
 import { classifyQueryType } from './utils/queryTypeDecider.js';
-import { logFeature, removeTrackedFeature, checkForUpdates, checkDescriptionUpdates } from './utils/featureTracker.js';
-//import { logFeature, removeTrackedFeature } from './utils/mcpFeatureTracker.js';
+import { removeTrackedFeature } from './utils/featureTracking/featureRemover.js';
+import { logFeature } from './utils/featureTracking/featureLogger.js';
+import { checkForUpdates } from './utils/featureTracking/updateChecker.js';
+
  
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
 export async function activate(context: vscode.ExtensionContext) {

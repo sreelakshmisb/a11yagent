@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
-import { getGitHubBearer } from '../auth.js';
+import { getGitHubBearer } from '../../auth.js';
 
 const TRACKED_ISSUES_KEY = 'trackedGithubIssues';
 // Global variable to store the MCP client instance
