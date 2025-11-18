@@ -158,7 +158,7 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
     if (e.button.tooltip === "Refresh State") {
       const issueUrl = e.item.detail;
 
-      if (e.item.description === "sreelakshmisb/portfolio") {
+      if (e.item.description === "microsoft/vscode" || e.item.description === "microsoft/vscode-copilot-release") {
         // Handle refresh for issues
         const issueIndex = trackedIssues.findIndex(
           (issue) => issue.html_url === issueUrl,
