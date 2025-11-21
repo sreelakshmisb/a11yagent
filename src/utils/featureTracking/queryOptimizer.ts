@@ -10,9 +10,6 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
       return;
     }
 
-    //const optimizedQuery = await optimizeQuery(request.prompt);
-   // console.log('Optimized GitHub Query:', optimizedQuery);
-
     const instruction = `
     You are an assistant that finds relevant GitHub issues. Your job is to take a user's accessibility-related problem description and return only the most relevant, verified issues.
     You need to perform the following steps
@@ -50,7 +47,9 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
           - Unrelated to the mentioned feature
           - About unrelated components
 
-    5. Return the top 1 to 3 most relevant issues, showing: 
+    5. Exclude tool runs from the results.
+
+    6. Return the top 1 to 3 most relevant issues, showing: 
       - Title
       - Issue Number
       - URL 
@@ -59,7 +58,7 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
       - For closed issues, provide details of the final resolution or reason for closure.
       - One or two sentence reason for relevance. 
 
-    6. If nothing is a strong match, reply: "No relevant issues found."
+    7. If nothing is a strong match, reply: "No relevant issues found."
 
     RULES FOR QUERY OPTIMIZATION:
     1. Focus on the core technical elements: features, main symptom or behavior, key error messages, function/class/module names, APIs, file paths,libraries/frameworks, versions.
@@ -79,7 +78,7 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
         responseStreamOptions: {
           stream,
           references: true,
-          responseText: true,
+          responseText: true
         },
         tools: [issueSearchTool],
       },
@@ -87,8 +86,8 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
     );
 
     // Wait for completion
-    await libResult.result;
-    
+    const result = await libResult.result;
+
   } catch (error) {
     stream.markdown(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
