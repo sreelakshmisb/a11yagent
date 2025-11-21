@@ -27,8 +27,14 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
 
   // Display a quick pick menu to select issues to remove
   const quickPick = vscode.window.createQuickPick();
+  quickPick.title = "Manage Tracked Issues";
+  quickPick.placeholder = "Select items to remove from tracking";
   quickPick.items = createQuickPickItems(context, trackedIssues, true);
   quickPick.canSelectMany = true;
+  quickPick.matchOnDescription = false;
+  quickPick.matchOnDetail = false;
+  // Hide the search box since we're just selecting from a list
+  quickPick.value = '';
 
   // Handle the refresh button click
   quickPick.onDidTriggerItemButton(async (e) => {

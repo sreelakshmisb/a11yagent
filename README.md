@@ -7,6 +7,7 @@ a11yagent is a VS Code extension that provides an accessibility-focused chat par
 - **Accessibility Help**: Ask accessibility-related questions and the agent will fetch answers from VS Code's accessibility documentation.
 - **Settings Search**: Ask about settings (e.g., "settings volume") and the agent will search through the default settings file, matching your query to the most relevant setting and returning its name.
 - **Release Notes**: Ask "what's new" or about release notes, and the agent will fetch the latest VS Code release notes for you.
+- **Issue Logging**: Use the `/log` command to directly track specific GitHub issues by their number (e.g., `/log 123456`).
 - **Audio Cues Information**: Get detailed information about VS Code's audio cues and accessibility signals from the source code.
 - **Accessibility Signal Tracking**: The extension monitors and logs which accessibility signals are played during your VS Code sessions, storing them in a `tracked_signals.log` file.
 - **Tracked Issues and Descriptions**: Track GitHub issues and custom descriptions. Get notified when updates are available, and manage tracked items with a QuickPick menu.

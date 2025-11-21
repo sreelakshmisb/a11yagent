@@ -6,9 +6,9 @@ import { AudioCuesSource } from './sources/AudioCuesSource.js';
 import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
 import { classifyQueryType } from './utils/queryTypeDecider.js';
 import { removeTrackedFeature } from './utils/featureTracking/featureRemover.js';
-import { logFeature } from './utils/featureTracking/featureLogger.js';
 import { checkForUpdates } from './utils/featureTracking/updateChecker.js';
 import { checkQuery } from './utils/featureTracking/queryOptimizer.js';
+import { fetchAndTrackIssue } from './utils/featureTracking/githubHelper.js';
 
  
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
@@ -74,6 +74,69 @@ export async function activate(context: vscode.ExtensionContext) {
       return;
     }
 
+    if (request.command === 'log') {
+      try {
+        // Extract issue number from the prompt
+        const issueNumber = request.prompt.trim();
+        
+        if (!issueNumber) {
+          stream.markdown('Please provide an issue number. Usage: `/log <issue_number>`\n\nExample: `/log 123456`');
+          return;
+        }
+
+        // Call fetchAndTrackIssue to get and track the issue
+        const result = await fetchAndTrackIssue(context, issueNumber);
+        
+        // Display the result message in chat
+        stream.markdown(result.message);
+        
+        // If successfully added, show button to view tracked issues
+        if (result.success || result.message.includes('already being tracked')) {
+          // Inform the user about the button to view tracked issues
+          stream.button({
+            command: 'a11yagent.removeTrackedFeature',
+            title: 'View Tracked Issues'
+          });
+        }
+      } catch (error) {
+        console.error('Error processing log command:', error);
+        stream.markdown('An error occurred while processing the log command. Please try again.');
+      }
+      return;
+    }
+
+    if (request.command === 'remove') {
+      try {
+        // Directly call the removeTrackedFeature function
+        //await removeTrackedFeature(context);
+        stream.markdown('To remove a tracked issue, please go to the tracked issues menu using the button below.');
+        stream.button({
+          command: 'a11yagent.removeTrackedFeature',
+          title: 'Remove Tracked Issues'
+        });
+      } catch (error) {
+        console.error('Error processing view command:', error);
+        stream.markdown('An error occurred while processing the remove command. Please try again.');
+      }
+      return;
+    }
+
+    if (request.command === 'update') {
+      try {
+        // Directly call the removeTrackedFeature function
+        await checkForUpdates(context);
+        stream.markdown('Issues have been updated.');
+        stream.button({
+          command: 'a11yagent.removeTrackedFeature',
+          title: 'View Updated Issues'
+        });
+      } catch (error) {
+        console.error('Error processing update command:', error);
+        stream.markdown('An error occurred while processing the update command. Please try again.');
+      }
+      return;
+    }
+
     // Determine the query type using the utility function
     const queryType = await classifyQueryType(request.prompt);
 
@@ -124,7 +187,7 @@ export async function activate(context: vscode.ExtensionContext) {
   // Register commands for logging and viewing tracked features
   //context.subscriptions.push(vscode.commands.registerCommand('a11yagent.logFeature', () => logFeature(context)));
   context.subscriptions.push(vscode.commands.registerCommand('a11yagent.removeTrackedFeature', () => removeTrackedFeature(context)));
-  context.subscriptions.push(vscode.commands.registerCommand('a11yagent.checkForUpdates', () => checkForUpdates(context)));
+  //context.subscriptions.push(vscode.commands.registerCommand('a11yagent.checkForUpdates', () => checkForUpdates(context)));
 
 }
 

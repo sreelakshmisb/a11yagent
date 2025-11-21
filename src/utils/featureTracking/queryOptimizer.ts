@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import * as chatUtils from '@vscode/chat-extension-utils';
-import { TrackedIssue } from "../../types/githubTypes.js";
 
 
 export async function checkQuery(request: vscode.ChatRequest, chatContext: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken,): Promise<void> {
@@ -24,7 +23,7 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
       - Accessibility terms (e.g., screen reader, keyboard navigation, focus, not accessible, ARIA, audio cues).
       - Behavior / symptoms (e.g., cannot read, not accessible, invisible, focus not moving).
     
-    You MUST prioritize feature names and accessibility terms equally.
+    You MUST prioritize the feature name the most.
     
     2. Generate 2 to 3 concise, search-optimized GitHub queries. All queries MUST:
       - Include: label:accessibility
@@ -37,22 +36,28 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
 
     3. Call the search_issues tool to run each query
       - Search ONLY in the microsoft/vscode repo.
-      - Search open issues first; if none, search closed issues.
+      - Prioritize open issues 
+      - Prioritize more recently created or updated issues.
+      - If there are no relevant open issues, look through closed issues. 
+      - For closed issues, keep track of what the final resolution was.
 
     4. Filter the results:
       Keep Issues that meet ALL of the following criteria:
         - Title or body references the specific feature/component (e.g., chat, Copilot, todo list, terminal, editor) or variations of it.
         - Title or body references an accessibility problem or the user described behavior (screen reader, keyboard access, ARIA, focus, navigation).
-      Discard issues that are:
+      (IMPORTANT)Discard issues that are:
           - Meta-issues
-          - Issues unrelated to accessibility of the mentioned feature
+          - Unrelated to the mentioned feature
           - About unrelated components
 
     5. Return the top 1 to 3 most relevant issues, showing: 
       - Title
+      - Issue Number
       - URL 
+      - Date Created
       - State (open or closed)
-      - One or two sentence reason for relevance
+      - For closed issues, provide details of the final resolution or reason for closure.
+      - One or two sentence reason for relevance. 
 
     6. If nothing is a strong match, reply: "No relevant issues found."
 

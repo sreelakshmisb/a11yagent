@@ -18,6 +18,8 @@ export async function logFeature(context: vscode.ExtensionContext) {
     const quickPick = vscode.window.createQuickPick();
     quickPick.placeholder = "Select issues to track:";
     quickPick.canSelectMany = false;
+    quickPick.matchOnDescription = false;
+    quickPick.matchOnDetail = false;
     quickPick.items = [
       ...createQuickPickItems(context, issues.slice(0, 5), false),
       {

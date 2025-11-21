@@ -29,6 +29,18 @@
           {
             "name": "issue",
             "description": "describe the issue you are facing and the agent will match it against known issues"
+          },
+          {
+            "name": "log",
+            "description": "log issue number - fetch a specific GitHub issue by number and add it to tracked issues"
+          },
+          {
+            "name": "remove",
+            "description": "view/remove tracked issues"
+          },
+          {
+            "name": "update",
+            "description": "update tracked issues"
           }
         ],
         "isSticky": true,
@@ -46,18 +58,10 @@
       }
     ],
     "commands": [
-      {
-        "command": "a11yagent.logFeature",
-        "title": "a11yagent: Log an issue for tracking"
-      },
-      {
-        "command": "a11yagent.removeTrackedFeature",
-        "title": "a11yagent: View/remove tracked issues"
-      },
-      {
-        "command": "a11yagent.checkForUpdates",
-        "title": "a11yagent: Check for updates related to tracked issues"
-      }
+          {
+            "command": "a11yagent.removeTrackedFeature",
+            "title": "a11yagent: View/Remove Tracked Features"
+          }
     ]
   },
   "scripts": {
