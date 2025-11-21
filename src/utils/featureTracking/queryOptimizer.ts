@@ -1,36 +1,90 @@
 import * as vscode from "vscode";
+import * as chatUtils from '@vscode/chat-extension-utils';
+import { TrackedIssue } from "../../types/githubTypes.js";
 
-// Utility fucntion to optimize user queries before running GitHub searches
-export async function optimizeQuery(prompt: string): Promise<string> {
-  const instruction = `
-  From the following detailed issue description, generate a concise, search-optimized GitHub query.
-  Focus on the core technical elements: features, key error messages, function/class/module names, APIs, file paths,libraries/frameworks, versions, and the main symptom or behavior.
-  Output only the final query string, suitable for use in a GitHub issue search.
-  Do not add decorative wording; reuse the user's own terms where possible and avoid complicated language not already present in the description.
-  `;
-  const messages = [
-    vscode.LanguageModelChatMessage.User(instruction),
-    vscode.LanguageModelChatMessage.User(prompt),
-  ];
 
-  try {
-    const [model] = await vscode.lm.selectChatModels({
-      vendor: "copilot",
-      family: "gpt-4o",
-    });
-    const cts = new vscode.CancellationTokenSource();
-    const chatResponse = await model.sendRequest(messages, {}, cts.token);
-    let refinedDescription = "";
+export async function checkQuery(request: vscode.ChatRequest, chatContext: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken,): Promise<void> {
 
-    for await (const fragment of chatResponse.text) {
-      refinedDescription += fragment;
+    const issueSearchTool = vscode.lm.tools.find(tool => tool.name === 'mcp_github_github_search_issues');
+    if (!issueSearchTool) {
+      stream.markdown('Unable to use GitHub tools to complete the query. Please install and enable the GitHub MCP server first.');
+      return;
     }
 
-    return refinedDescription.trim(); // Return the refined description
-  } catch (error) {
-    vscode.window.showErrorMessage(
-      "Error refining the issue description. Using the original description.",
+    //const optimizedQuery = await optimizeQuery(request.prompt);
+   // console.log('Optimized GitHub Query:', optimizedQuery);
+
+    const instruction = `
+    You are an assistant that finds relevant GitHub issues. Your job is to take a user's accessibility-related problem description and return only the most relevant, verified issues.
+    You need to perform the following steps
+    
+    1. Extract core concepts from the user description
+      - Identify and explicitly extract:
+      - Feature / component names (e.g., Copilot, Copilot agent, chat pane, todo list, tool, panel, web editor).
+      - Accessibility terms (e.g., screen reader, keyboard navigation, focus, not accessible, ARIA, audio cues).
+      - Behavior / symptoms (e.g., cannot read, not accessible, invisible, focus not moving).
+    
+    You MUST prioritize feature names and accessibility terms equally.
+    
+    2. Generate 2 to 3 concise, search-optimized GitHub queries. All queries MUST:
+      - Include: label:accessibility
+      - Include at least one feature/component term from the user description
+      - Include at least one accessibility term
+      - Prefer exact strings + synonyms for core terms(e.g., "to-do list", "todo list", checklist, task list; screen reader, keyboard, focus).
+      - Include multi-word quoted phrases if present in user text (e.g., "chat pane", "to-do list").
+      - Use literal, short keyword combinations.
+      - Avoid generic or irrelevant terms.
+
+    3. Call the search_issues tool to run each query
+      - Search ONLY in the microsoft/vscode repo.
+      - Search open issues first; if none, search closed issues.
+
+    4. Filter the results:
+      Keep Issues that meet ALL of the following criteria:
+        - Title or body references the specific feature/component (e.g., chat, Copilot, todo list, terminal, editor) or variations of it.
+        - Title or body references an accessibility problem or the user described behavior (screen reader, keyboard access, ARIA, focus, navigation).
+      Discard issues that are:
+          - Meta-issues
+          - Issues unrelated to accessibility of the mentioned feature
+          - About unrelated components
+
+    5. Return the top 1 to 3 most relevant issues, showing: 
+      - Title
+      - URL 
+      - State (open or closed)
+      - One or two sentence reason for relevance
+
+    6. If nothing is a strong match, reply: "No relevant issues found."
+
+    RULES FOR QUERY OPTIMIZATION:
+    1. Focus on the core technical elements: features, main symptom or behavior, key error messages, function/class/module names, APIs, file paths,libraries/frameworks, versions.
+    2. The optimized query should be suitable for use in a GitHub issue search.
+    3. Keep queries short. Avoid filler language, long phrases, or invented terms.
+    4. Do not guess or invent issue numbers or details.
+  `;
+
+  try {
+
+    // Using the chat-extension-utils library to handle tool calling
+    const libResult = chatUtils.sendChatParticipantRequest(
+      request,
+      chatContext,
+      {
+        prompt: instruction,
+        responseStreamOptions: {
+          stream,
+          references: true,
+          responseText: true,
+        },
+        tools: [issueSearchTool],
+      },
+      token
     );
-    return prompt; // Fallback to the original prompt if refinement fails
+
+    // Wait for completion
+    await libResult.result;
+    
+  } catch (error) {
+    stream.markdown(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }

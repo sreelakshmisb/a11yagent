@@ -1,13 +1,10 @@
 import * as vscode from "vscode";
 import axios from "axios";
 import { REPOSITORIES } from "../../constants.js";
-import { optimizeQuery } from "./queryOptimizer.js";
 
 // Searches GitHub for issues matching the given description
 export async function searchGitHubIssues(description: string): Promise<any[]> {
   // Refine the issue description before searching GitHub issues
-  const refinedDescription = await optimizeQuery(description);
-  console.log(refinedDescription);
   const repositories = REPOSITORIES;
   const allIssues: any[] = [];
   for (const repo of repositories) {
@@ -15,7 +12,7 @@ export async function searchGitHubIssues(description: string): Promise<any[]> {
       // Query the GitHub API for open issues in the specified repositories
       const response = await axios.get(`https://api.github.com/search/issues`, {
         params: {
-          q: `${refinedDescription} repo:${repo} is:issue state:open`,
+          q: `${description} repo:${repo} is:issue label:accessibility`,
         },
       });
       const issues = response.data.items.map((issue: any) => ({

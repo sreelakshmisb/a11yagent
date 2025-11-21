@@ -8,6 +8,7 @@ import { classifyQueryType } from './utils/queryTypeDecider.js';
 import { removeTrackedFeature } from './utils/featureTracking/featureRemover.js';
 import { logFeature } from './utils/featureTracking/featureLogger.js';
 import { checkForUpdates } from './utils/featureTracking/updateChecker.js';
+import { checkQuery } from './utils/featureTracking/queryOptimizer.js';
 
  
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
@@ -62,6 +63,17 @@ export async function activate(context: vscode.ExtensionContext) {
       return;
     }
 
+    if (request.command === 'issue') {
+      try {
+        // Call checkQuery with the request prompt
+        await checkQuery(request, chatContext, stream, token);
+      } catch (error) {
+        console.error('Error processing query:', error);
+        vscode.window.showErrorMessage('Failed to process query.');
+      }
+      return;
+    }
+
     // Determine the query type using the utility function
     const queryType = await classifyQueryType(request.prompt);
 
@@ -109,16 +121,8 @@ export async function activate(context: vscode.ExtensionContext) {
   // Add the participant to the extension context's subscriptions for proper cleanup on deactivation
   context.subscriptions.push(a11yAgent);
 
-  const initCommand = 'a11yagent.init';
-
-  const commandHandler = () => {
-    vscode.window.showInformationMessage('Initializing a11yagent...');
-  };
-
-  context.subscriptions.push(vscode.commands.registerCommand(initCommand, commandHandler));
- 
   // Register commands for logging and viewing tracked features
-  context.subscriptions.push(vscode.commands.registerCommand('a11yagent.logFeature', () => logFeature(context)));
+  //context.subscriptions.push(vscode.commands.registerCommand('a11yagent.logFeature', () => logFeature(context)));
   context.subscriptions.push(vscode.commands.registerCommand('a11yagent.removeTrackedFeature', () => removeTrackedFeature(context)));
   context.subscriptions.push(vscode.commands.registerCommand('a11yagent.checkForUpdates', () => checkForUpdates(context)));
 
