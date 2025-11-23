@@ -4,7 +4,7 @@ import * as chatUtils from '@vscode/chat-extension-utils';
 
 export async function checkQuery(request: vscode.ChatRequest, chatContext: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken,): Promise<void> {
 
-    const issueSearchTool = vscode.lm.tools.find(tool => tool.name === 'mcp_github_github_search_issues');
+  const issueSearchTool = vscode.lm.tools.find(tool => tool.name==='mcp_io_github_git_search_issues');
     if (!issueSearchTool) {
       stream.markdown('Unable to use GitHub tools to complete the query. Please install and enable the GitHub MCP server first.');
       return;
@@ -86,7 +86,7 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
     );
 
     // Wait for completion
-    const result = await libResult.result;
+    await libResult.result;
 
   } catch (error) {
     stream.markdown(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
