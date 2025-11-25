@@ -8,7 +8,7 @@ import { classifyQueryType } from './utils/queryTypeDecider.js';
 import { removeTrackedFeature } from './utils/featureTracking/featureRemover.js';
 import { checkForUpdates, checkForUpdatesChat } from './utils/featureTracking/updateChecker.js';
 import { checkQuery } from './utils/featureTracking/queryOptimizer.js';
-import { fetchAndTrackIssue } from './utils/featureTracking/githubHelper.js';
+import { fetchAndTrackIssue, logDescription } from './utils/featureTracking/githubHelper.js';
 
  
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
@@ -67,6 +67,13 @@ export async function activate(context: vscode.ExtensionContext) {
       try {
         // Call checkQuery with the request prompt
         await checkQuery(request, chatContext, stream, token);
+        stream.markdown(' You can also choose to track your description using the button below.');
+        // Provide a button to track the description
+          stream.button({
+            command: 'a11yagent.logDescription',
+            title: 'Track Description',
+            arguments: [context, request.prompt]
+          });
       } catch (error) {
         console.error('Error processing query:', error);
         vscode.window.showErrorMessage('Failed to process query.');
@@ -105,18 +112,17 @@ export async function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    if (request.command === 'remove') {
+    if (request.command === 'view') {
       try {
         // Directly call the removeTrackedFeature function
-        //await removeTrackedFeature(context);
-        stream.markdown('To remove a tracked issue, please go to the tracked issues menu using the button below.');
+        stream.markdown('To view tracked issues, please go to the tracked issues menu using the button below.');
         stream.button({
           command: 'a11yagent.removeTrackedFeature',
-          title: 'Remove Tracked Issues'
+          title: 'View Tracked Issues'
         });
       } catch (error) {
         console.error('Error processing view command:', error);
-        stream.markdown('An error occurred while processing the remove command. Please try again.');
+        stream.markdown('An error occurred while processing the view command. Please try again.');
       }
       return;
     }
@@ -182,6 +188,7 @@ export async function activate(context: vscode.ExtensionContext) {
   // Register commands for logging and viewing tracked features
   //context.subscriptions.push(vscode.commands.registerCommand('a11yagent.logFeature', () => logFeature(context)));
   context.subscriptions.push(vscode.commands.registerCommand('a11yagent.removeTrackedFeature', () => removeTrackedFeature(context)));
+  context.subscriptions.push(vscode.commands.registerCommand('a11yagent.logDescription', (context, description, stream) => logDescription(context, description)));
   //context.subscriptions.push(vscode.commands.registerCommand('a11yagent.checkForUpdates', () => checkForUpdates(context)));
 
 }

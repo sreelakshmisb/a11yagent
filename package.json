@@ -35,7 +35,7 @@
             "description": "log issue number - fetch a specific GitHub issue by number and add it to tracked issues"
           },
           {
-            "name": "remove",
+            "name": "view",
             "description": "view/remove tracked issues"
           },
           {

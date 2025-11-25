@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import axios from "axios";
-import { REPOSITORIES, TRACKED_ISSUES_KEY } from "../../constants.js";
+import { REPOSITORIES, TRACKED_ISSUES_KEY, TRACKED_DESCRIPTIONS_KEY } from "../../constants.js";
 import { TrackedIssue } from "../../types/githubTypes.js";
 
 // Searches GitHub for issues matching the given description
@@ -122,3 +122,36 @@ export async function fetchAndTrackIssue(
     }
   }
 }
+
+export async function logDescription(context: vscode.ExtensionContext, description: string) {
+  const trackedDescriptions = context.globalState.get<any[]>(TRACKED_DESCRIPTIONS_KEY, []);
+
+  // Generate a title automatically based on the description
+  const title = `Tracked Description: ${description.substring(0, 50)}...`;
+
+  // Check if the description is already being tracked
+  const existingDescription = trackedDescriptions.find(
+    (tracked) => tracked.description === description
+  );
+
+  if (existingDescription) {
+    vscode.window.showInformationMessage(
+      `The description is already being tracked as: ${existingDescription.title}`
+    );
+    return;
+  }
+
+  // Add the new description to the tracked descriptions
+  const newTrackedDescription = {
+    title,
+    description,
+    hasUpdates: false,
+    html_url: "", // Placeholder for potential future use
+  };
+
+  trackedDescriptions.push(newTrackedDescription);
+  await context.globalState.update(TRACKED_DESCRIPTIONS_KEY, trackedDescriptions);
+
+  vscode.window.showInformationMessage(`The description has been successfully logged as: **${title}**.`);
+}
+
