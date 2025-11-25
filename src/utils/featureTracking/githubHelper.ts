@@ -44,7 +44,7 @@ export async function createGitHubIssue(description: string) {
 export async function fetchAndTrackIssue(
   context: vscode.ExtensionContext,
   issueNumber: string,
-  repo = "microsoft/vscode"
+  repo = REPOSITORIES[0]
 ): Promise<{ success: boolean; message: string }> {
   try {
     // Parse and validate issue number
@@ -52,7 +52,7 @@ export async function fetchAndTrackIssue(
     if (isNaN(issueNum) || issueNum <= 0) {
       return {
         success: false,
-        message: `Invalid issue number: "${issueNumber}". Please enter a valid positive number.`
+        message: `Invalid issue number: "${issueNumber}". Please enter a valid positive number.`,
       };
     }
 
@@ -64,12 +64,12 @@ export async function fetchAndTrackIssue(
     });
 
     const issue = response.data;
-    
+
     // Check if it's actually an issue (not a PR) and exists
     if (issue.pull_request) {
       return {
         success: false,
-        message: `#${issueNum} is a pull request, not an issue. Only issues can be tracked.`
+        message: `#${issueNum} is a pull request, not an issue. Only issues can be tracked.`,
       };
     }
 
@@ -94,30 +94,30 @@ export async function fetchAndTrackIssue(
     if (existingIssue) {
       return {
         success: false,
-        message: `Issue #${issueNum} "${issue.title}" is already being tracked.`
+        message: `Issue #${issueNum} "${issue.title}" is already being tracked.`,
       };
     }
 
     // Add to tracked issues
     trackedIssues.push(trackedIssue);
     await context.globalState.update(TRACKED_ISSUES_KEY, trackedIssues);
-    
+
     return {
       success: true,
-      message: `Successfully added issue #${issueNum} "${issue.title}" to tracking.`
+      message: `Successfully added issue #${issueNum} "${issue.title}" to tracking.`,
     };
 
   } catch (error: any) {
     if (error.response?.status === 404) {
       return {
         success: false,
-        message: `Issue #${issueNumber} not found in repository ${repo}.`
+        message: `Issue #${issueNumber} not found in repository ${repo}.`,
       };
     } else {
       console.error("Error fetching issue:", error);
       return {
         success: false,
-        message: `Failed to fetch issue #${issueNumber}. Please try again.`
+        message: `Failed to fetch issue #${issueNumber}. Please try again.`,
       };
     }
   }
