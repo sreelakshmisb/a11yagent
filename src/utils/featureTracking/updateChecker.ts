@@ -29,6 +29,10 @@ export async function checkForUpdates(context: vscode.ExtensionContext) {
       }),
     );
 
+    // Debugging logs to verify updates
+    console.log("Updates:", updates);
+    console.log("Tracked Issues:", trackedIssues);
+
     // Process updates and set the hasUpdates flag for changed issues
     updatedIssues = updates.filter((update, index) => {
       if (update && update.state !== trackedIssues[index].state) {
@@ -41,6 +45,8 @@ export async function checkForUpdates(context: vscode.ExtensionContext) {
       }
       return false;
     });
+
+    console.log("Updated Issues:", updatedIssues);
 
     if (updatedIssues.length > 0) {
       // Save the updated issues back to global state
@@ -66,6 +72,78 @@ export async function checkForUpdates(context: vscode.ExtensionContext) {
       // Assuming removeTrackedFeature is imported where needed
       removeTrackedFeature(context);
     }
+  }
+}
+
+export async function checkForUpdatesChat(context: vscode.ExtensionContext, stream: vscode.ChatResponseStream) {
+  const trackedIssues = context.globalState.get<any[]>(TRACKED_ISSUES_KEY, []);
+  let updatedIssues: any[] = [];
+
+  if (trackedIssues.length > 0) {
+    // Check for updates to each tracked issue
+    const updates = await Promise.all(
+      trackedIssues.map(async (issue) => {
+        try {
+          const response = await axios.get(issue.api_url, {
+            headers: { Accept: "application/vnd.github+json" },
+          });
+          return { ...issue, state: response.data.state };
+        } catch (error) {
+          console.error(
+            `Error checking updates for issue ${issue.html_url}:`,
+            error,
+          );
+          return null;
+        }
+      }),
+    );
+
+    // Debugging logs to verify updates
+    console.log("Updates:", updates);
+    console.log("Tracked Issues:", trackedIssues);
+
+    // Process updates and set the hasUpdates flag for changed issues
+    updatedIssues = updates.filter((update, index) => {
+      if (update && update.state !== trackedIssues[index].state) {
+        trackedIssues[index] = {
+          ...trackedIssues[index],
+          state: update.state,
+          hasUpdates: true,
+        };
+        return true;
+      }
+      return false;
+    });
+
+    console.log("Updated Issues:", updatedIssues);
+
+    if (updatedIssues.length > 0) {
+    }
+
+    if (updatedIssues.length > 0) {
+
+      // Save the updated issues back to global state
+      await context.globalState.update(TRACKED_ISSUES_KEY, trackedIssues);
+
+      // Send details about updated issues to the chat response stream
+      const updatedIssuesDetails = updatedIssues.map(
+        (issue) => `- [${issue.title}](${issue.html_url}) (State: ${issue.state})`
+      ).join("\n");
+
+      stream.markdown(
+        `### Updated Issues:\n${updatedIssuesDetails}`
+      );
+
+      // Add a button to view updates
+      stream.button({
+        command: "a11yagent.removeTrackedFeature",
+        title: "View Updated Issues",
+      });
+    } else {
+      stream.markdown("No updates found for tracked issues.");
+    }
+  } else {
+    stream.markdown("No tracked issues to check.");
   }
 }
 
@@ -106,3 +184,4 @@ export async function checkDescriptionUpdates(
     return false;
   }
 }
+

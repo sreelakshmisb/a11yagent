@@ -6,7 +6,7 @@ import { AudioCuesSource } from './sources/AudioCuesSource.js';
 import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
 import { classifyQueryType } from './utils/queryTypeDecider.js';
 import { removeTrackedFeature } from './utils/featureTracking/featureRemover.js';
-import { checkForUpdates } from './utils/featureTracking/updateChecker.js';
+import { checkForUpdates, checkForUpdatesChat } from './utils/featureTracking/updateChecker.js';
 import { checkQuery } from './utils/featureTracking/queryOptimizer.js';
 import { fetchAndTrackIssue } from './utils/featureTracking/githubHelper.js';
 
@@ -124,12 +124,7 @@ export async function activate(context: vscode.ExtensionContext) {
     if (request.command === 'update') {
       try {
         // Directly call the removeTrackedFeature function
-        await checkForUpdates(context);
-        stream.markdown('Issues have been updated.');
-        stream.button({
-          command: 'a11yagent.removeTrackedFeature',
-          title: 'View Updated Issues'
-        });
+        await checkForUpdatesChat(context, stream);
       } catch (error) {
         console.error('Error processing update command:', error);
         stream.markdown('An error occurred while processing the update command. Please try again.');
