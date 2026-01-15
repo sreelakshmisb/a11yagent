@@ -2,12 +2,14 @@ import * as vscode from "vscode";
 import axios from "axios";
 import { REPOSITORIES, TRACKED_ISSUES_KEY, TRACKED_DESCRIPTIONS_KEY } from "../../constants.js";
 import { TrackedIssue } from "../../types/githubTypes.js";
+import { optimizeDescription } from "./queryOptimizer.js";
 
 // Searches GitHub for issues matching the given description
 export async function searchGitHubIssues(description: string): Promise<any[]> {
   // Refine the issue description before searching GitHub issues
   const repositories = REPOSITORIES;
   const allIssues: any[] = [];
+  description = await optimizeDescription(description);
   for (const repo of repositories) {
     try {
       // Query the GitHub API for open issues in the specified repositories

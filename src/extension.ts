@@ -6,7 +6,7 @@ import { AudioCuesSource } from './sources/AudioCuesSource.js';
 import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
 import { classifyQueryType } from './utils/queryTypeDecider.js';
 import { removeTrackedFeature } from './utils/featureTracking/featureRemover.js';
-import { checkForUpdates, checkForUpdatesChat } from './utils/featureTracking/updateChecker.js';
+import { checkForUpdates} from './utils/featureTracking/updateChecker.js';
 import { checkQuery } from './utils/featureTracking/queryOptimizer.js';
 import { fetchAndTrackIssue, logDescription } from './utils/featureTracking/githubHelper.js';
 
@@ -130,7 +130,7 @@ export async function activate(context: vscode.ExtensionContext) {
     if (request.command === 'update') {
       try {
         // Directly call the removeTrackedFeature function
-        await checkForUpdatesChat(context, stream);
+        await checkForUpdates(context, stream);
       } catch (error) {
         console.error('Error processing update command:', error);
         stream.markdown('An error occurred while processing the update command. Please try again.');
@@ -185,8 +185,7 @@ export async function activate(context: vscode.ExtensionContext) {
   // Add the participant to the extension context's subscriptions for proper cleanup on deactivation
   context.subscriptions.push(a11yAgent);
 
-  // Register commands for logging and viewing tracked features
-  //context.subscriptions.push(vscode.commands.registerCommand('a11yagent.logFeature', () => logFeature(context)));
+  // Register commands for viewing tracked features, logging descriptions
   context.subscriptions.push(vscode.commands.registerCommand('a11yagent.removeTrackedFeature', () => removeTrackedFeature(context)));
   context.subscriptions.push(vscode.commands.registerCommand('a11yagent.logDescription', (context, description, stream) => logDescription(context, description)));
   //context.subscriptions.push(vscode.commands.registerCommand('a11yagent.checkForUpdates', () => checkForUpdates(context)));

@@ -13,7 +13,7 @@ export async function classifyQueryType(prompt: string): Promise<string> {
     ];
 
     let chatResponse: vscode.LanguageModelChatResponse | undefined;
-    const [model] = await vscode.lm.selectChatModels({ vendor: 'copilot' });
+    const [model] = await vscode.lm.selectChatModels({id: 'gpt-4o'});
 
     try {
       chatResponse = await model.sendRequest(

@@ -92,3 +92,44 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
     stream.markdown(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
+
+export async function optimizeDescription(description: string): Promise<string> {
+  // description optimization logic
+
+  const systemMessage = [
+      vscode.LanguageModelChatMessage.User(
+        `Condense this description to use as a GitHub search query. Description: ${description}. 
+        Follow these steps
+        1. Extract core concepts present in the user description
+          - Identify and explicitly extract:
+          - Feature / component names (e.g., Copilot, Copilot agent, chat pane, todo list, tool, panel, web editor).
+          - Accessibility terms (e.g., screen reader, keyboard navigation, focus, not accessible, ARIA, audio cues).
+          - Behavior / symptoms (e.g., cannot read, not accessible, invisible, focus not moving).
+    
+        You MUST prioritize the feature name the most.
+    
+        2. Generate a concise, search-optimized GitHub query. The query must:
+          - Include at least one feature/component term from the user description
+          - Prefer exact strings + synonyms for core terms(e.g., "to-do list", "todo list", checklist, task list; screen reader, keyboard, focus).
+          - Use literal, short keyword combinations.
+          - Avoid generic or irrelevant terms.
+          - Don't add terms or concepts that are not in the original description.
+
+        Example:
+        - Input description: "When using the chat pane, I cannot access the to-do list items. The focus does not move correctly and ARIA labels seem to be missing."
+        - Condensed query: chat pane to-do list screen reader focus ARIA
+      `
+      )];
+
+  const [model] = await vscode.lm.selectChatModels({ id: "gpt-4o" });
+
+  const response = await model.sendRequest(systemMessage, {}, new vscode.CancellationTokenSource().token);
+
+  // extract the string from the response
+  let result = '';
+  for await (const chunk of response.text) {
+    result += chunk;
+  }
+
+  return result.trim();
+}
