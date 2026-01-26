@@ -52,7 +52,8 @@ export class ReleaseNotesSource implements IAccessibilitySource {
               if (!fs.existsSync(cacheDir)) {
                 fs.mkdirSync(cacheDir, { recursive: true });
               }
-              fs.writeFileSync(this.cacheFilePath, result, 'utf8');
+              const cleaned = this.cleanReleaseNotesContent(result);
+              fs.writeFileSync(this.cacheFilePath, '# Release Notes\n\n' + cleaned, 'utf8');
               //console.log('Release notes cached successfully.');
               resolve(result);
             } else {
@@ -68,6 +69,38 @@ export class ReleaseNotesSource implements IAccessibilitySource {
         });
       });
     });
+  }
+
+  /**
+   * Cleans up the release notes content before storing.
+   * - Removes everything up to and including the TOC navigation section
+   * - Removes all screenshot markdown links
+   * - Removes everything after the "Thank you" heading
+   */
+  cleanReleaseNotesContent(raw: string): string {
+    // Remove TOC navigation section (<!-- TOC ... Navigation End -->)
+    let content = raw.replace(/<!-- TOC[\s\S]*?Navigation End -->/g, '');
+
+    // Remove everything before the first ## heading (first section)
+    const firstHeadingIndex = content.indexOf('\n##');
+    if (firstHeadingIndex !== -1) {
+      content = content.substring(firstHeadingIndex + 1);
+    }
+
+    // Remove screenshot markdown links: ![description](images/...)
+    content = content.replace(/!\[.*?\]\(.*?\.(?:png|webp|jpg|jpeg|gif)\)/g, '');
+
+    // Remove everything from "## Thank you" onwards
+    const thankYouIndex = content.indexOf('## Thank you');
+    if (thankYouIndex !== -1) {
+      content = content.substring(0, thankYouIndex);
+    }
+
+    // Clean up consecutive blank lines
+    let lines = content.split('\n');
+    lines = lines.filter((line, idx, arr) => line.trim() !== '' || (idx > 0 && arr[idx - 1].trim() !== ''));
+
+    return lines.join('\n').trim();
   }
 
   /**

@@ -121,7 +121,7 @@ export async function optimizeDescription(description: string): Promise<string> 
       `
       )];
 
-  const [model] = await vscode.lm.selectChatModels({ id: "gpt-4o" });
+  const [model] = await vscode.lm.selectChatModels({ id: "gpt-4.1" });
 
   const response = await model.sendRequest(systemMessage, {}, new vscode.CancellationTokenSource().token);
 

@@ -8,12 +8,12 @@ import * as vscode from 'vscode';
 export async function classifyQueryType(prompt: string): Promise<string> {
     const messages = [
         vscode.LanguageModelChatMessage.User(
-            `Classify the following query into one of the categories: 'audioCues', 'settings and features', or 'general'. Respond with only the category name. Query: "${prompt}"`
+            `Classify the following query into one of the categories: 'audioCues', 'settings and features', 'keybindings', or 'general'. Respond with only the category name. Query: "${prompt}"`
         )
     ];
 
     let chatResponse: vscode.LanguageModelChatResponse | undefined;
-    const [model] = await vscode.lm.selectChatModels({id: 'gpt-4o'});
+    const [model] = await vscode.lm.selectChatModels({id: 'gpt-4.1'});
 
     try {
       chatResponse = await model.sendRequest(

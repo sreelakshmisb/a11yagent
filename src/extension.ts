@@ -3,12 +3,14 @@ import { AccessibilityHelpSource } from './sources/AccessibilityHelpSource.js';
 import { SettingsFileSource } from './sources/SettingsFileSource.js';
 import { ReleaseNotesSource } from './sources/ReleaseNotesSource.js';
 import { AudioCuesSource } from './sources/AudioCuesSource.js';
+import { KeybindingsSource } from './sources/KeybindingsSource.js';
 import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
 import { classifyQueryType } from './utils/queryTypeDecider.js';
 import { removeTrackedFeature } from './utils/featureTracking/featureRemover.js';
 import { checkForUpdates} from './utils/featureTracking/updateChecker.js';
 import { checkQuery } from './utils/featureTracking/queryOptimizer.js';
 import { fetchAndTrackIssue, logDescription } from './utils/featureTracking/githubHelper.js';
+import { ACCESSIBILITY_INSTRUCTIONS } from './constants.js';
 
  
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
@@ -39,7 +41,8 @@ export async function activate(context: vscode.ExtensionContext) {
     new AccessibilityHelpSource(context),
     new ReleaseNotesSource(context),
     new SettingsFileSource(context),
-    new AudioCuesSource(context)
+    new AudioCuesSource(context),
+    new KeybindingsSource(context)
   ];
   
   // Chat request handler
@@ -150,21 +153,14 @@ export async function activate(context: vscode.ExtensionContext) {
     } else if (queryType === 'settings and features') {
         relevantSources = sources.filter(source => source instanceof AccessibilityHelpSource || source instanceof SettingsFileSource);
     }
+    else if (queryType === 'keybindings') {
+        relevantSources = sources.filter(source => source instanceof KeybindingsSource);
+    }
 
     const contexts = await Promise.all(relevantSources.map(source => source.getContext(request, context)));
     contextData = contexts.filter(Boolean).join('\n\n');
 
-    // Build the appropriate instruction based on the query type
-    let instruction = `
-    The user relies on a screen reader and uses keyboard navigation as their primary interaction mode.
-    Prioritize keyboard accessibility in answers and avoid mouse-only solutions while responding to queries.
-    When possible, suggest command palette entries or CLI commands instead of mouse-based or UI workflows.
-    Don't suggest keyboard shortcuts not mentioned in the official VS Code documentation.
-    Provide platform-specific keybindings and commands, and clarify any differences in behavior across platforms.
-    Format all keyboard shortcuts using backticks. Do not use <kbd> tags or kb(...) macros. 
-    Don't provide settings not mentioned in the Accessibility settings section or audio cues not mentioned in the Accessibility Signals section.
-    If you're not sure of a setting, audio cue or feature suggest multiple possibilities rather than guessing.
-    Suggest accessibility-specific features, as much as possible, before general VS Code features.`;
+    const instruction = ACCESSIBILITY_INSTRUCTIONS;
 
     const messages = [
       vscode.LanguageModelChatMessage.User(instruction),
@@ -192,7 +188,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 }
 
-export function deactivate() {
+export function deactivate() { 
   try {
     // Stop telemetry tracking
     stopTelemetryTracking();

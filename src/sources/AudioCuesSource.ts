@@ -6,14 +6,14 @@ import * as ts from 'typescript'; // Import TypeScript Compiler API
 
 export class AudioCuesSource implements IAccessibilitySource {
 
-    private readonly url: string = 'https://raw.githubusercontent.com/microsoft/vscode/f554e3c48013328227e23981a33d0f0d902dc75d/src/vs/workbench/contrib/accessibility/browser/accessibilityConfiguration.ts';
+    private readonly url: string = 'https://raw.githubusercontent.com/microsoft/vscode/main/src/vs/workbench/contrib/accessibility/browser/accessibilityConfiguration.ts';
     private readonly cacheFilePath: string;
 
     constructor(context: vscode.ExtensionContext) {
         this.cacheFilePath = path.join(context.extensionPath, 'cache', 'signals.md');
     }
 
-    /**
+    /*
      * Fetches and extracts audio cues and their descriptions from the provided URL.
      * Uses a cache file to avoid repeated network requests and ensures the cache persists across VS Code sessions.
      */
@@ -41,9 +41,14 @@ export class AudioCuesSource implements IAccessibilitySource {
                 .sort()
                 .filter((item, index, array) => array.indexOf(item) === index); // Remove duplicates
 
+            // Filter matches to include only entries ending with '.sound' or '.announcement'
+            const filteredSignals = processedSignals.filter(signal => 
+                signal.includes(".sound'") || signal.includes(".announcement'")
+            );
+
             // Format the results as a string
             let result = '# Accessibility Signals\n\n';
-            for (const signal of processedSignals) {
+            for (const signal of filteredSignals) {
                 result += `- ${signal}\n`;
             }
             // Store the results in the cache file
