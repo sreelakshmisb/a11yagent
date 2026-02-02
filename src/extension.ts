@@ -4,13 +4,14 @@ import { SettingsFileSource } from './sources/SettingsFileSource.js';
 import { ReleaseNotesSource } from './sources/ReleaseNotesSource.js';
 import { AudioCuesSource } from './sources/AudioCuesSource.js';
 import { KeybindingsSource } from './sources/KeybindingsSource.js';
-import { startTelemetryTracking, stopTelemetryTracking } from './utils/signalTracker.js';
+import { startTelemetryTracking, stopTelemetryTracking, fetchTrackedSignals } from './utils/signalTracker.js';
 import { classifyQueryType } from './utils/queryTypeDecider.js';
 import { removeTrackedFeature } from './utils/featureTracking/featureRemover.js';
 import { checkForUpdates} from './utils/featureTracking/updateChecker.js';
 import { checkQuery } from './utils/featureTracking/queryOptimizer.js';
 import { fetchAndTrackIssue, logDescription } from './utils/featureTracking/githubHelper.js';
 import { ACCESSIBILITY_INSTRUCTIONS } from './constants.js';
+import { searchAccessibilityIssuesTool, SearchAccessibilityIssuesInput } from './tools.js';
 
  
 // Explicitly cast 'context' to 'vscode.ExtensionContext'
@@ -150,6 +151,12 @@ export async function activate(context: vscode.ExtensionContext) {
     let relevantSources = sources;
     if (queryType === 'audiocues') {
         relevantSources = sources.filter(source => source instanceof AudioCuesSource || source instanceof SettingsFileSource);
+
+        // Include tracked signals log as additional context
+        const trackedSignals = fetchTrackedSignals();
+        if (trackedSignals) {
+            contextData += `\n${trackedSignals}`;
+        }
     } else if (queryType === 'settings and features') {
         relevantSources = sources.filter(source => source instanceof AccessibilityHelpSource || source instanceof SettingsFileSource);
     }
@@ -158,7 +165,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 
     const contexts = await Promise.all(relevantSources.map(source => source.getContext(request, context)));
-    contextData = contexts.filter(Boolean).join('\n\n');
+    contextData += contexts.filter(Boolean).join('\n\n');
 
     const instruction = ACCESSIBILITY_INSTRUCTIONS;
 
@@ -168,10 +175,37 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.LanguageModelChatMessage.User(request.prompt)
     ];
 
-    const chatResponse = await request.model.sendRequest(messages, {}, token);
-    for await (const fragment of chatResponse.text) {
-      // Relay the output from the language model
-      stream.markdown(fragment);
+    const tools = [searchAccessibilityIssuesTool];
+
+    const chatResponse = await request.model.sendRequest(
+      messages,
+      { tools },
+      token
+    );
+
+    //handle logic for chat response parts (text vs tool calls))
+    for await (const part of chatResponse.stream) {
+      if (part instanceof vscode.LanguageModelToolCallPart) {
+        const { name, input } = part;
+        if (name === 'search_accessibility_issues') {
+          const toolInput = input as SearchAccessibilityIssuesInput;
+          // Execute the issue finding logic
+          await checkQuery(
+            { ...request, prompt: toolInput.description },
+            chatContext,
+            stream,
+            token
+          );
+          stream.markdown('You can also choose to track your description using the button below.');
+          stream.button({
+            command: 'a11yagent.logDescription',
+            title: 'Track Description',
+            arguments: [context, toolInput.description]
+          });
+        }
+      } else if (part instanceof vscode.LanguageModelTextPart) {
+        stream.markdown(part.value);
+      }
     }
   };
 
