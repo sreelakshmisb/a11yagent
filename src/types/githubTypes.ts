@@ -13,5 +13,6 @@ export interface TrackedIssue {
   api_url: string;
   repository: string;
   state: string;
+  milestone: string | null;
   hasUpdates: boolean;
 }

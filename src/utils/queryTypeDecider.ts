@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 /**
  * Classifies the query type using a language model.
- * The type of query: 'audioCue', 'settings', or 'general'.
+ * The type of query: 'audioCue', 'settings', 'keybindings', or 'general'.
  */
 
 export async function classifyQueryType(prompt: string): Promise<string> {
@@ -32,7 +32,7 @@ export async function classifyQueryType(prompt: string): Promise<string> {
             text += chunk;
         }
         const classification = text.trim().toLowerCase();
-        if (['audiocues', 'settings and features', 'general'].includes(classification)) {
+        if (['audiocues', 'settings and features', 'keybindings', 'general'].includes(classification)) {
             return classification;
         }
 

@@ -15,7 +15,7 @@ export async function searchGitHubIssues(description: string): Promise<any[]> {
       // Query the GitHub API for open issues in the specified repositories
       const response = await axios.get(`https://api.github.com/search/issues`, {
         params: {
-          q: `${description} repo:${repo} is:issue label:accessibility`,
+          q: `${description} repo:${repo} is:issue state:open label:accessibility`,
         },
       });
       const issues = response.data.items.map((issue: any) => ({
@@ -24,7 +24,8 @@ export async function searchGitHubIssues(description: string): Promise<any[]> {
         api_url: issue.url,
         repository: repo,
         state: issue.state,
-        hasUpdates: false, // to track updated issues
+        milestone: issue.milestone?.title || null, // Include milestone title if available
+        hasUpdates: false,
       }));
       allIssues.push(...issues);
     } catch (error) {
@@ -82,6 +83,7 @@ export async function fetchAndTrackIssue(
       api_url: issue.url,
       repository: repo,
       state: issue.state,
+      milestone: issue.milestone?.title || null, // Include milestone title if available
       hasUpdates: false,
     };
 

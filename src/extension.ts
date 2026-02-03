@@ -71,7 +71,7 @@ export async function activate(context: vscode.ExtensionContext) {
       try {
         // Call checkQuery with the request prompt
         await checkQuery(request, chatContext, stream, token);
-        stream.markdown(' You can also choose to track your description using the button below.');
+        stream.markdown(' \n\nYou can also choose to track your description to receive future updates, using the button below.');
         // Provide a button to track the description
           stream.button({
             command: 'a11yagent.logDescription',
@@ -150,7 +150,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // Filter sources based on the query type
     let relevantSources = sources;
     if (queryType === 'audiocues') {
-        relevantSources = sources.filter(source => source instanceof AudioCuesSource || source instanceof SettingsFileSource);
+        relevantSources = sources.filter(source => source instanceof AccessibilityHelpSource || source instanceof AudioCuesSource || source instanceof SettingsFileSource);
 
         // Include tracked signals log as additional context
         const trackedSignals = fetchTrackedSignals();
@@ -161,7 +161,7 @@ export async function activate(context: vscode.ExtensionContext) {
         relevantSources = sources.filter(source => source instanceof AccessibilityHelpSource || source instanceof SettingsFileSource);
     }
     else if (queryType === 'keybindings') {
-        relevantSources = sources.filter(source => source instanceof KeybindingsSource);
+        relevantSources = sources.filter(source => source instanceof AccessibilityHelpSource || source instanceof KeybindingsSource);
     }
 
     const contexts = await Promise.all(relevantSources.map(source => source.getContext(request, context)));
@@ -196,7 +196,7 @@ export async function activate(context: vscode.ExtensionContext) {
             stream,
             token
           );
-          stream.markdown('You can also choose to track your description using the button below.');
+          stream.markdown('\n\nYou can also choose to track your description to receive future updates, using the button below.');
           stream.button({
             command: 'a11yagent.logDescription',
             title: 'Track Description',
