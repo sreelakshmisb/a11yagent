@@ -1,6 +1,10 @@
 import * as vscode from "vscode";
 import axios from "axios";
-import { REPOSITORIES, TRACKED_ISSUES_KEY, TRACKED_DESCRIPTIONS_KEY } from "../../constants.js";
+import {
+  REPOSITORIES,
+  TRACKED_ISSUES_KEY,
+  TRACKED_DESCRIPTIONS_KEY,
+} from "../../constants.js";
 import { TrackedIssue } from "../../types/githubTypes.js";
 import { optimizeDescription } from "./queryOptimizer.js";
 
@@ -47,7 +51,7 @@ export async function createGitHubIssue(description: string) {
 export async function fetchAndTrackIssue(
   context: vscode.ExtensionContext,
   issueNumber: string,
-  repo = REPOSITORIES[0]
+  repo = REPOSITORIES[0],
 ): Promise<{ success: boolean; message: string }> {
   try {
     // Parse and validate issue number
@@ -60,11 +64,14 @@ export async function fetchAndTrackIssue(
     }
 
     // Fetch issue from GitHub API
-    const response = await axios.get(`https://api.github.com/repos/${repo}/issues/${issueNum}`, {
-      headers: {
-        Accept: "application/vnd.github+json",
+    const response = await axios.get(
+      `https://api.github.com/repos/${repo}/issues/${issueNum}`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+        },
       },
-    });
+    );
 
     const issue = response.data;
 
@@ -88,11 +95,14 @@ export async function fetchAndTrackIssue(
     };
 
     // Get existing tracked issues
-    const trackedIssues = context.globalState.get<TrackedIssue[]>(TRACKED_ISSUES_KEY, []);
+    const trackedIssues = context.globalState.get<TrackedIssue[]>(
+      TRACKED_ISSUES_KEY,
+      [],
+    );
 
     // Check if issue is already being tracked
     const existingIssue = trackedIssues.find(
-      (tracked) => tracked.html_url === trackedIssue.html_url
+      (tracked) => tracked.html_url === trackedIssue.html_url,
     );
 
     if (existingIssue) {
@@ -110,7 +120,6 @@ export async function fetchAndTrackIssue(
       success: true,
       message: `Successfully added issue #${issueNum} "${issue.title}" to tracking.`,
     };
-
   } catch (error: any) {
     if (error.response?.status === 404) {
       return {
@@ -127,20 +136,26 @@ export async function fetchAndTrackIssue(
   }
 }
 
-export async function logDescription(context: vscode.ExtensionContext, description: string) {
-  const trackedDescriptions = context.globalState.get<any[]>(TRACKED_DESCRIPTIONS_KEY, []);
+export async function logDescription(
+  context: vscode.ExtensionContext,
+  description: string,
+) {
+  const trackedDescriptions = context.globalState.get<any[]>(
+    TRACKED_DESCRIPTIONS_KEY,
+    [],
+  );
 
   // Generate a title automatically based on the description
   const title = `Tracked Description: ${description.substring(0, 50)}...`;
 
   // Check if the description is already being tracked
   const existingDescription = trackedDescriptions.find(
-    (tracked) => tracked.description === description
+    (tracked) => tracked.description === description,
   );
 
   if (existingDescription) {
     vscode.window.showInformationMessage(
-      `The description is already being tracked as: ${existingDescription.title}`
+      `The description is already being tracked as: ${existingDescription.title}`,
     );
     return;
   }
@@ -154,8 +169,12 @@ export async function logDescription(context: vscode.ExtensionContext, descripti
   };
 
   trackedDescriptions.push(newTrackedDescription);
-  await context.globalState.update(TRACKED_DESCRIPTIONS_KEY, trackedDescriptions);
+  await context.globalState.update(
+    TRACKED_DESCRIPTIONS_KEY,
+    trackedDescriptions,
+  );
 
-  vscode.window.showInformationMessage(`The description has been successfully logged as: **${title}**.`);
+  vscode.window.showInformationMessage(
+    `The description has been successfully logged as: **${title}**.`,
+  );
 }
-

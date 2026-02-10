@@ -1,17 +1,15 @@
 {
-	"compilerOptions": {
-		"module": "Nodenext",
-		"target": "ESNext",
-		"outDir": "out",
-		"lib": [
-			"ESNext"
-		],
-		"sourceMap": true,
-		"rootDir": "src",
-		"strict": true,
-		"typeRoots": [
-			"./src/types",
-			"./node_modules/@types"
-		]
-	}
+  "compilerOptions": {
+    "module": "Nodenext",
+    "target": "ESNext",
+    "outDir": "out",
+    "lib": ["ESNext"],
+    "sourceMap": true,
+    "rootDir": "src",
+    "strict": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "jsx": "react",
+    "jsxFactory": "vscpp",
+    "jsxFragmentFactory": "vscppf"
+  }
 }

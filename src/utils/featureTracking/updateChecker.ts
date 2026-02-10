@@ -1,11 +1,17 @@
 import * as vscode from "vscode";
 import axios from "axios";
-import { TRACKED_ISSUES_KEY, TRACKED_DESCRIPTIONS_KEY } from "../../constants.js";
+import {
+  TRACKED_ISSUES_KEY,
+  TRACKED_DESCRIPTIONS_KEY,
+} from "../../constants.js";
 import { searchGitHubIssues } from "./githubHelper.js";
 import { removeTrackedFeature } from "./featureRemover.js";
 
 // Checks for updates to tracked issues and notifies the user about the same
-export async function checkForUpdates(context: vscode.ExtensionContext, stream?: vscode.ChatResponseStream) {
+export async function checkForUpdates(
+  context: vscode.ExtensionContext,
+  stream?: vscode.ChatResponseStream,
+) {
   const trackedIssues = context.globalState.get<any[]>(TRACKED_ISSUES_KEY, []);
   let updatedIssues: any[] = [];
   let newDescriptions: boolean = false;
@@ -61,17 +67,19 @@ export async function checkForUpdates(context: vscode.ExtensionContext, stream?:
 
   if (trackedIssues.length === 0 && trackedDescriptions.length === 0) {
     if (stream) {
-        stream.markdown("No tracked items to check.");
-        return;
-      }
+      stream.markdown("No tracked items to check.");
+      return;
+    }
   }
 
   if (updatedIssues.length > 0 || newDescriptions) {
-    if(stream) {
-      stream.markdown('Updates found for tracked issues/descriptions. Check your tracked items using the button below');
+    if (stream) {
+      stream.markdown(
+        "Updates found for tracked issues/descriptions. Check your tracked items using the button below",
+      );
       stream.button({
-        command: 'a11yagent.removeTrackedFeature',
-        title: 'View Tracked Issues'
+        command: "a11yagent.removeTrackedFeature",
+        title: "View Tracked Issues",
       });
       return;
     }
@@ -82,11 +90,11 @@ export async function checkForUpdates(context: vscode.ExtensionContext, stream?:
     if (action === "View updates") {
       // Assuming removeTrackedFeature is imported where needed
       removeTrackedFeature(context);
-    } 
-  }else {
-      if (stream) {
-        stream.markdown("No updates found for tracked issues.");
-      }
+    }
+  } else {
+    if (stream) {
+      stream.markdown("No updates found for tracked issues.");
+    }
   }
 }
 
@@ -127,4 +135,3 @@ export async function checkDescriptionUpdates(
     return false;
   }
 }
-

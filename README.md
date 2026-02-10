@@ -26,33 +26,40 @@ This extension does not contribute any new settings. It helps you find and under
 ## How It Works
 
 ### Signal Tracking
+
 The extension:
+
 1. Locates the most recent VS Code log folder
 2. Monitors the telemetry.log file in real-time
 3. Parses entries related to accessibility signals
 4. Records signals to the tracked_signals.log file
 
 ### Tracked Items Management
+
 - **Add Items**: Use the QuickPick menu to add GitHub issues or custom descriptions for tracking.
 - **Refresh Items**: Click the refresh icon next to a tracked item to update its state. The `hasUpdates` flag is reset, and the QuickPick menu reflects the changes.
 - **Remove Items**: Select items in the QuickPick menu to remove them from tracking.
 
 ### Chat Integration
+
 When you ask a question, the extension:
+
 1. Analyzes your query
 2. Selects relevant information sources
 3. Provides screen reader-optimized answers prioritizing keyboard accessibility
 
 ## Known Issues
 
-* The agent cannot directly read system files outside the workspace. Settings search is limited to the default settings file.
-* Signal tracking depends on access to VS Code log files, which might require appropriate permissions.
-* Some features depend on VS Code APIs and may not work in older versions.
+- The agent cannot directly read system files outside the workspace. Settings search is limited to the default settings file.
+- Signal tracking depends on access to VS Code log files, which might require appropriate permissions.
+- Some features depend on VS Code APIs and may not work in older versions.
 
 ## Release Notes
 
 ### 0.0.1
+
 Initial release of a11yagent with:
+
 - Chat participant integration
 - Accessibility help documentation access
 - Settings search capabilities
@@ -66,8 +73,8 @@ Initial release of a11yagent with:
 
 ## Resources
 
-* [VS Code Accessibility Documentation](https://code.visualstudio.com/docs/editor/accessibility)
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-* [VS Code Audio Cues Documentation](https://code.visualstudio.com/docs/editor/accessibility#_audio-cues)
+- [VS Code Accessibility Documentation](https://code.visualstudio.com/docs/editor/accessibility)
+- [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+- [VS Code Audio Cues Documentation](https://code.visualstudio.com/docs/editor/accessibility#_audio-cues)
 
 **Enjoy using a11yagent!**

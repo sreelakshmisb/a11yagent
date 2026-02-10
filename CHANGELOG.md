@@ -1,4 +1,3 @@
-
 # Change Log
 
 All notable changes to the "a11yagent" extension will be documented in this file.

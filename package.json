@@ -58,10 +58,10 @@
       }
     ],
     "commands": [
-          {
-            "command": "a11yagent.removeTrackedFeature",
-            "title": "a11yagent: View/Remove Tracked Features"
-          }
+      {
+        "command": "a11yagent.removeTrackedFeature",
+        "title": "a11yagent: View/Remove Tracked Features"
+      }
     ]
   },
   "scripts": {
@@ -90,6 +90,7 @@
     "@types/jsdom": "^21.1.7",
     "@vscode/chat-extension-utils": "^0.0.0-alpha.5",
     "@vscode/extension-telemetry": "^1.0.0",
+    "@vscode/prompt-tsx": "0.3.0-alpha.24",
     "axios": "^1.12.2",
     "fuse.js": "^7.1.0",
     "jsdom": "^27.0.0",
@@ -97,5 +98,8 @@
     "tail": "^2.2.6",
     "vscode-extension-telemetry": "^0.4.5"
   },
-  "type": "module"
+  "type": "module",
+  "overrides": {
+    "@vscode/prompt-tsx": "0.3.0-alpha.24"
+  }
 }

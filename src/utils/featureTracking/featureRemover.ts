@@ -6,7 +6,7 @@ import {
   REPOSITORIES,
 } from "../../constants.js";
 import { createQuickPickItems } from "./quickPickHelper.js";
-import { searchGitHubIssues} from "./githubHelper.js";
+import { searchGitHubIssues } from "./githubHelper.js";
 
 // Removes selected issues from the list of tracked issues
 // For an issue with updates, updates the state when the user clicks the refresh icon
@@ -34,7 +34,7 @@ export async function removeTrackedFeature(context: vscode.ExtensionContext) {
   quickPick.matchOnDescription = false;
   quickPick.matchOnDetail = false;
   // Hide the search box since we're just selecting from a list
-  quickPick.value = '';
+  quickPick.value = "";
 
   // Handle the refresh button click
   quickPick.onDidTriggerItemButton(async (e) => {

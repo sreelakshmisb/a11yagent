@@ -1,16 +1,23 @@
 import * as vscode from "vscode";
-import * as chatUtils from '@vscode/chat-extension-utils';
+import * as chatUtils from "@vscode/chat-extension-utils";
 
+export async function checkQuery(
+  request: vscode.ChatRequest,
+  chatContext: vscode.ChatContext,
+  stream: vscode.ChatResponseStream,
+  token: vscode.CancellationToken,
+): Promise<void> {
+  const issueSearchTool = vscode.lm.tools.find(
+    (tool) => tool.name === "mcp_io_github_git_search_issues",
+  );
+  if (!issueSearchTool) {
+    stream.markdown(
+      "Unable to use GitHub tools to complete the query. Please install and enable the GitHub MCP server first.",
+    );
+    return;
+  }
 
-export async function checkQuery(request: vscode.ChatRequest, chatContext: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken,): Promise<void> {
-
-  const issueSearchTool = vscode.lm.tools.find(tool => tool.name==='mcp_io_github_git_search_issues');
-    if (!issueSearchTool) {
-      stream.markdown('Unable to use GitHub tools to complete the query. Please install and enable the GitHub MCP server first.');
-      return;
-    }
-
-    const instruction = `
+  const instruction = `
     You are an assistant that finds relevant GitHub issues. Your job is to take a user's accessibility-related problem description and return only the most relevant, verified issues.
     You need to perform the following steps
     
@@ -64,7 +71,6 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
   `;
 
   try {
-
     // Using the chat-extension-utils library to handle tool calling
     const libResult = chatUtils.sendChatParticipantRequest(
       request,
@@ -74,27 +80,30 @@ export async function checkQuery(request: vscode.ChatRequest, chatContext: vscod
         responseStreamOptions: {
           stream,
           references: true,
-          responseText: true
+          responseText: true,
         },
         tools: [issueSearchTool],
       },
-      token
+      token,
     );
 
     // Wait for completion
     await libResult.result;
-
   } catch (error) {
-    stream.markdown(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    stream.markdown(
+      `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
   }
 }
 
-export async function optimizeDescription(description: string): Promise<string> {
+export async function optimizeDescription(
+  description: string,
+): Promise<string> {
   // description optimization logic
 
   const systemMessage = [
-      vscode.LanguageModelChatMessage.User(
-        `Condense this description to use as a GitHub search query. Description: ${description}. 
+    vscode.LanguageModelChatMessage.User(
+      `Condense this description to use as a GitHub search query. Description: ${description}. 
         Follow these steps
         1. Extract core concepts present in the user description
           - Identify and explicitly extract:
@@ -114,15 +123,20 @@ export async function optimizeDescription(description: string): Promise<string> 
         Example:
         - Input description: "When using the chat pane, I cannot access the to-do list items. The focus does not move correctly and ARIA labels seem to be missing."
         - Condensed query: chat pane to-do list screen reader focus ARIA
-      `
-      )];
+      `,
+    ),
+  ];
 
   const [model] = await vscode.lm.selectChatModels({ id: "gpt-4.1" });
 
-  const response = await model.sendRequest(systemMessage, {}, new vscode.CancellationTokenSource().token);
+  const response = await model.sendRequest(
+    systemMessage,
+    {},
+    new vscode.CancellationTokenSource().token,
+  );
 
   // extract the string from the response
-  let result = '';
+  let result = "";
   for await (const chunk of response.text) {
     result += chunk;
   }

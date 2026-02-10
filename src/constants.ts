@@ -6,7 +6,6 @@ export const REPOSITORIES = [
   "sreelakshmisb/vscode-test",
 ];
 
-
 export const ACCESSIBILITY_INSTRUCTIONS = `
 The user relies on a screen reader and uses keyboard navigation as their primary interaction mode. They are asking questions in the context of VS Code. Rules for answers :
 
@@ -36,7 +35,6 @@ The user relies on a screen reader and uses keyboard navigation as their primary
 }
 - Deduce the use of the keybinding based on the "command" metric.
 - **Always** Provide keybinding entries as relevant to the user's platform. "alt" is only relevant for windows and maps to the Option (⌥) key on macOS. When providing answers for mac, alt should be replaced with Option key.
-
 
 # Settings
 - Don't provide settings not mentioned in the '# Accessibility settings' section.
