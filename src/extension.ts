@@ -208,6 +208,9 @@ export async function activate(context: vscode.ExtensionContext) {
       token,
     );
 
+     // Calculate max tokens allowed for the model
+    console.log("Max input tokens:", request.model.maxInputTokens);
+
     //handle logic for chat response parts (text vs tool calls))
     for await (const part of chatResponse.stream) {
       if (part instanceof vscode.LanguageModelToolCallPart) {
