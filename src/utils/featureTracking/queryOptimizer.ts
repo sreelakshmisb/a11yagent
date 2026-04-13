@@ -53,6 +53,7 @@ export async function checkQuery(
     5. Return the top 1 to 3 most relevant issues, showing: 
       - Title
       - Issue Number
+      - A summary of the issue
       - URL 
       - Date Created
       - State (open)
