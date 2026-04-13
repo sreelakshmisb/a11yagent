@@ -29,7 +29,7 @@ export async function checkQuery(
     
     You MUST prioritize the feature name the most.
     
-    2. Generate 2 to 3 concise, search-optimized GitHub queries. All queries MUST:
+    2. Generate **only** 2 to 3 concise, search-optimized GitHub queries. All queries MUST:
       - Include at least one feature/component term from the user description
       - Prefer exact strings + synonyms for core terms(e.g., to-do list, todo list, audio cue, sound, keyboard, focus).
       - Include multi-word quoted phrases if present in user text (e.g., "chat pane", "to-do list").
@@ -38,7 +38,7 @@ export async function checkQuery(
 
     3. Call the search_issues tool to run each query
       - Search ONLY in the microsoft/vscode repo.
-      - Look ONLY for open issues
+      - Look for open issues
       - **All** searches should have label:accessibility
       - Prioritize more recently created or updated issues.
 
@@ -60,14 +60,17 @@ export async function checkQuery(
       - Explain what the status of the issue is and when it'll be fixed, if this is known.
       - One or two sentence reason for relevance. 
 
-    6. If nothing is a match, reply: "No relevant issues found."
+    6. If no open issues are a match, search for closed issues that match the same criteria. Return the same details, along with the closure date, any workarounds mentioned in the comments, and the reason for closure (if available).
+
+    7. If no relevant issues are found, return a message saying "No relevant GitHub issues found that match the description you have provided."
 
     RULES FOR QUERY OPTIMIZATION:
     1. Focus on the core technical elements: features, main symptom or behavior, key error messages, function/class/module names, APIs, file paths,libraries/frameworks, versions.
     2. The optimized query should be suitable for use in a GitHub issue search.
     3. Keep queries short. Avoid filler language, long phrases, or invented terms.
     4. Do not guess or invent issue numbers or details.
-    5. **DO NOT** look for CLOSED issues 
+    6. Use at most 4 logical operators total (AND, OR, NOT combined) in the generated queryPre. If more terms exist, prioritize the most important ones
+    7. Only retrun the top 1 to 3 most relevant issues.
   `;
 
   try {

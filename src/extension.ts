@@ -233,7 +233,8 @@ export async function activate(context: vscode.ExtensionContext) {
             arguments: [context, toolInput.description],
           });
         }
-      } else if (part instanceof vscode.LanguageModelTextPart) {
+      } 
+      if (part instanceof vscode.LanguageModelTextPart) {
         stream.markdown(part.value);
       }
     }
