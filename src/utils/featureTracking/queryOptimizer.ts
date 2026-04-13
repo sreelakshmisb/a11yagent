@@ -10,11 +10,19 @@ export async function checkQuery(
   const issueSearchTool = vscode.lm.tools.find(
     (tool) => tool.name === "mcp_io_github_git_search_issues",
   );
+  const issueReadTool = vscode.lm.tools.find(
+    (tool) => tool.name === "mcp_io_github_git_issue_read",
+  );
   if (!issueSearchTool) {
     stream.markdown(
       "Unable to use GitHub tools to complete the query. Please install and enable the GitHub MCP server first.",
     );
     return;
+  }
+  if (!issueReadTool) {
+    stream.markdown(
+      "Note: GitHub issue comment lookup is unavailable because the MCP tool 'mcp_io_github_git_issue_read' is not installed/enabled. I will still search issues, but I cannot include comment-based workarounds.\n\n",
+    );
   }
 
   const instruction = `
@@ -42,6 +50,13 @@ export async function checkQuery(
       - **All** searches should have label:accessibility
       - Prioritize more recently created or updated issues.
 
+    3b. For each issue you decide to return in the final answer (top 1 to 3), call the issue_read tool to fetch comments.
+      - Use method: get_comments
+      - Use owner: microsoft
+      - Use repo: vscode
+      - Use issue_number from the issue you picked
+      - Limit to a small number of comments (e.g. perPage: 10) to avoid long output.
+
     4. Filter the results:
       Keep Issues that meet ALL of the following criteria:
         - Title or body references the specific feature/component or variations of it.
@@ -58,6 +73,7 @@ export async function checkQuery(
       - State (open)
       - Milestone 
       - Explain what the status of the issue is and when it'll be fixed, if this is known.
+      - Mention any workarounds in the comments, if available.
       - One or two sentence reason for relevance. 
 
     6. If no open issues are a match, search for closed issues that match the same criteria. Return the same details, along with the closure date, any workarounds mentioned in the comments, and the reason for closure (if available).
@@ -85,7 +101,7 @@ export async function checkQuery(
           references: true,
           responseText: true,
         },
-        tools: [issueSearchTool],
+        tools: issueReadTool ? [issueSearchTool, issueReadTool] : [issueSearchTool],
       },
       token,
     );
