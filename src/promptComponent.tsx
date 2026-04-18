@@ -6,14 +6,14 @@ import {
   TextChunk,
   UserMessage,
 } from "@vscode/prompt-tsx";
-import { ChatContext} from 'vscode';
+import { ChatContext } from "vscode";
 import { HistoryMessages } from "./historyComponent.js";
 
 export interface PromptProps extends BasePromptElementProps {
   userQuery: string;
   sourceContext: string;
   os: string;
-  history: ChatContext['history'];
+  history: ChatContext["history"];
 }
 
 export interface PromptState {}
@@ -45,10 +45,11 @@ const guidelinesChunk = (
 const workflowChunk = (
   <TextChunk>
     RESPONSE WORKFLOW: 1. First suggest the most relevant settings or features.
-    2. If there are no existing settings for it, explain that you're going to 
-    use the search_accessibility_issues tool to check for matching open GitHub issues 
-    based on the user's description. Then run the tool to look for related open GitHub issues 
-    using the user's description. 3. Provide additional recommendations based on tool results.
+    2. If there are no relevant existing settings, explain that you're going to
+    use the search_accessibility_issues tool to check for matching open GitHub
+    issues based on the user's description. Then run the tool to look for
+    related open GitHub issues using the user's description. 3. Provide
+    additional recommendations based on tool results.
   </TextChunk>
 );
 
@@ -103,17 +104,18 @@ const audioSignalsChunk = (
 
 const toolUsageChunk = (
   <TextChunk>
-    TOOL USAGE: - When the user describes an accessibility issue, bug, or problem,
-    first look for relevant settings or features that can resolve the issue and
-    provide those suggestions in the response. - Then, use the
-    'search_accessibility_issues' tool with the user's description to find
-    related GitHub issues. - When using tools, never output only a tool call:
-    include a short plain-language sentence explaining what you're doing and why.
-   - After a tool returns, summarize the result in 1-3 sentences and then give concrete next steps (what
-    to try now, plus 1 fallback option if the first option doesn't help). - Never
-    end answers with phrases like "let me know and I can search for related GitHub
-    issues or feature requests." Instead, take action automatically and combine
-    direct suggestions with tool results for comprehensive responses.
+    TOOL USAGE: - When the user describes an accessibility issue, bug, or
+    problem, first look for relevant settings or features that can resolve the
+    issue and provide those suggestions in the response, with the exact names and
+    descriptions. - Then, use the 'search_accessibility_issues' tool with the
+    user's description to find related GitHub issues. - When using tools, never
+    output only a tool call: include a short plain-language sentence explaining
+    what you're doing and why. - After a tool returns, summarize the result in
+    1-3 sentences and then give concrete next steps (what to try now, plus 1
+    fallback option if the first option doesn't help). - Never end answers with
+    phrases like "let me know and I can search for related GitHub issues or
+    feature requests." Instead, take action automatically and combine direct
+    suggestions with tool results for comprehensive responses.
   </TextChunk>
 );
 
@@ -125,7 +127,7 @@ export class systemPrompt extends PromptElement<PromptProps, PromptState> {
   async render(state: PromptState, sizing: PromptSizing) {
     return (
       <>
-        <AssistantMessage priority={100} >
+        <AssistantMessage priority={100}>
           {overviewChunk}
           {guidelinesChunk}
           {workflowChunk}
@@ -134,13 +136,16 @@ export class systemPrompt extends PromptElement<PromptProps, PromptState> {
           {audioSignalsChunk}
           {toolUsageChunk}
         </AssistantMessage>
-          <HistoryMessages history={this.props.history.slice(0, -2)} priority={0} />
-				  {/* The last 2 history messages are preferred over the workspace context below */}
-				  <HistoryMessages history={this.props.history.slice(-2)} priority={80} />
+        <HistoryMessages
+          history={this.props.history.slice(0, -2)}
+          priority={0}
+        />
+        {/* The last 2 history messages are preferred over the workspace context below */}
+        <HistoryMessages history={this.props.history.slice(-2)} priority={80} />
         <UserMessage priority={90}>
           {this.props.userQuery}
           User's Operating System Details: {this.props.os}
-         </UserMessage>
+        </UserMessage>
         <UserMessage priority={70}>
           Here are the sources you can use to answer the user's question:
           {this.props.sourceContext}

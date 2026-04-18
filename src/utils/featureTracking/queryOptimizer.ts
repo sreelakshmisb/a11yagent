@@ -85,7 +85,8 @@ export async function checkQuery(
     2. The optimized query should be suitable for use in a GitHub issue search.
     3. Keep queries short. Avoid filler language, long phrases, or invented terms.
     4. Do not guess or invent issue numbers or details.
-    6. Use at most 4 logical operators total (AND, OR, NOT combined) in the generated queryPre. If more terms exist, prioritize the most important ones
+    5. Do not explain intermediate steps like the concepts extracted or the filtering process followed. Only return the final results.
+    6. Use at most 4 logical operators total (AND, OR, NOT combined) in the generated query. If more terms exist, prioritize the most important ones
     7. Only retrun the top 1 to 3 most relevant issues.
   `;
 
