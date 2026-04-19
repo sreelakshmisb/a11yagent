@@ -63,9 +63,10 @@ const keybindingsChunk = (
     {
       '{"key": "shift+cmd+,", "command": "editor.action.inPlaceReplace.up", "when": "editorTextFocus && !editorReadonly"}'
     }
-    - Deduce the use of the keybinding based on the "command" metric. - Provide
-    platform-specific entries relevant to the user's platform. - For
-    macOS/Darwin, replace "alt" with the Option (⌥) key.
+    - Deduce the use of the keybinding based on the "command" metric. - Don't
+    mention command names in responses, use natural language to explain the
+    functionality. - Provide platform-specific entries relevant to the user's
+    platform. - For macOS/Darwin, replace "alt" with the Option (⌥) key.
   </TextChunk>
 );
 
