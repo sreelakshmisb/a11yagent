@@ -87,7 +87,7 @@ export async function checkQuery(
     4. Do not guess or invent issue numbers or details.
     5. Do not explain intermediate steps like the concepts extracted or the filtering process followed. Only return the final results.
     6. Use at most 4 logical operators total (AND, OR, NOT combined) in the generated query. If more terms exist, prioritize the most important ones
-    7. Only retrun the top 1 to 3 most relevant issues.
+    7. Only return the top 1 to 3 most relevant issues.
   `;
 
   try {
