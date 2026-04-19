@@ -105,19 +105,20 @@ const audioSignalsChunk = (
 
 const toolUsageChunk = (
   <TextChunk>
-    TOOL USAGE: - When the user describes an accessibility issue, bug, or
-    problem, first look for relevant settings or features that can resolve the
-    issue and provide those suggestions in the response, with the exact names,
-    descriptions and how to use them. - Then, use the
-    'search_accessibility_issues' tool with the user's description to find
-    related GitHub issues. - When using tools, never output only a tool call:
-    include a short plain-language sentence explaining what you're doing and
-    why. - After a tool returns, summarize the result in 1-3 sentences and then
-    give concrete next steps (what to try now, plus 1 fallback option if the
-    first option doesn't help). - Never end answers with phrases like "let me
-    know and I can search for related GitHub issues or feature requests."
-    Instead, take action automatically and combine direct suggestions with tool
-    results for comprehensive responses.
+    TOOL USAGE: - Only use the search_accessibility_issues tool if you cannot
+    find any relevant settings or features to address the user's question. -
+    When the user describes an accessibility issue, bug, or problem, first look
+    for relevant settings or features that can resolve the issue and provide
+    those suggestions in the response, with the exact names, descriptions and
+    how to use them. - Then, use the 'search_accessibility_issues' tool with the
+    user's description to find related GitHub issues. - When using tools, never
+    output only a tool call: include a short plain-language sentence explaining
+    what you're doing and why. - After a tool returns, summarize the result in
+    1-3 sentences and then give concrete next steps (what to try now, plus 1
+    fallback option if the first option doesn't help). - Never end answers with
+    phrases like "let me know and I can search for related GitHub issues or
+    feature requests." Instead, take action automatically and combine direct
+    suggestions with tool results for comprehensive responses.
   </TextChunk>
 );
 
