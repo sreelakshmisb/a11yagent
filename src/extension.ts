@@ -185,20 +185,13 @@ export async function activate(context: vscode.ExtensionContext) {
       { modelMaxPromptTokens: request.model.maxInputTokens },
       request.model,
     );
-    // Log messages to a file for debugging
-    // try {
-    //   const logFilePath = context.asAbsolutePath('messages_log.txt');
-    //   fs.appendFileSync(logFilePath, messages.map(msg => JSON.stringify(msg)).join('\n') + '\n', 'utf8');
-    // } catch (err) {
-    //   console.error('Failed to log messages:', err);
-    // }
 
     // Calculate and log token count for request
-    let totalTokens = 0;
-    for (const msg of messages) {
-      totalTokens += await request.model.countTokens(msg);
-    }
-    console.log("Input token count:", totalTokens);
+    // let totalTokens = 0;
+    // for (const msg of messages) {
+    //   totalTokens += await request.model.countTokens(msg);
+    // }
+    // console.log("Input token count:", totalTokens);
 
     const tools = [searchAccessibilityIssuesTool];
 
@@ -209,7 +202,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
      // Calculate max tokens allowed for the model
-    console.log("Max input tokens:", request.model.maxInputTokens);
+    // console.log("Max input tokens:", request.model.maxInputTokens);
 
     //handle logic for chat response parts (text vs tool calls))
     for await (const part of chatResponse.stream) {

@@ -40,13 +40,6 @@ export async function searchGitHubIssues(description: string): Promise<any[]> {
   return allIssues;
 }
 
-// Function to create a GitHub issue in vs code repo
-export async function createGitHubIssue(description: string) {
-  const body = encodeURIComponent(description);
-  const url = `https://github.com/microsoft/vscode/issues/new?body=${body}`;
-  await vscode.env.openExternal(vscode.Uri.parse(url));
-}
-
 // Function to fetch a specific GitHub issue by issue number and add to tracked issues
 export async function fetchAndTrackIssue(
   context: vscode.ExtensionContext,
