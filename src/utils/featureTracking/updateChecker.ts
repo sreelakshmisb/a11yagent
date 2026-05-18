@@ -17,7 +17,7 @@ export async function checkForUpdates(
   let newDescriptions: boolean = false;
 
   if (trackedIssues.length > 0) {
-    // Check for updates to each tracked issue
+    // For each tracked GitHub issue, fetch the latest issue metadata from the GitHub API
     const updates = await Promise.all(
       trackedIssues.map(async (issue) => {
         try {
@@ -35,7 +35,7 @@ export async function checkForUpdates(
       }),
     );
 
-    // Process updates and set the hasUpdates flag for changed issues
+    // Compare each issue's fetched metadata with the stored metadata to identify changes in the state. Store the issues with changes in  'updatedIssues' and update the global state for tracked issues with the new metadata and a flag indicating that there are updates.
     updatedIssues = updates.filter((update, index) => {
       if (update && update.state !== trackedIssues[index].state) {
         trackedIssues[index] = {

@@ -14,9 +14,8 @@ import { renderPrompt } from "@vscode/prompt-tsx";
 import os from "os";
 import { systemPrompt } from "./promptComponent.js";
 
-// Explicitly cast 'context' to 'vscode.ExtensionContext'
 export async function activate(context: vscode.ExtensionContext) {
-  // Check if telemetry is enabled before starting telemetry tracking
+  // Check if telemetry is enabled by the user before starting telemetry tracking
   if (vscode.env.isTelemetryEnabled) {
     startTelemetryTracking(context);
   }
@@ -57,7 +56,7 @@ export async function activate(context: vscode.ExtensionContext) {
   ): Promise<any> => {
     let contextData = "";
 
-    // If the command is 'init', initialize all sources
+    // If the user calls '/init', initialize all sources
     if (request.command === "init") {
       try {
         await Promise.all(sources.map((source) => source.fetchContext()));

@@ -7,6 +7,7 @@
     "sourceMap": true,
     "rootDir": "src",
     "strict": true,
+    "types": ["node", "vscode", "mocha"],
     "typeRoots": ["./src/types", "./node_modules/@types"],
     "jsx": "react",
     "jsxFactory": "vscpp",
