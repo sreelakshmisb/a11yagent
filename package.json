@@ -2,8 +2,8 @@
   "name": "a11yagent",
   "publisher": "IDEA",
   "displayName": "a11yagent",
-  "description": "A VS Code extension that helps screenreader users discover accessibility features and troubleshoot issues in VS Code",
-  "version": "0.0.1",
+  "description": "A VS Code extension that helps screenreader users discover accessibility features and troubleshoot accessibility-related issues in VS Code",
+  "version": "0.0.2",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
