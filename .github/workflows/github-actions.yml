@@ -88,7 +88,7 @@ jobs:
 
       # Publish to VS Code Marketplace
       - name: Publish to VS Code Marketplace
-        run: npx @vscode/vsce publish -p $VSCE_PAT_A11YAGENT
+        run: npx @vscode/vsce publish ${{ inputs.version_type }} -m "Release %s" -p $VSCE_PAT_A11YAGENT
         env:
           VSCE_PAT_A11YAGENT: ${{ secrets.VSCE_PAT_A11YAGENT }}
 
