@@ -1,0 +1,103 @@
+name: CI
+
+# When this workflow runs:
+# - on pushes to main
+# - on PRs targeting main
+# - manually from the Actions tab
+"on":
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: "Version bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+# Least-privilege token permissions for CI.
+permissions:
+  contents: write
+
+jobs:
+  # Build + lint + test the extension on the major OSes VS Code runs on.
+  build-test:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      # Pull the repository contents into the runner.
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # Install a supported Node version and enable npm caching.
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      # Reproducible install using package-lock.json.
+      - name: Install dependencies
+        run: npm ci
+
+      # TypeScript compile step (produces ./out).
+      - name: Compile
+        run: npm run compile
+
+      # Lint source code.
+      - name: Lint
+        run: npm run lint
+
+      # VS Code extension tests spin up Electron; Linux CI typically needs a virtual display.
+      - name: Run tests (Linux)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a npm test
+
+      - name: Run tests (macOS/Windows)
+        if: runner.os != 'Linux'
+        run: npm test
+
+  # Package the extension and publish to the VS Code Marketplace. This job only runs if build-test succeeds, and it only needs to run once (not on every OS).
+  deploy-vsix:
+    name: Deploy Extension
+    runs-on: ubuntu-latest
+    needs: build-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile
+        run: npm run compile
+
+      # Publish to VS Code Marketplace
+      - name: Publish to VS Code Marketplace
+        run: npx @vscode/vsce publish -p $VSCE_PAT_A11YAGENT
+        env:
+          VSCE_PAT_A11YAGENT: ${{ secrets.VSCE_PAT_A11YAGENT }}
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Push version commit and tag
+        run: |
+          git push
+          git push --tags
