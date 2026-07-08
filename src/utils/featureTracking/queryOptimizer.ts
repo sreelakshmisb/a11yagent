@@ -8,10 +8,12 @@ export async function checkQuery(
   token: vscode.CancellationToken,
 ): Promise<void> {
   const issueSearchTool = vscode.lm.tools.find(
-    (tool) => tool.name === "mcp_io_github_git_search_issues",
+    // old name: mcp_io_github_git_search_issues , new name: mcp_github_mcp_se_search_issues
+    (tool) => tool.name.includes("search_issues"),
   );
   const issueReadTool = vscode.lm.tools.find(
-    (tool) => tool.name === "mcp_io_github_git_issue_read",
+    // old name: mcp_io_github_git_issue_read , new name: mcp_github_mcp_se_issue_read
+    (tool) => tool.name.includes("issue_read"),
   );
   if (!issueSearchTool) {
     stream.markdown(
@@ -21,7 +23,7 @@ export async function checkQuery(
   }
   if (!issueReadTool) {
     stream.markdown(
-      "Note: GitHub issue comment lookup is unavailable because the MCP tool 'mcp_io_github_git_issue_read' is not installed/enabled. I will still search issues, but I cannot include comment-based workarounds.\n\n",
+      "Note: GitHub issue comment lookup is unavailable because the MCP tool 'issue_read' is not installed/enabled. I will still search for issues, but I cannot include comment-based workarounds in the response.\n\n",
     );
   }
 

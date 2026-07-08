@@ -260,8 +260,8 @@ export function deactivate() {
   try {
     // Stop telemetry tracking
     stopTelemetryTracking();
-    console.log("Extension successfully deactivated");
+    console.log("a11yagent successfully deactivated");
   } catch (error) {
-    console.error("Error during extension deactivation:", error);
+    console.error("Error during a11yagent deactivation:", error);
   }
 }

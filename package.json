@@ -5,6 +5,7 @@
   "description": "A VS Code extension that helps screenreader users discover accessibility features and troubleshoot accessibility-related issues in VS Code",
   "version": "0.0.2",
   "license": "UNLICENSED",
+  "icon": "images/a11yagent-logo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/idea11y/a11yagent"
