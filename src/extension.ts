@@ -177,6 +177,9 @@ export async function activate(context: vscode.ExtensionContext) {
     // Gather OS info
     const osInfo = `OS: ${os.platform()} (${os.type()} ${os.release()})`;
 
+    //print model being used 
+    console.log(request.model);
+
     //Rendering the TSX prompt, now including OS info
     const { messages } = await renderPrompt(
       systemPrompt,
